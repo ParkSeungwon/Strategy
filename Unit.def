@@ -1,0 +1,2 @@
+#name 	maxHealth	fuelCapacity	unitPrice	minimumSpeed	maximumSpeed	reconRadius	minimumTurnRadius	terrainPenalty	weapon1	rounds	weapon2	rounds	weapon3	rounds	weapon4	rounds	weapon5	rounds	weapon6 rounds
+Infantry	10		5000			10			0				15				15				3					0				M16		50		granade	2
