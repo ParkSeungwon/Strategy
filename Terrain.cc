@@ -16,7 +16,7 @@ Terrain::Terrain() {
 
 Map::Map(char* filename) {
 	ifstream fin(filename);
-	fin >> width >> height;
+	fin >> width >> height;//한글도 잘 되고 나노도 있고
 	bitSize = width * height / sizeof(unsigned int) + 1;
 	intSize = 8 * sizeof(unsigned int);
 	terrainTypeBitmask = (unsigned int) malloc(width * height * 4 / intSize +1);
