@@ -7,6 +7,7 @@ class Time {
 	protected:
 	
 	public:
+		double clock;
 		int oneTickPass() ;
-		Time();
+		void time_pass(int time) {clock += time;}
 };
