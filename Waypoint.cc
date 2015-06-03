@@ -3,39 +3,6 @@
 #include "Waypoint.h"
 #include "Util.h"
 
-Waypoint::Waypoint(Waypoint &prev, int _duration, int _speed, CGPoint _turnCenter)
-{
-	if (_duration <= 0) throw 1;
-	
-    duration = _duration;
-	speed = _speed;
-	turnCenter = _turnCenter;
-	if (typeid(prev).name() == "WhereAbout") {			//첫번째 경로일 경우 
-		position = prev.position;
-		headingToward = prev.headingToward;
-	}  	
-	else {
-		float theta = prev.speed * prev.duration / prev.radius;
-		position.x = prev.turnCenter.x + prev.radius * cosf(theta + prev.headingToward - M_PI/2);
-	  	position.y = prev.turnCenter.y + prev.radius * sinf(theta + prev.headingToward - M_PI/2);
-  		headingToward = prev.headingToward + theta;
-	}
-	radius = Util::distanceBetween(turnCenter, position);
-}
-
-WhereAbout::WhereAbout(int )
-WhereAbout* Waypoint::where(int when) 
-{
-	if(when>duration) throw 5;
-	WhereAbout *ptr = new WhereAbout;
-	float theta = speed * when / radius;
-	ptr->position.x = turnCenter.x + radius * cosf(theta + headingToward - M_PI/2);
-	ptr->position.y = turnCenter.y + radius * sinf(theta + headingToward - M_PI/2);  
-	ptr->headingToward += theta;			//방향 조절
-	ptr->speed = speed;
-	return ptr;				
-}
-
 float WhereAbout::correct_angle(float f)
 {
 	while(f >= M_PI) f -= M_PI;
@@ -43,32 +10,107 @@ float WhereAbout::correct_angle(float f)
 	return f;
 }
 
-int time_pass(int time)
+WhereAbout WhereAbout::time_pass(int time)
 {
+//	if(duration == 0) return *this;
+	WhereAbout wh;
 	int rt = 0;
-	if(time > duration) {
-		rt = time - duration;
-		time = duration;
-	}
-	duration -= time;
-	float x = initial_position.x - turnCenter.x;
-	float y = initial_position.y - turnCenter.y;
+	if(time > duration) time = duration;
+	float x = position.x - turn_center.x;
+	float y = position.y - turn_center.y;
 	float r = sqrtf(x*x + y*y);
 	float center_angle = acosf(x/r);
-	if(y/r > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
+	if(y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
 	float theta = speed * time / r;
 	
-	float diff = abs(center_angle - correct_angle(initial_heading_toward + M_PI/2);
-	if(diff < 0.1 || diff > 3) {
-		heading_toward = initial_heading_toward + theta;
-		position.x = turnCenter.x + r * cosf(center_angle + theta);
-		position.y = turnCenter.y + r * sinf(center_angle + theta);
+	float diff = abs(center_angle - correct_angle(initial_heading_toward + M_PI/2));
+	if(diff < 0.1 || diff > 3) { //if center is at the left of heading direction
+		wh.heading_toward = heading_toward + theta;
+		wh.position.x = turn_center.x + r * cosf(center_angle + theta);
+		wh.position.y = turn_center.y + r * sinf(center_angle + theta);
 	} else {
-		heading_toward = initial_heading_toward - theta;
-		position.x = turnCenter.x + r * cosf(center_angle - theta);
-		position.y = turnCenter.y + r * sinf(center_angle - theta);
+		wh.heading_toward = initial_heading_toward - theta;
+		wh.position.x = turn_center.x + r * cosf(center_angle - theta);
+		wh.position.y = turn_center.y + r * sinf(center_angle - theta);
 	}
-	return rt;
+	wh.speed = speed;
+	wh.turn_center = turn_center;
+	wh.duration = duration - time;//left duration of this waypiont
+	return wh;
 }
 
+WhereAbout Waypoint::time_pass(int time)
+{
+	int i, t;
+	for(i=0, time > 0; i++) {
+		t = time;
+		time -= waypoints[i].duration;
+	}
+	return waypoints[i].time_pass[time];
+}
+
+int Waypoint::moved_distance(int start, int end) {
+	Nth nth1 = nth_way(start);
+	Nth nth2 = nth_way(end);
+	int distance = 0;
+	for(int i = nth1.n; i <= nth2.n; i++) {
+		distance += waypoints[i].speed * waypoints[i].duration;
+	}
+	distance -= waypoints[nth1.n].speed * nth1.sec;
+	distance -= waypoints[nth2.n].speed * (waypoints[nth2.n].duration - nth2.sec);
+	return distance;
+}
+
+Nth Waypoint::nth_way(int time) {
+	int i, t;
+	for(i=0, time > 0; i++) {
+		t = time;
+		time -= waypoints[i].duration;
+	}
+	Nth nth;
+	nth.n = i;
+	nth.sec = t;
+	return nth;
+}
+
+int Waypoint::how_long_can_i_go(int start, int fuel) {
+	Nth nth = nth_way(start);
+	int tmp = fuel;
+	int dur;
+	fuel -= waypoints[nth.n].speed * (waypoints[nth.n].duration - nth.sec);
+	while(fuel > 0) {
+		tmp = fuel;
+		dur += waypoints[nth.n].duration;
+		fuel -= waypoints[++nth.n].duration * waypoints[nth.n].speed;
+	}
+	dur += tmp / waypoints[nth.n].speed;
+	return start + dur;
+}
+
+int Waypoint::insert_waypoint(CGPoint turn, int spd, int dur)
+{
+	int i;
+	for(i = 0; i < MAX_Waypoints; i++) {
+		if(waypoints[i].duration == 0) break;
+	}
+	if(i < MAX_Waypoints) {
+		waypoints[i].speed = spd;
+		waypoints[i].turn_center = turn;
+		waypoints[i].duration = dur;
+		waypoints[i+1] = waypoints[i].time_pass(dur);//reach here by this waypoint
+		waypoints[i+1].duration = 0;//work as a mark
+	} else message("Way points limit reached!!");
+	return i;
+}
+
+int Waypoint::delete_waypoint()
+{
+	int i;
+	for(i = 0; i <= MAX_Waypoints; i++) {
+		if(waypoints[i].duration == 0) break;
+	}
+	if(i == 0) message("No waypoint!!")
+	else waypoints[--i].duration = 0;
+	return i;
+}
 
