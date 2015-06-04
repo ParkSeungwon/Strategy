@@ -14,12 +14,33 @@ Terrain::Terrain() {
 	//terrainBitmask =  malloc(width * height * 3);
 }
 
+City::City()
+{
+	movePenaltyVsInfantry = 0;
+	movePenaltyVsArmor = 0;
+	movePenaltyVsShip = 100;
+	evadeBonus = 20;
+}
+
+Capital::Capital()
+{
+	evadeBonus = 50;
+}
+
+Mountain::Mountain()
+{
+	movePenaltyVsInfantry = 50;
+	movePenaltyVsArmor = 100;
+	movePenaltyVsShip = 100;
+	evadeBonus = 60;
+}
+
 Map::Map(char* filename) {
-	ifstream fin(filename);
+	ifstream fin(filename);//width, height, & bitwise info about terrains
 	fin >> width >> height;//한글도 잘 되고 나노도 있고
-	bitSize = width * height / sizeof(unsigned int) + 1;
-	intSize = 8 * sizeof(unsigned int);
-	terrainTypeBitmask = (unsigned int) malloc(width * height * 4 / intSize +1);
+	bitSize = width * height / sizeof(unsigned int) + 1;//
+	intSize = 8 * sizeof(unsigned int);//bit of int=32
+	terrainTypeBitmask = (unsigned int) malloc(width * height * 4 / intSize +1);//need 4 bit to show terrain type(less than 16)
 	while(fin != null) fin >> terrainTypeBitmask++;
 	
 	fin.close();

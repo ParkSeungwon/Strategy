@@ -10,23 +10,55 @@
 
 class Unit;
 
-class Terrain {
-	private:
-		int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; 
-		enum terrainType {capital, city, airport, harbor, fort, road, mountain, sea,  field, forest, desert, swamp, hill};
+class Terrain 
+{
+private:
+	static int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
+	enum terrainType {capital, city, airport, harbor, fort, road, mountain, sea,  field, forest, desert, swamp, hill};
 		
-	protected:
-		int evadeBonus; 
+protected:
+	static int evadeBonus; 
 		
-	public:
-		Terrain();
-		char* terrainBitmask(int width, int height, CGPoint center);
-		Unit* produceUnit(char* _unitName, float _headingToward);
+public:
+	Terrain();
+	char* terrainBitmask(int width, int height, CGPoint center);
+	
+};
+
+class City : public Terrain 
+{
+public:
+	City();
+	Unit* produceUnit(char* _unitName, float _headingToward);
+	int owner;
+	int identifier;//connected pixels have same identifier, because they are one city
+};
+
+class Capital : public City
+{
+public:
+	City();
+	lose();
+};
+class Airport : public City
+{
+public:
+	Airport();
+};
+class Harbor : public City
+{
+public:
+	Harbor();
+};
+class Mountain : public Terrain
+{
+public:
+	Mountain();
 };
 
 class Map : public Terrain {
 	private:
-		int width, height;
+		unsigned int width, height;
 		int bitSize, intSize;
 		enum bitOption {OR, AND, XOR};
 		const static int maxTeam = 8;
@@ -39,6 +71,7 @@ class Map : public Terrain {
 		unsigned int* terrainTypeBitmask;		//맵에 의해 초기화된 지형, 한 좌표가 4비트를 차지 함.
 	
 	public:
+		Terrain whole_map[width][height];
 		Unit* deployedUnits[maxTeam][maxUnit];
 		terrainType getTerrainType(CGPoint _position);
 		Map(char* filename);
