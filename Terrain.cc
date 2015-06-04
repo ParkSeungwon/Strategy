@@ -46,6 +46,35 @@ Map::Map(char* filename) {
 	fin.close();
 }
 
+unsigned int* Map::make_bitmap(int bit_per_pixel)
+{
+	unsigned int alloc[] = new unsigned int[width*hei/intSize + 1][bit_per_pixel];
+	unsigned int* alloc = new unsigned int[w * h * bit_per_pixel / intSize + 5];
+	alloc[0] = w;
+	alloc[1] = h;
+	alloc[2] = bit_per_pixel;
+}
+
+unsigned int Map::get_pixel_data(unsigned int *bitmap, int x, int y)
+{
+	int b = bitmap[2];
+	int share = (y * bitmap[0] + x) * b / intSize;
+	int rest = (y * bitmap[0] + x) * b % intSize;
+	
+	unsigned long l = (unsigned long)bitmap[share+3] << intSize 
+	l += bitmap[share+4};//두개를 연결시킴
+	unsigned long mask = 2 << b - 1;
+	mask = mask << (2*intSize - b - rest);
+	l = l & mask;
+	l = l >> (2*intSize - b - rest);
+	return l;
+}
+
+unsigned int* Map::make_arc_bitmap(CGPoint c, float sa, float ea)
+{
+	
+}
+
 terrainType MAP::getTerrainType(CGPoint position) {
 	int share = (position.y * width + position.x) * 4 / intSize;
 	int rest = (position.y * width + position.x) * 4 % intSize;
