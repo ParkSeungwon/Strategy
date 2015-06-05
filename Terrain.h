@@ -6,10 +6,10 @@
 //  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
 //
 
-
-
-class Unit;
-
+struct IPoint {
+	int x,y;
+};
+  
 class Terrain 
 {
 private:
@@ -60,19 +60,20 @@ class Map : public Terrain
 {
 private:
 	unsigned int width, height;
-	int bitSize, intSize;
 	enum bitOption {OR, AND, XOR};
 	const static int maxTeam = 8;
 	const static int maxUnit = 100;
 	unsigned int* make_arc_bitmap(CGPoint center, float start_angle, float end_angle);
 	
+	
 protected:
-	unsigned int* make_bitmap(bit_per_pixel);
-	unsigned int get_pixel_data(unsigned int* bitmap, int x, int y);
+	int bitSize, intSize;
+	Bitmap* bit_circle(IPoint center, int radius);
+	Bitmap* bit_flat_line(IPoint a, int longer);
 	static unsigned int* bitmask(CGPoint center, int radius);
 	static unsigned int* bitOperation(unsigned int *bitmaskA, unsigned int *bitmaskB, bitOption option);
 	static bool inRange(unsigned int *bitmask, CGPoint position);
-	unsigned int* terrainTypeBitmask;		//맵에 의해 초기화된 지형, 한 좌표가 4비트를 차지 함.
+	unsigned int* terrainTypeBitmask;//맵에 의해 초기화된 지형, 한 좌표가 4비트를 차지 함.
 	
 public:
 	Terrain whole_map[width][height];
@@ -80,4 +81,22 @@ public:
 	terrainType getTerrainType(CGPoint _position);
 	Map(char* filename);
 	void deployUnit(Unit &unit);
+};
+
+class Bitmap : public Map
+{
+public:
+	unsigned int **bitmap;
+	int bit_per_pixel;
+	
+	Bitmap(int bit_per_pixel);
+	~Bitmap();
+	
+protected:
+	int flat_line(unsigned int* pane, IPoint start_point, int longevity);
+	int get_pixel_data(Bitmap* bitmap, int x, int y);
+private:
+	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
+	int xy_to_bit_share(int x, int y) {return (y * width + x) / intSize;}
+	int xy_to_bit_rest(int x, int y) {return (y * width + x) % intSize;}
 };

@@ -46,34 +46,77 @@ Map::Map(char* filename) {
 	fin.close();
 }
 
-unsigned int* Map::make_bitmap(int bit_per_pixel)
+Bitmap::Bitmap(int bpp)
 {
-	unsigned int alloc[] = new unsigned int[width*hei/intSize + 1][bit_per_pixel];
-	unsigned int* alloc = new unsigned int[w * h * bit_per_pixel / intSize + 5];
-	alloc[0] = w;
-	alloc[1] = h;
-	alloc[2] = bit_per_pixel;
+	bit_per_pixel = bpp;
+	bitmap = new unsigned int*[bit_per_pixel + 1];
+	for(int i=0; i<bit_per_pixel; i++) {
+		bitmap[i] = create_pane();
+	}
 }
 
-unsigned int Map::get_pixel_data(unsigned int *bitmap, int x, int y)
+Bitmap::~Bitmap()
 {
-	int b = bitmap[2];
-	int share = (y * bitmap[0] + x) * b / intSize;
-	int rest = (y * bitmap[0] + x) * b % intSize;
-	
-	unsigned long l = (unsigned long)bitmap[share+3] << intSize 
-	l += bitmap[share+4};//두개를 연결시킴
-	unsigned long mask = 2 << b - 1;
-	mask = mask << (2*intSize - b - rest);
-	l = l & mask;
-	l = l >> (2*intSize - b - rest);
-	return l;
+	for(int i = 0; i < bit_per_pixel; i++) {
+		delete [] bitmap[i];
+	}
+	delete [] bitmap;
+}
+
+int Bitmap::get_pixel_data(int x, int y)
+{
+	int share = (y * width + x) / intSize;
+	int rest = (y * width + x) / intSize;
+	unsigned int mask = 1 << (intSize - rest);
+	int ret=0, b;
+	for(int i=0; i<bit_per_pixel; i++) {
+		b = bitmap[i][share] & mask;
+		b = b >> (intSize - rest);
+		ret += b << i;
+	}
+	return ret;
+}
+
+int Bitmap::flat_line(unsigned int* pane, IPoint s, int l)
+{
+	if(s.x + l >= width) l = width - s.x + 1;//바운더리 체크
+	if(s.x < 0) s.x = 0;
+	int ret = l;
+	int share = xy_to_bit_share(s.x, s.y);
+	int rest = xy_to_bit_rest(s.x, s.y);
+	unsigned int mask;
+	for(int i=0; l>0; i++) {
+		if(intSize < rest + i) {
+			share++;
+			i = 0;
+			rest = 0;
+		}
+		mask = 1 << (intSize - rest - i);
+		pane[share] = pane[share] | mask;
+		l--;
+	}
+	return ret;
+}
+
+unsigned int* Bitmap::bit_circle(IPoint c, int r)
+{
+	unsigned int* pane = create_pane();
+	IPoint s;
+	for(s.y = c.y - r; s.y <= c.y + r; s.y++) {
+		if(s.y >= 0 && s.y < height) {
+			s.x = c.x - sqrtf(r*r - (c.y-s.y)*(c.y-s.y));
+			flat_line(pane, s, 2*(c.x-s.x) +1);
+		}
+	}
+	return pane;
 }
 
 unsigned int* Map::make_arc_bitmap(CGPoint c, float sa, float ea)
 {
 	
 }
+
+
 
 terrainType MAP::getTerrainType(CGPoint position) {
 	int share = (position.y * width + position.x) * 4 / intSize;
