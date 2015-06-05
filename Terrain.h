@@ -5,10 +5,6 @@
 //  Created by 승원 박 on 12. 7. 14..
 //  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
 //
-
-struct IPoint {
-	int x,y;
-};
   
 class Terrain 
 {
@@ -83,20 +79,3 @@ public:
 	void deployUnit(Unit &unit);
 };
 
-class Bitmap : public Map
-{
-public:
-	unsigned int **bitmap;
-	int bit_per_pixel;
-	
-	Bitmap(int bit_per_pixel);
-	~Bitmap();
-	
-protected:
-	int flat_line(unsigned int* pane, IPoint start_point, int longevity);
-	int get_pixel_data(Bitmap* bitmap, int x, int y);
-private:
-	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
-	int xy_to_bit_share(int x, int y) {return (y * width + x) / intSize;}
-	int xy_to_bit_rest(int x, int y) {return (y * width + x) % intSize;}
-};
