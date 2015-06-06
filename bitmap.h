@@ -11,26 +11,31 @@ struct Clip {
 class Bitmap
 {
 public:
-	int width, height;
+	int width, height;// in pixel
 	unsigned int ***bitmap;
 	int bit_per_pixel;
 	int bitSize, intSize;
 	
 	Bitmap(int bit_per_pixel);
 	~Bitmap();
+	IPoint bit_circle(Clip *cl, IPoint center, int radius);//클립된 후의 중심좌표
+	IPoint bit_arc_circle(Clip *cl, IPoint center, int radius_from, int radius_to, float angle_from, float angle_to);
 	
 protected:
-	int flat_line(unsigned int* pane, IPoint start_point, int longevity);
 	int get_pixel_data(Bitmap* bitmap, int x, int y);
-	
+	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
+	Clip create_clip(IPoint center, int radius);//원을 포함하는 직사각형 영역
+	Clip create_clip(int x, int y, int width, int height);//직사각형 영역을 만듬
+	bool free_clip(Clip* cl);
+	Clip copy_clip(IPoint center, int radius, int from_layer = 0);//원을 둘러싼 정사각형을 클립한다.
+	void paste_clip(Clip* cl, int to_layer = 0);
+	int paste_clip(Clip* source, Clip* destination, bitOperation option);
+	Clip join_clip(Clip *cl1, Clip* cl2, bitOperation op);
+	IPoint bit_arc(Clip* cl, IPoint center, float angle_from, float angle_to);
 	
 private:
-	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
-	Clip* create_clip(IPoint center, int radius, int layer = 0);//원을 둘러싼 정사각형을 클립한다.
-	void paste_clip(Clip* cl, int layer = 0);
-	IPoint* 
-	int xy_to_bit_share(int x, int y) {return (y * width + x) / intSize;}
-	int xy_to_bit_share(IPoint p) {return (p.y * width + p.x) / intSize;}
-	int xy_to_bit_rest(int x, int y) {return (y * width + x) % intSize;}
-	int xy_to_bit_rest(IPoint p) {return (p.y * width + x) % intSize;}
+	float bit_line(Clip* cl, IPoint center, float theta);
+	int flat_line(unsigned int* pane, IPoint start_point, int longevity);
+	int flat_line(Clip* pane, IPoint start_point, int longevity);
+	enum bitOption {SUBST, OR, AND, XOR, MINUS, NOT};
 };

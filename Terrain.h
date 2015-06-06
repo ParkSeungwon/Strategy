@@ -56,11 +56,9 @@ class Map : public Terrain
 {
 private:
 	unsigned int width, height;
-	enum bitOption {OR, AND, XOR};
 	const static int maxTeam = 8;
 	const static int maxUnit = 100;
 	unsigned int* make_arc_bitmap(CGPoint center, float start_angle, float end_angle);
-	
 	
 protected:
 	int bitSize, intSize;

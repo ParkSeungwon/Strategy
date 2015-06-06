@@ -45,7 +45,6 @@ Map::Map(char* filename) {
 	fin.close();
 }
 
-
 bool Map::inRange(unsigned int *bitmask, CGPoint position) {
 	int share = (position.y * width + position.x) / intSize;//CGPoint int
 	int rest = (position.y * width + position.x) % intSize;
