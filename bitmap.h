@@ -16,11 +16,12 @@ public:
 	int bit_per_pixel;
 	int bitSize, intSize;
 	
-	Bitmap(int bit_per_pixel);
+	Bitmap(){}
 	~Bitmap();
+	int alloc(int width, int height, int bit_per_pixel);
 	IPoint bit_circle(Clip *cl, IPoint center, int radius);//클립된 후의 중심좌표
 	IPoint bit_arc_circle(Clip *cl, IPoint center, int radius_from, int radius_to, float angle_from, float angle_to);
-	
+		
 protected:
 	int get_pixel_data(Bitmap* bitmap, int x, int y);
 	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}

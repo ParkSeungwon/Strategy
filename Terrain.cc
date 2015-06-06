@@ -35,10 +35,16 @@ Mountain::Mountain()
 	evadeBonus = 60;
 }
 
+Map::create_terrain_bitmap(char *filename)
+{
+	bit_per_pixel = 4;
+	
+}
+
 Map::Map(char* filename) {
 	ifstream fin(filename);//width, height, & bitwise info about terrains
 	fin >> width >> height;//한글도 잘 되고 나노도 있고
-	
+	terrain_bitmap.alloc(width, height, 4);
 	terrainTypeBitmask = (unsigned int) malloc(width * height * 4 / intSize +1);//need 4 bit to show terrain type(less than 16)
 	while(fin != null) fin >> terrainTypeBitmask++;
 	

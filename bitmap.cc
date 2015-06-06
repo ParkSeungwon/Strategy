@@ -1,5 +1,7 @@
-Bitmap::Bitmap(int bpp)
+int Bitmap::alloc(int w, int h, int bpp)
 {
+	width = w;
+	height = h;
 	bitSize = width * height / sizeof(unsigned int) + 1;//
 	intSize = 8 * sizeof(unsigned int);//bit of int=32
 	
@@ -12,6 +14,7 @@ Bitmap::Bitmap(int bpp)
 			bitmap[i][y] = new unsigned int[width/intSize+1];
 		}
 	}
+	return (width/intSize+1) * h * bpp;
 }
 
 Bitmap::~Bitmap()

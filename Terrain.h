@@ -10,7 +10,7 @@ class Terrain
 {
 private:
 	static int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
-	enum terrainType {capital, city, airport, harbor, fort, road, mountain, sea,  field, forest, desert, swamp, hill};
+	enum terrainType {Road, Fort, Mountain, Sea, Field, Forest, Desert, Swamp, Hill, City, Capital, Airport, Harbor};
 		
 protected:
 	static int evadeBonus; 
@@ -52,22 +52,19 @@ public:
 	Mountain();
 };
 
-class Map : public Terrain 
+class Map : public Terrain
 {
 private:
 	unsigned int width, height;
 	const static int maxTeam = 8;
 	const static int maxUnit = 100;
-	unsigned int* make_arc_bitmap(CGPoint center, float start_angle, float end_angle);
 	
 protected:
-	int bitSize, intSize;
-	Bitmap* bit_circle(IPoint center, int radius);
-	Bitmap* bit_flat_line(IPoint a, int longer);
 	static unsigned int* bitmask(CGPoint center, int radius);
 	static unsigned int* bitOperation(unsigned int *bitmaskA, unsigned int *bitmaskB, bitOption option);
 	static bool inRange(unsigned int *bitmask, CGPoint position);
-	unsigned int* terrainTypeBitmask;//맵에 의해 초기화된 지형, 한 좌표가 4비트를 차지 함.
+	Bitmap terrain_bitmap, unit_bitmap, recon_bitmap, wepon_range_bitmap, city_bitmap;
+	create_terrain_bitmap();
 	
 public:
 	Terrain whole_map[width][height];
