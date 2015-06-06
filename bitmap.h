@@ -16,7 +16,6 @@ public:
 	int bit_per_pixel;
 	int bitSize, intSize;
 	
-	Bitmap(){}
 	~Bitmap();
 	int alloc(int width, int height, int bit_per_pixel);
 	IPoint bit_circle(Clip *cl, IPoint center, int radius);//클립된 후의 중심좌표

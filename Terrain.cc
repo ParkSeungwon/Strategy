@@ -11,7 +11,10 @@
 #include <ifstream>
 
 Terrain::Terrain() {
-	//terrainBitmask =  malloc(width * height * 3);
+	movePenaltyVsInfantry = 0;
+	movePenaltyVsArmor = 0;
+	movePenaltyVsShip = 100;
+	evadeBonus = 0;
 }
 
 City::City()
@@ -22,17 +25,51 @@ City::City()
 	evadeBonus = 20;
 }
 
-Capital::Capital()
+Harbor::Harbor()
 {
-	evadeBonus = 50;
+	movePenaltyVsShip = 0;
+	evadeBonus = 0;
+}
+
+Sea::Sea()
+{
+	movePenaltyVsInfantry = 100;
+	movePenaltyVsArmor = 100;
+	movePenaltyVsShip = 0;
+}
+
+Forest::Forest()
+{
+	movePenaltyVsInfantry = 20;
+	movePenaltyVsArmor = 50;
+	evadeBonus = 30;
+}
+
+Hill::Hill()
+{
+	movePenaltyVsInfantry = 30;
+	movePenaltyVsArmor = 30;
+	evadeBonus = 20;
 }
 
 Mountain::Mountain()
 {
 	movePenaltyVsInfantry = 50;
 	movePenaltyVsArmor = 100;
-	movePenaltyVsShip = 100;
 	evadeBonus = 60;
+}
+
+Desert::Desert()
+{
+	movePenaltyVsInfantry = 60;
+	movePenaltyVsArmor = 20;
+}
+
+Swamp::Swamp()
+{
+	movePenaltyVsInfantry = 50;
+	movePenaltyVsArmor = 70;
+	evadeBonus = 10;
 }
 
 Map::create_terrain_bitmap(char *filename)
@@ -41,25 +78,3 @@ Map::create_terrain_bitmap(char *filename)
 	
 }
 
-Map::Map(char* filename) {
-	ifstream fin(filename);//width, height, & bitwise info about terrains
-	fin >> width >> height;//한글도 잘 되고 나노도 있고
-	terrain_bitmap.alloc(width, height, 4);
-	terrainTypeBitmask = (unsigned int) malloc(width * height * 4 / intSize +1);//need 4 bit to show terrain type(less than 16)
-	while(fin != null) fin >> terrainTypeBitmask++;
-	
-	fin.close();
-}
-
-bool Map::inRange(unsigned int *bitmask, CGPoint position) {
-	int share = (position.y * width + position.x) / intSize;//CGPoint int
-	int rest = (position.y * width + position.x) % intSize;
-	return *(bitmask+share+1) | 1 << (intSize-rest-1);
-}
-
-void deployUnit(Unit &unit) 
-{
-	int i;
-	while (deployedUnit[unit.team][i++ ] != null);
-	deployedUnit[unit.team][i] = &unit;
- }
