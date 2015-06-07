@@ -5,24 +5,17 @@
 //  Created by 승원 박 on 12. 7. 14..
 //  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
 //
-
-
-
-class Unit;
-
+  
 class Terrain 
 {
 private:
 	static int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
-	enum terrainType {capital, city, airport, harbor, fort, road, mountain, sea,  field, forest, desert, swamp, hill};
-		
+			
 protected:
 	static int evadeBonus; 
 		
 public:
 	Terrain();
-	char* terrainBitmask(int width, int height, CGPoint center);
-	
 };
 
 class City : public Terrain 
@@ -37,13 +30,13 @@ public:
 class Capital : public City
 {
 public:
-	City();
+	Capital() {evadeBonus = 50;}
 	lose();
 };
 class Airport : public City
 {
 public:
-	Airport();
+	Airport() {evadeBonus = 0;}
 };
 class Harbor : public City
 {
@@ -55,29 +48,50 @@ class Mountain : public Terrain
 public:
 	Mountain();
 };
+class Forest : public Terrain
+{
+public:
+	Forest();
+};
 
-class Map : public Terrain {
-	private:
-		unsigned int width, height;
-		int bitSize, intSize;
-		enum bitOption {OR, AND, XOR};
-		const static int maxTeam = 8;
-		const static int maxUnit = 100;
-	
-	protected:
-		static unsigned int* bitmask(CGPoint center, int radius);
-		static unsigned int* bitOperation(unsigned int *bitmaskA, unsigned int *bitmaskB, bitOption option);
-		static bool inRange(unsigned int *bitmask, CGPoint position);
-		unsigned int* terrainTypeBitmask;		//맵에 의해 초기화된 지형, 한 좌표가 4비트를 차지 함.
-		unsigned int* unitBitmask;
-		unsigned int* weaponRangeBitmask;
-		unsigned int* cityBitmask;
-		unsigned int* reconBitmask;
-		
-	public:
-		Terrain whole_map[width][height];
-		Unit* deployedUnits[maxTeam][maxUnit];
-		terrainType getTerrainType(CGPoint _position);
-		Map(char* filename);
-		void deployUnit(Unit &unit);
+class Desert : public Terrain
+{
+public:
+	Desert();
+};
+
+class Swamp : public Terrain
+{
+public:
+	Swamp();
+};
+
+class Sea : public Terrain
+{
+public:
+	Sea();
+};
+
+class Field : public Terrain
+{
+public:
+	Field() {movePenaltyVsArmor = 10;}
+};
+
+class Road : public Terrain
+{
+public:
+
+};
+
+class Fort : public Terrain
+{
+public:
+	Fort() {evadeBonus = 70;}
+};
+
+class Hill : public Terrain
+{
+public:
+	Hill();
 };
