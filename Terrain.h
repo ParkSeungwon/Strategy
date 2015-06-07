@@ -69,7 +69,11 @@ class Map : public Terrain {
 		static unsigned int* bitOperation(unsigned int *bitmaskA, unsigned int *bitmaskB, bitOption option);
 		static bool inRange(unsigned int *bitmask, CGPoint position);
 		unsigned int* terrainTypeBitmask;		//맵에 의해 초기화된 지형, 한 좌표가 4비트를 차지 함.
-	
+		unsigned int* unitBitmask;
+		unsigned int* weaponRangeBitmask;
+		unsigned int* cityBitmask;
+		unsigned int* reconBitmask;
+		
 	public:
 		Terrain whole_map[width][height];
 		Unit* deployedUnits[maxTeam][maxUnit];
