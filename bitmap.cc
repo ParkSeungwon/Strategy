@@ -230,9 +230,10 @@ int Bitmap::paste_clip(Clip *source, Clip *dest, bitOperation op)
 		if(diffy + y >= 0 && diffy + y < dest->array_height) {
 			for(int x = 0; x <= source->width; x++) {
 				if(diffx + x >= 0 && diffx + x < dest->array_width) {
-					switch op {
+                    switch(op) {
 						case SUBST:
 							dest->clip[y + diffy][x + diffx] = source->clip[y][x];
+                            break;
 						case OR:
 							dest->clip[y + diffy][x + diffx] = 
 							dest->clip[y + diffy][x + diffx] | source->clip[y][x]; 
