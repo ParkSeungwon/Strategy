@@ -7,7 +7,6 @@ int Bitmap::alloc(int w, int h, int bpp)
 	
 	bit_per_pixel = bpp;
 	bitmap = new unsigned int**[bit_per_pixel];
-	
 	for(int i=0; i<bit_per_pixel; i++) {
 		bitmap[i] = new unsigned int*[height];
 		for(int y=0; y<width/intSize+1; y++) {
