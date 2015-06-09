@@ -14,6 +14,7 @@ protected:
 public:
 	Terrin whole_map[width][height];
 	Unit* deployedUnits[maxTeam][maxUnit];
+	read_mapfile(char *filename);
 	terrainType getTerrainType(CGPoint _position);
 	Map(char* filename);
 	void deployUnit(Unit &unit);
