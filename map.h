@@ -1,4 +1,3 @@
-
 class Map : public Terrain
 {
 private:
@@ -13,7 +12,7 @@ protected:
 	Bitmap terrain_bitmap, unit_bitmap, recon_bitmap, wepon_range_bitmap, city_bitmap;
 	
 public:
-	Terrain whole_map[width][height];
+	Terrin whole_map[width][height];
 	Unit* deployedUnits[maxTeam][maxUnit];
 	terrainType getTerrainType(CGPoint _position);
 	Map(char* filename);
