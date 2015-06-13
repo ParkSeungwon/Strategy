@@ -39,6 +39,18 @@ int Bitmap::get_pixel_data(int x, int y)
 	return ret;
 }
 
+int Bitmap::set_pixel_data(int x, int y, unsigned char v)
+{
+	int shift = intSize - 1 - (x % intSize);
+	unsigned int mask = 1 << shift;
+	mask = mask & v;
+	for(int i=0; i<bit_per_pixel; i++) {
+		v = v << shift--;
+		bitmap[i][y][x/intSize] = v & mask;
+	}
+	return mask;//쓸모없다
+}
+
 int Bitmap::flat_line(unsigned int** pane, IPoint s, int l)
 {
 	//boundary check

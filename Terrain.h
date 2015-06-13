@@ -16,6 +16,7 @@ protected:
 		
 public:
 	Terrain();
+	static unsigned int color_code;
 	virtual Unit* produce_unit() = 0;
 };
 
@@ -33,6 +34,8 @@ public:
 	int owner;
 	int identifier;//connected pixels have same identifier, because they are one city
 };
+
+unsigned int City::color_code = 0x0000ff;
 
 class Capital : public City
 {

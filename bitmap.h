@@ -22,7 +22,8 @@ public:
 	IPoint bit_arc_circle(Clip *cl, IPoint center, int radius_from, int radius_to, float angle_from, float angle_to);
 		
 protected:
-	int get_pixel_data(Bitmap* bitmap, int x, int y);
+	int get_pixel_data(int x, int y);
+	int set_pixel_data(int x, int y, unsigned char value);
 	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
 	Clip create_clip(IPoint center, int radius);//원을 포함하는 직사각형 영역
 	Clip create_clip(int x, int y, int width, int height);//직사각형 영역을 만듬
