@@ -5,7 +5,7 @@
 //  Created by 승원 박 on 12. 7. 14..
 //  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
 //
-  
+enum TerrainType city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river;
 class Terrain 
 {
 private:
@@ -37,7 +37,6 @@ public:
 	int owner;
 	int identifier;//connected pixels have same identifier, because they are one city
 };
-
 unsigned int City::color_code = 0xff00ff;//분홍색
 int City::movePenaltyVsInfantry = 0;
 int City::movePenaltyVsArmor = 0;
@@ -116,6 +115,15 @@ unsigned int Sea::color_code = 0x00007f;//짙은 파란색
 int Sea::movePenaltyVsInfantry = 100;
 int Sea::movePenaltyVsArmor = 100;
 int Sea::movePenaltyVsShip = 0;
+
+class River : public Land
+{
+public:
+};
+unsigned int River::color_code = 0x0;
+int River::movePenaltyVsInfantry = 70;
+int River::movePenaltyVsArmor = 70;
+int River::movePenaltyVsShip = 30;
 
 class Field : public Land
 {

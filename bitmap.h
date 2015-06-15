@@ -23,6 +23,8 @@ public:
 		
 protected:
 	int get_pixel_data(int x, int y);
+	bool get_pixel_of_layer(int x, int y, int layer);
+	int get_near_data(int x, int y);
 	int set_pixel_data(int x, int y, unsigned char value);
 	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
 	Clip create_clip(IPoint center, int radius);//원을 포함하는 직사각형 영역
@@ -39,4 +41,6 @@ private:
 	int flat_line(unsigned int* pane, IPoint start_point, int longevity);
 	int flat_line(Clip* pane, IPoint start_point, int longevity);
 	enum bitOption {SUBST, OR, AND, XOR, MINUS, NOT};
+	int find_num(int* array, int value, int size_of_array);
+	int find_big(int* array, int size_of_array);
 };

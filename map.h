@@ -6,17 +6,13 @@ private:
 	const static int maxUnit = 100;
 	
 protected:
-	static unsigned int* bitmask(CGPoint center, int radius);
-	static unsigned int* bitOperation(unsigned int *bitmaskA, unsigned int *bitmaskB, bitOption option);
 	static bool inRange(unsigned int *bitmask, CGPoint position);
-	Bitmap terrain_bitmap, unit_bitmap, recon_bitmap, wepon_range_bitmap, city_bitmap;
+	Bitmap terrain_bitmap, recon_bitmap, weapon_range_bitmap, city_bitmap;
 	
 public:
-	Terrin whole_map[width][height];
 	Unit* deployedUnits[maxTeam][maxUnit];
-	read_mapfile(char *filename);
 	terrainType getTerrainType(CGPoint _position);
-	Map(char* filename);
+	Map(char* PNG_filename);//Read png file to init bitmaps
 	void deployUnit(Unit &unit);
 };
 

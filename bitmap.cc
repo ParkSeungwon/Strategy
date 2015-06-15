@@ -39,6 +39,48 @@ int Bitmap::get_pixel_data(int x, int y)
 	return ret;
 }
 
+bool Bitmap::get_pixel_of_layer(int x, int y, int l)
+{
+	int shift = intSize - 1 - ( x % intSize );
+	unsigned int mask = 1 << shift;
+	if(bitmap[l][y][x/intsize] & mask == 0) return false;
+	else return true;
+}
+
+int Bitmap::get_near_data(int x, int y)
+{
+	int ret[21 * 21];
+	int repeat[21 * 21];
+	int tmp;
+	int n, k=0;
+	for(int i=-10; i<=10; i++) {
+		for(int j=-10; j<=10; j++) {
+			tmp = get_pixel_data(x+i, y+j);
+			n = find_num(ret, tmp, 21 * 21);
+			if(n != -1) repeat[n]++;
+			else ret[k++] = tmp;
+		}
+	}
+	return ret[find_big(repeat, 21*21)];
+}
+
+int Bitmap::find_num(int* ar, int v, int s)
+{
+	for(int i=0; i<s; i++) {
+		if(ar[i] == v) return i;
+	}
+	return -1;
+}
+
+int Bitmap::find_big(int *ar, int s)
+{
+	int index = 0;
+	for(int i=0; i<s; i++) {
+		if(ar[i] > ar[index]) index = i;
+	}
+	return index;
+}
+
 int Bitmap::set_pixel_data(int x, int y, unsigned char v)
 {
 	int shift = intSize - 1 - (x % intSize);
@@ -46,7 +88,7 @@ int Bitmap::set_pixel_data(int x, int y, unsigned char v)
 	mask = mask & v;
 	for(int i=0; i<bit_per_pixel; i++) {
 		v = v << shift--;
-		bitmap[i][y][x/intSize] = v & mask;
+		bitmap[i][y][x/intSize] = (bitmap[i][y][x/intSize] & ~mask) | (v & mask);
 	}
 	return mask;//쓸모없다
 }

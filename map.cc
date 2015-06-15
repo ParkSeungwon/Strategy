@@ -11,20 +11,11 @@ Map::Map(char* filename) {
 bool Map::inRange(unsigned int *bitmask, CGPoint position) {
 
 Map::Map(char* filename) {
-	ifstream fin(filename);//width, height, & bitwise info about terrains
-	fin >> width >> height;//한글도 잘 되고 나노도 있고 우리 사나이 
-	read_mapfile(char* filename);
-	terrain_bitmap.alloc(width, height, 4);
-	terrain_bitmap.
-	terrainTypeBitmask = (unsigned int) malloc(width * height * 4 / intSize +1);//need 4 bit to show terrain type(less than 16)
-	while(fin != null) fin >> terrainTypeBitmask++;
-	
-	fin.close();
-}
-
-void Map::read_mapfile(char* filename)
-{
-	somehow_manage_to_init();
+	PNG_interface::png_to_terrain_city_bitmap(filename, &terrain_bitmap, &city_bitmap);
+	width = terrain_bitmap.width;
+	height = terrain_bitmap.height;
+	recon_bitmap.alloc(width, height, joined_teams);
+	weapon_range_bitmap.alloc(width, height, joined_teams);
 }
 
 bool Map::inRange(unsigned int *bitmask, CGPoint position) {
@@ -49,4 +40,4 @@ void deployUnit(Unit &unit)
 	int i;
 	while (deployedUnit[unit.team][i++ ] != null);
 	deployedUnit[unit.team][i] = &unit;
- }
+}
