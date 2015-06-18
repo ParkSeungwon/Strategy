@@ -20,6 +20,7 @@ class Weapon {
 		
 	public:
 		int operand>>(Unit &enenmy);		//공격 함수
+		int in_range(Unit &enemy);
 		Unit* selectTarget();
 		unsigned int *bitmask(int mapWidth, int mapHeight, CGPoint unitPosition);
 		int reload();

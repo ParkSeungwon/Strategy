@@ -9,7 +9,6 @@
 //#include <iostream>
 
 //#include "Terrain.h"
-using namespace std;
 
 class Unit : public Waypoint<T>
 {
@@ -18,9 +17,9 @@ class Unit : public Waypoint<T>
 	const static int maxWayPoint = 10;
 	int minimumSpeed;
 	int maximumSpeed;
-	WhereAbout positionInfo;
-	Waypoint waypoint[maxWayPoint];
-
+	terrain_bitmap* ptr_terrain_bitmap;
+	recon_bitmap* ptr_recon_bitmap;
+	weapon_range_bitmap* ptr_weapon_range_bitmap;
 	CGPoint getTurnCenter(CGPoint destination);
 	//CGPoint getTurnCenterByRadiusAndTheta(float r, float theta);
 	float getTurnRadius(CGPoint destination);
@@ -43,29 +42,28 @@ public:
 	int currentHealth;
 	
 	Weapon* weaponSlot[10];
-	WhereAbout position;
-	Waypoint waypoint;
-	
-	//@property (nonatomic) int maximumAcceleration;
 	unsigned int intelligenceRadius;
 	
-	unsigned int terrainPenaltyPercent;
-	NSMutableArray *wayPoints; //CGPoint or Target Unit
-	int time_pass(int time);
 	int move(int start_time, int end_time);
 	CGPoint getCurrentPosition() {return *this->currentPosition;}
 	BOOL canEquip:(Weapon *)weapon;
-	void moveToAtSpeed(CGPoint destination,int speed);
-	//- (void) followOtherUnit:(Unit *)otherUnit;
-	float calculateMovableRadiusForRadian:(float)radius;
-	//- (void) calculateMovableAreaOnMap:(Map *)map;
-	//- (void) addWayPoint:(CGPoint)destination atSpeed:(int)speed;
 	
 	Unit(string _unitName, CGPoint _position, float _headingToward);
-;
+
+private:
+	float distance_to(Unit& unit) const;
+	float angle_to(Unit& unit) const;
+};
 
 unsigned int Unit::price;
 
+class TerrainUnit : public Unit//지형효과를 받는 유닛들의 모클래스
+{
+public:
+	int insert_waypoint(FPoint turn_center, int spd, int dur);//return inserted nth waypoint 지형효과를 고려함
+	virtual WhereAbout<int> time_pass(int time);//버추얼
+	static unsigned int terrainPenaltyPercent;
+};
 
 class AirUnit : public Unit 
 {
@@ -73,20 +71,19 @@ class AirUnit : public Unit
 	AirUnit(string _unitName, CGPoint _currentPosition) : Unit(_unitName, _currentPosition);
 };
 
-class ArmorUnit : public Unit 
+class ArmorUnit : public TerrainUnit 
 {
-	WhereAbout<> time_pass(int time);	
-	int insert_waypoint(CGPoint turn, int spd, int dur);//return inserted nth waypoint
+	WhereAbout<int> time_pass(int time);	
 };
 
-class InfantryUnit : public Unit 
+class InfantryUnit : public TerrainUnit 
 {
-	WhereAbout<> time_pass(int time);
-	int insert_waypoint(CGPoint turn, int spd, int dur);//return inserted nth waypoint
+	WhereAbout<int> time_pass(int time);
 };
 
-class ShipUnit : public Unit 
+class ShipUnit : public TerrainUnit 
 {
-	WhereAbout<> time_pass(int time);
+	WhereAbout<int> time_pass(int time);
+
 };
 

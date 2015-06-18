@@ -31,3 +31,41 @@ void deployUnit(Unit &unit)
 	while (deployedUnit[unit.team][i++ ] != null);
 	deployedUnit[unit.team][i] = &unit;
 }
+
+int Map::generate_recon_bitmap() const
+{
+	Unit* u;
+	IPoint p;
+	Clip cl;
+	recon_bitmap.clear();
+	for(int i=0; i<maxTeam; i++) {
+		for(int j=0; j<maxUnit; j++) {
+			u = deployedUnits[i][j];
+			p = u->position;
+			recon_bitmap.bit_circle(&cl, p, u->intelligenceRadius);//generate circle bit clip
+			recon_bitmap.paste_clip(&cl, recon_bitmap.bitmap[i], OR);//paste to own team(i)'s layer
+		}
+	}
+	return i * j;
+}
+
+int Map::generate_weapon_range_bitmap() const
+{
+	Unit* u;
+	IPoint p;
+	Clip cl;
+	Weapon* w;
+	weapon_range_bitmap.clear();
+	for(int i=0; i<maxTeam; i++) {
+		for(int j=0; j<maxUnit; j++) {
+			u = deployedUnits[i][j];
+			p = u->position;
+			for(int k=0; k<maxWeapon; k++) {
+				w = &weaponSlot[k];
+				weapon_range_bitmap.bit_arc_circle(&cl, p, w->shootingRangeMin, w->shootingRangeMax, w->shootingAngleFrom, w->shootingAngleTo);
+				weapon_range_bitmap.paste_clip(&cl, weapon_range_bitmap[i], OR);
+			}
+		}
+	}
+	return i * j;
+}

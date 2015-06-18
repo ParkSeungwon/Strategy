@@ -16,6 +16,18 @@ int Bitmap::alloc(int w, int h, int bpp)
 	return (width/intSize+1) * h * bpp;
 }
 
+int Bitmap::clear()
+{
+	for(int i=0; i<bit_per_pixel; i++) {
+		for(int y=0; y<height; y++) {
+			for(int x=0; x*intSize<width; x++) {//be careful
+				bitmap[i][y][x] = 0;
+			}
+		}
+	}
+	return x * y * i;
+}
+
 Bitmap::~Bitmap()
 {
 	for(int i = 0; i < bit_per_pixel; i++) {
@@ -123,12 +135,12 @@ int Bitmap::flat_line(unsigned int** pane, IPoint s, int l)
 	return ret;
 }
 
-int Bitmap::flat_line(Clip* cl, IPoint s, int l)
+int Clip::flat_line(IPoint s, int l)
 {
 	//boundary check
-	if(s.y < 0 || s.y >= cl->array_height || l <= 0) return -1;
+	if(s.y < 0 || s.y >= height || l <= 0) return -1;
 	if(s.x < 0) s.x = 0;
-	if(s.x + l >= cl->array_width * intSize) l = cl->array_width * intSize - s.x;
+	if(s.x + l >= width) l = width - s.x;
 	
 	//use coordinate of clip
 	unsigned int mask;
@@ -136,52 +148,52 @@ int Bitmap::flat_line(Clip* cl, IPoint s, int l)
 	if(l < intSize - rest) {
 		mask = 0xffffffff << (intSize - l);
 		mask = mask >> rest;
-		cl->clip[s.y][s.x / intSize] = mask;
+		clip[s.y][s.x / intSize] = mask;
 	} else {
 		mask = 0xffffffff >> rest;
-		cl->clip[s.y][s.x / intSize] = mask;
+		clip[s.y][s.x / intSize] = mask;
 		l -= intSize - rest;//앞에서 쓴 부분의 비트맵을 뺀다.
 		rest = l % intSize;
 		int i;
-		for(i=1; i <= l/intSize; i++) cl->clip[s.y][s.x / intSize + i] = 0xffffffff;
+		for(i=1; i <= l/intSize; i++) clip[s.y][s.x / intSize + i] = 0xffffffff;
 		mask = 0xffffffff << (intSize - rest);
-		cl->clip[s.y, s.x / intSize + i] = mask;
+		clip[s.y, s.x / intSize + i] = mask;
 	}
 	return l / intSize;
 }
 
-IPoint Bitmap::bit_circle(Clip *cl, IPoint c, int r)
+IPoint Clip::bit_circle(IPoint c, int r)
 {
-	c.x -= intSize * cl->x;
-	c.y -= cl->y;
+	c.x -= intSize * lower_left.x;
+	c.y -= lower_left.y;
 	IPoint s;
 	for(s.y = c.y - r; s.y <= c.y + r; s.y++) {
 		s.x = c.x - sqrtf(r*r - (c.y-s.y)*(c.y-s.y));
-		flat_line(cl, s, 2*(s.x-c.x) +1);
+		flat_line(s, 2*(s.x-c.x) +1);
 	}
 	return c;
 }
 
-float Bitmap::bit_line(Clip* cl, IPoint c, float theta)//if theta is over PI, right area of  the line
+float Clip::bit_line(IPoint c, float theta)//if theta is over PI, right area of  the line
 {
 	theta = correct_angle(theta);
-	c.x -= cl.x * intSize;
-	c.y -= cl.y;
+	c.x -= lower_left.x;
+	c.y -= lower_left.y;
 	float tan = tanf(theta);
 	int l;
-	for(int y = 0; y < cl->y; y++) {
+	for(int y = 0; y < lower_left.y; y++) {
 		l = c.x - (y - c.y) / tan;
-		if(theta < M_PI) flat_line(cl, 0, l);
-		else flat_line(cl, l, cl->array_width * intSize - l);
+		if(theta < M_PI) flat_line(0, l);
+		else flat_line(l, width * intSize - l);
 	}
 	return tan;
 }
 
-IPoint Bitmap::bit_arc(Clip* cl, IPoint c, float fr, float to)
+IPoint Clip::bit_arc(IPoint c, float fr, float to)
 {
-	c.x -= cl->x * intSize;
-	c.y -= cl->y;
-	bit_line(cl, c, fr);
+	c.x -= lower_left.x;
+	c.y -= lower_left.y;
+	bit_line(c, fr);
 	Clip cl1 = create_clip(cl->x, cl->y, cl->array_width, cl->array_height);
 	bit_line(&cl1, c, correct_angle(to + M_PI));
 	if(to < from) to += 2 * M_PI;//한바퀴 도는 경우 고려
@@ -191,31 +203,32 @@ IPoint Bitmap::bit_arc(Clip* cl, IPoint c, float fr, float to)
 	return c;
 }
 
-IPoint Bitmap::bit_arc_circle(Clip* cl, IPoint c, int rf, int rt, float af, float at)
+IPoint Clip::bit_arc_circle(IPoint c, int rf, int rt, float af, float at)
 {
-	c.x -= cl->x * intSize;
-	c.y -= cl->y;
-	bit_circle(cl, c, rt);
-	Clip cl1 = create_clip(cl->x, cl->y, cl->array_width, cl->array_height);
-	Clip cl2 = create_clip(cl->x, cl->y, cl->array_width, cl->array_height);
-	bit_circle(&cl1, c, rf);
-	bit_arc(&cl2, c, af, at);
-	paste_clip(&cl1, cl, MINUS);
-	paste_clip(&cl2, cl, AND);
-	free_clip(&cl1);
-	free_clip(&cl2);
+	c.x -= lower_left.x;
+	c.y -= lower_left.y;
+	bit_circle(c, rt);
+	Clip *cl1 = new Clip(lower_left, width, height);
+	Clip *cl2 = new Clip(lower_left, width, height);
+	bit_circle(cl1, c, rf);
+	bit_arc(cl2, c, af, at);
+	paste_clip(cl1, this, MINUS);
+	paste_clip(cl2, this, AND);
+	free_clip(cl1);
+	free_clip(cl2);
 	return c;
 }
 
-Clip Bitmap::join_clip(Clip *cl1, Clip *cl2, bitOperation op)
+Clip* Clip::join_clip(Clip &cl1, Clip &cl2, bitOperation op)
 {	
 	//new clip region to include both clips
-	int x = min(cl1.x, cl2.x);
-	int y = min(cl1.y, cl2.y);
-	int array_width = max(cl1.x + cl1.array_width * intSize, cl2.x + cl2.width * intSize) - cl.x;
-	array_width = cl.array_width / intSize;
-	int array_height = max(cl1.y + cl1.array_height, cl2.y + cl2.height) - cl.y;
-	Clip cl = create_clip(x, y, array_width, array_height);
+	int x = min(cl1.lower_left.x, cl2.lower_left.x);
+	int y = min(cl1.lower_left.y, cl2.lower_left.y);
+	int width = max(cl1.lower_left.x + cl1.width, cl2.lower_left.x + cl2.width) - cl.lower_left.x;
+	width = cl.width / intSize;
+	int height = max(cl1.lower_left.y + cl1.height, cl2.lower_left.y + cl2.height) - cl.lower_left.y;
+	IPoint p; p.x = x; p.y = y;
+	Clip *cl = new Clip(p, width, height);
 	paste_clip(cl1, cl, SUBST);
 	paste_clip(cl2, cl, op);
 	return cl;
@@ -235,34 +248,36 @@ Clip Bitmap::copy_clip(IPoint c, int r, int layer)
 	return cl;
 }
 
-Clip Bitmap::create_clip(IPoint c, int r)
+Clip* Clip::circle_clip(IPoint c, int r)
 {
-	return create_clip((c.x-r)/intSize, c.y-r, (2*r+1)/intSize, 2*r+1);
-}
-
-Clip Bitmap::create_clip(int x, int y, int width, int height)
-{
-	Clip cl;
-	cl.x = x;
-	cl.y = y;
-	cl.width = width;
-	cl.height = height;
-	
-	//memory allocation
-	cl.clip = new unsigned int*[height];
-	for(int y = 0; y < cl.array_height; y++) {
-		cl.clip[y] = new unsigned int[cl.array_width];
-	}
+	IPoint p;
+	p.x = c.x - r;
+	p.y = c.y - r;
+	Clip* cl = new Clip(p, (2*r+1)/intSize, 2*r+1);
 	return cl;
 }
 
-bool Bitmap::free_clip(Clip* cl) 
+Clip::Clip(IPoint p, int w, int h)
 {
-	for(int y = 0; y <= cl->array_height; y++) {
-		delete [] cl->clip[y];
+	int rest = p.x % intSize;
+	p.x = p.x - share;
+	this->lower_left = p;
+	width =((w + share) / intSize + 1) * intSize;
+	height = h;
+	
+	//memory allocation
+	clip = new unsigned int*[height];
+	for(int y = 0; y < height; y++) {
+		clip[y] = new unsigned int[width/intSize];
 	}
-	delete [] cl->clip;
-	return true;
+}
+
+Clip::~Clip() 
+{
+	for(int y = 0; y < height; y++) {
+		delete [] clip[y];
+	}
+	delete [] clip;
 }
 
 void Bitmap::paste_clip(Clip* cl, int layer)
@@ -275,7 +290,7 @@ void Bitmap::paste_clip(Clip* cl, int layer)
 	}
 }
 
-int Bitmap::paste_clip(Clip *source, Clip *dest, bitOperation op)
+int Clip::paste_clip(Clip *source, Clip *dest, bitOperation op)
 {
 	int diffx = source->x - dest->x;
 	int diffy = source->y - dest->y;

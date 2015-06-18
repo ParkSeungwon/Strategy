@@ -14,5 +14,7 @@ public:
 	terrainType getTerrainType(CGPoint _position);
 	Map(char* PNG_filename);//Read png file to init bitmaps
 	void deployUnit(Unit &unit);
+	int generate_recon_bitmap() const;//return showing unit count
+	int generate_weapon_range_bitmap() const;
 };
 

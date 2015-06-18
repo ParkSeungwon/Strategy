@@ -13,6 +13,23 @@
 
 #include <string>
 
+Unit::Unit(terrain_bitmap *tb, recon_bitmap *rb, weapon_range_bitmap *wb)
+{
+	ptr_terrain_bitmap = tb;
+	ptr_recon_bitmap = rb;
+	ptr_weapon_range_bitmap = wb;
+}
+
+int Unit::in_range(Weapon& weapon, Unit& enemy)
+{
+	if(lapsedTimeAfterFire < fireRate) return 0;
+	if(currentRounds <= 0) return 0;
+	(enemy.position.x - position.x)
+	weapon.shootingRangeMin;
+	weapon.shootingRangeMax;
+	weapon.shootingAngleFrom;
+	weapon.shootingAngleTo;
+
 Unit::Unit(string _unitName, CGPoint _currentPosition) 
 {
 	ifstream fin("Unit.def");
@@ -48,9 +65,9 @@ Unit::time_pass(int time) {
 	weapon.time_pass();
 }
 
-WhereAbout<> ArmorUnit::time_pass(int time)
+WhereAbout<> ArmorUnit::time_pass(int time) const
 {
-	WhereAbout<float> wh;
+	WhereAbout<float> wh = *this;
 	wh = this->position;
 	TerrainType tt;
 	float elapse = 0;
@@ -58,67 +75,66 @@ WhereAbout<> ArmorUnit::time_pass(int time)
 		wh.time_pass(0.1 * i);
 		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
-			case city: elapse += 10 / (100 - City::movePenaltyVsArmor); break;
-			case capital: elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
-			case harbor: elapse += 10 / (100 - Harbor::movePenaltyVsArmor); break;
-			case airport: elapse += 10 / (100 - Airport::movePenaltyVsArmor); break;
-			case field: elapse += 10 / (100 - Field::movePenaltyVsArmor); break;
-			case mountain: elapse += 10 / (100 - Mountain::movePenaltyVsArmor); break;
-			case river: elapse += 10 / (100 - River::movePenaltyVsArmor); break;
-			case forest: elapse += 10 / (100 - Forest::movePenaltyVsArmor); break;
-			case swamp: elapse += 10 / (100 - Swamp::movePenaltyVsArmor); break;
-			case road: elapse += 10 / (100 - Road::movePenaltyVsArmor); break;
-			case hill: elapse += 10 / (100 - Hill::movePenaltyVsArmor); break;
-			case fort: elapse += 10 / (100 - Fort::movePenaltyVsArmor); break;
-			case desert: elapse += 10 / (100 - Desert::movePenaltyVsArmor); break;
+			case city: 		elapse += 10 / (100 - City::movePenaltyVsArmor); 	break;
+			case capital: 	elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
+			case harbor: 	elapse += 10 / (100 - Harbor::movePenaltyVsArmor); 	break;
+			case airport: 	elapse += 10 / (100 - Airport::movePenaltyVsArmor); break;
+			case field: 	elapse += 10 / (100 - Field::movePenaltyVsArmor); 	break;
+			case mountain: 	elapse += 10 / (100 - Mountain::movePenaltyVsArmor);break;
+			case river: 	elapse += 10 / (100 - River::movePenaltyVsArmor); 	break;
+			case forest: 	elapse += 10 / (100 - Forest::movePenaltyVsArmor); 	break;
+			case swamp: 	elapse += 10 / (100 - Swamp::movePenaltyVsArmor); 	break;
+			case road: 		elapse += 10 / (100 - Road::movePenaltyVsArmor); 	break;
+			case hill: 		elapse += 10 / (100 - Hill::movePenaltyVsArmor); 	break;
+			case fort: 		elapse += 10 / (100 - Fort::movePenaltyVsArmor); 	break;
+			case desert: elapse += 10 / (100 - Desert::movePenaltyVsArmor); 	break;
 			case sea: elapse += 10000; 
 		}
-		if(elapse > time) break;
+		if(elapse >= time) break;
 	}
 	WhereAbout<> ret;
 	ret = wh;
 	return ret;
 }
 
-WhereAbout<> InfantryUnit::time_pass(int time)
+WhereAbout<int> InfantryUnit::time_pass(int time) const
 {
-	WhereAbout<float> wh;
-	wh = this->position;
+	WhereAbout<float> wh = *this;//여기에서만 유일하게 float형이 쓰임
 	TerrainType tt;
 	float elapse = 0;
 	for(int i=0; i < time*10; i++) {
 		wh.time_pass(0.1 * i);
 		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {
-			case city:		elapse += 10 / (100 - City::movePenaltyVsInfantry);	break;
-			case capital:	elapse += 10 / (100 - Capital::movePenaltyVsInfantry); break;
-			case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsInfantry); break;
-			case airport:	elapse += 10 / (100 - Airport::movePenaltyVsInfantry); break;
-			case field:		elapse += 10 / (100 - Field::movePenaltyVsInfantry); break;
+			case city:		elapse += 10 / (100 - City::movePenaltyVsInfantry);		break;
+			case capital:	elapse += 10 / (100 - Capital::movePenaltyVsInfantry); 	break;
+			case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsInfantry); 	break;
+			case airport:	elapse += 10 / (100 - Airport::movePenaltyVsInfantry); 	break;
+			case field:		elapse += 10 / (100 - Field::movePenaltyVsInfantry); 	break;
 			case mountain:	elapse += 10 / (100 - Mountain::movePenaltyVsInfantry); break;
-			case river:		elapse += 10 / (100 - River::movePenaltyVsInfantry); break;
-			case forest:	elapse += 10 / (100 - Forest::movePenaltyVsInfantry); break;
-			case swamp:		elapse += 10 / (100 - Swamp::movePenaltyVsInfantry); break;
-			case road:		elapse += 10 / (100 - Road::movePenaltyVsInfantry); break;
-			case hill:		elapse += 10 / (100 - Hill::movePenaltyVsInfantry); break;
-			case fort:		elapse += 10 / (100 - Fort::movePenaltyVsInfantry); break;
-			case desert:	elapse += 10 / (100 - Desert::movePenaltyVsInfantry); break;
+			case river:		elapse += 10 / (100 - River::movePenaltyVsInfantry); 	break;
+			case forest:	elapse += 10 / (100 - Forest::movePenaltyVsInfantry); 	break;
+			case swamp:		elapse += 10 / (100 - Swamp::movePenaltyVsInfantry); 	break;
+			case road:		elapse += 10 / (100 - Road::movePenaltyVsInfantry); 	break;
+			case hill:		elapse += 10 / (100 - Hill::movePenaltyVsInfantry); 	break;
+			case fort:		elapse += 10 / (100 - Fort::movePenaltyVsInfantry); 	break;
+			case desert:	elapse += 10 / (100 - Desert::movePenaltyVsInfantry); 	break;
 			case sea:		elapse += 10000; 
 		}
-		if(elapse > time) break;
+		if(elapse >= time) break;
 	}
-	WhereAbout<> ret;
+	WhereAbout<int> ret;
 	ret = wh;
 	return ret;
 }
 
-WhereAbout<> ShipUnit::time_pass(int time)
+WhereAbout<int> ShipUnit::time_pass(int time) const
 {
-	WhereAbout<float> wh;
-	wh = this->position;
+	WhereAbout<float> wh = *this;
+	
 	TerrainType tt;
 	float elapse = 0;
-	for(int i=0; i < time*10; i++) {
+	for(int i=0; i <= time*10; i++) {
 		wh.time_pass(0.1 * i);
 		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {
@@ -127,14 +143,14 @@ WhereAbout<> ShipUnit::time_pass(int time)
 			case harbor: elapse += 10 / (100 - Harbor::movePenaltyVsShip); break;
 			default: elapse += 10000; 
 		}
-		if(elapse > time) break;
+		if(elapse >= time) break;
 	}
-	WhereAbout<> ret;
+	WhereAbout<int> ret;
 	ret = wh;
 	return ret;
 }
 
-int ArmorUnit::insert_waypoint(CGPoint turn, int spd, int dur)
+int TerrainUnit::insert_waypoint(FPoint turn, int spd, int dur)
 {
 	int i;
 	for(i = 0; i < MAX_Waypoints; i++) {
@@ -144,7 +160,10 @@ int ArmorUnit::insert_waypoint(CGPoint turn, int spd, int dur)
 		waypoints[i].speed = spd;
 		waypoints[i].turn_center = turn;
 		waypoints[i].duration = dur;
-		waypoints[i+1] = waypoints[i].time_pass(dur);//reach here by this waypoint
+		WhereAbout *tmp = this;
+		this = &waypoints[i];//maybe error
+		waypoints[i+1] = time_pass(dur);//reach here by this waypoint, use own time_pass
+		this = tmp;
 		waypoints[i+1].duration = 0;//work as a mark
 	} else message("Way points limit reached!!");
 	return i;
@@ -217,3 +236,13 @@ float Unit::calculateMovableDistanceForPolar(float theta)
 }
  */
 
+float Unit::distance_to(Unit* u) const
+{
+	return sqrtf((u.position.x - position.x) * (u.position.x - position.x) + 
+			(u.position.y - position.y) * (u.position.y - position.y));
+}
+
+float Unit::anglt_to(Unit& u) const
+{
+	u.
+	
