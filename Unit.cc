@@ -41,13 +41,115 @@ bool Unit::canEquip(Weapon *weapon)
     return YES;
 }
 
-int Unit::time_pass(int time)
-{
+Unit::time_pass(int time) {
 	move(time);
 	attack(time);
 
 	weapon.time_pass();
 }
+
+WhereAbout<> ArmorUnit::time_pass(int time)
+{
+	WhereAbout<float> wh;
+	wh = this->position;
+	TerrainType tt;
+	float elapse = 0;
+	for(int i=0; i < time*10; i++) {
+		wh.time_pass(0.1 * i);
+		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
+		switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
+			case city: elapse += 10 / (100 - City::movePenaltyVsArmor); break;
+			case capital: elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
+			case harbor: elapse += 10 / (100 - Harbor::movePenaltyVsArmor); break;
+			case airport: elapse += 10 / (100 - Airport::movePenaltyVsArmor); break;
+			case field: elapse += 10 / (100 - Field::movePenaltyVsArmor); break;
+			case mountain: elapse += 10 / (100 - Mountain::movePenaltyVsArmor); break;
+			case river: elapse += 10 / (100 - River::movePenaltyVsArmor); break;
+			case forest: elapse += 10 / (100 - Forest::movePenaltyVsArmor); break;
+			case swamp: elapse += 10 / (100 - Swamp::movePenaltyVsArmor); break;
+			case road: elapse += 10 / (100 - Road::movePenaltyVsArmor); break;
+			case hill: elapse += 10 / (100 - Hill::movePenaltyVsArmor); break;
+			case fort: elapse += 10 / (100 - Fort::movePenaltyVsArmor); break;
+			case desert: elapse += 10 / (100 - Desert::movePenaltyVsArmor); break;
+			case sea: elapse += 10000; 
+		}
+		if(elapse > time) break;
+	}
+	WhereAbout<> ret;
+	ret = wh;
+	return ret;
+}
+
+WhereAbout<> InfantryUnit::time_pass(int time)
+{
+	WhereAbout<float> wh;
+	wh = this->position;
+	TerrainType tt;
+	float elapse = 0;
+	for(int i=0; i < time*10; i++) {
+		wh.time_pass(0.1 * i);
+		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
+		switch(tt) {
+			case city:		elapse += 10 / (100 - City::movePenaltyVsInfantry);	break;
+			case capital:	elapse += 10 / (100 - Capital::movePenaltyVsInfantry); break;
+			case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsInfantry); break;
+			case airport:	elapse += 10 / (100 - Airport::movePenaltyVsInfantry); break;
+			case field:		elapse += 10 / (100 - Field::movePenaltyVsInfantry); break;
+			case mountain:	elapse += 10 / (100 - Mountain::movePenaltyVsInfantry); break;
+			case river:		elapse += 10 / (100 - River::movePenaltyVsInfantry); break;
+			case forest:	elapse += 10 / (100 - Forest::movePenaltyVsInfantry); break;
+			case swamp:		elapse += 10 / (100 - Swamp::movePenaltyVsInfantry); break;
+			case road:		elapse += 10 / (100 - Road::movePenaltyVsInfantry); break;
+			case hill:		elapse += 10 / (100 - Hill::movePenaltyVsInfantry); break;
+			case fort:		elapse += 10 / (100 - Fort::movePenaltyVsInfantry); break;
+			case desert:	elapse += 10 / (100 - Desert::movePenaltyVsInfantry); break;
+			case sea:		elapse += 10000; 
+		}
+		if(elapse > time) break;
+	}
+	WhereAbout<> ret;
+	ret = wh;
+	return ret;
+}
+
+WhereAbout<> ShipUnit::time_pass(int time)
+{
+	WhereAbout<float> wh;
+	wh = this->position;
+	TerrainType tt;
+	float elapse = 0;
+	for(int i=0; i < time*10; i++) {
+		wh.time_pass(0.1 * i);
+		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
+		switch(tt) {
+			case sea: elapse += 10 / (100 - Sea::movePenaltyVsShip); break;
+			case river: elapse += 10 / (100 - River::movePenaltyVsShip); break;
+			case harbor: elapse += 10 / (100 - Harbor::movePenaltyVsShip); break;
+			default: elapse += 10000; 
+		}
+		if(elapse > time) break;
+	}
+	WhereAbout<> ret;
+	ret = wh;
+	return ret;
+}
+
+int ArmorUnit::insert_waypoint(CGPoint turn, int spd, int dur)
+{
+	int i;
+	for(i = 0; i < MAX_Waypoints; i++) {
+		if(waypoints[i].duration == 0) break;
+	}
+	if(i < MAX_Waypoints) {
+		waypoints[i].speed = spd;
+		waypoints[i].turn_center = turn;
+		waypoints[i].duration = dur;
+		waypoints[i+1] = waypoints[i].time_pass(dur);//reach here by this waypoint
+		waypoints[i+1].duration = 0;//work as a mark
+	} else message("Way points limit reached!!");
+	return i;
+}
+
 
 int Unit::move(int start, int end)//increase durong a turn, move by one_tick
 {

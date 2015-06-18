@@ -11,9 +11,9 @@
 //#include "Terrain.h"
 using namespace std;
 
-class Unit 
+class Unit : public Waypoint<T>
 {
-private:
+	Unit(terrain_bitmap& tb) {t_bitmap = tb;};
 	string unitName;
 	const static int maxWayPoint = 10;
 	int minimumSpeed;
@@ -34,7 +34,8 @@ protected:
 	int fuelCapacity;
 	int fuel;
 	unsigned int experience;
-	
+	terrain_bitmap& t_bitmap;
+
 public:
 	int team;
 	static unsigned int unitPrice;
@@ -74,16 +75,18 @@ class AirUnit : public Unit
 
 class ArmorUnit : public Unit 
 {
-
+	WhereAbout<> time_pass(int time);	
+	int insert_waypoint(CGPoint turn, int spd, int dur);//return inserted nth waypoint
 };
 
 class InfantryUnit : public Unit 
 {
-
+	WhereAbout<> time_pass(int time);
+	int insert_waypoint(CGPoint turn, int spd, int dur);//return inserted nth waypoint
 };
 
 class ShipUnit : public Unit 
 {
-
+	WhereAbout<> time_pass(int time);
 };
 

@@ -17,3 +17,4 @@ Map::create_terrain_bitmap(char *filename)
 	
 }
 
+

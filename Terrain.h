@@ -120,7 +120,7 @@ class River : public Land
 {
 public:
 };
-unsigned int River::color_code = 0x0;
+unsigned int River::color_code = 0x007f7f;
 int River::movePenaltyVsInfantry = 70;
 int River::movePenaltyVsArmor = 70;
 int River::movePenaltyVsShip = 30;

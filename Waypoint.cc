@@ -10,10 +10,10 @@ float WhereAbout::correct_angle(float f)
 	return f;
 }
 
-WhereAbout WhereAbout::time_pass(int time)
+WhereAbout WhereAbout::time_pass(T time)
 {
 //	if(duration == 0) return *this;
-	WhereAbout wh;
+	WhereAbout<int> wh;
 	int rt = 0;
 	if(time > duration) time = duration;
 	float x = position.x - turn_center.x;
@@ -39,7 +39,8 @@ WhereAbout WhereAbout::time_pass(int time)
 	return wh;
 }
 
-WhereAbout Waypoint::time_pass(int time)
+
+WhereAbout Waypoint::time_pass(T time)
 {
 	int i, t;
 	for(i=0, time > 0; i++) {
@@ -61,7 +62,7 @@ int Waypoint::moved_distance(int start, int end) {
 	return distance;
 }
 
-Nth Waypoint::nth_way(int time) {
+Nth Waypoint::nth_way(T time) {
 	int i, t;
 	for(i=0, time > 0; i++) {
 		t = time;
