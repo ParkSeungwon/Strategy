@@ -10,7 +10,23 @@
 #include "Util.h"
 #include "Weapon.h"
 
-int Weapon::operand>>(Unit &enenmy) 
+int Weapon::operator + (Unit &e) 
+{
+	if(currentRounds == 0) return -1;
+	if(lapsedTimeAfterFire < fireRate) return -2;
+	switch(e.type) {
+		case AirUnit:
+			return firePower * hitRatioVSAir * e.evadeRatio / 100;
+		case InfantryUnit:
+			return firePower * hitRatioVsInfantry * e.evadeRatio /100;
+		case ArmorUnit:
+			return firePower * hitRatioVsArmor * e.evadeRatio /100;
+		default:
+			return firePower * hitRatioVsShip * e.evadeRatio / 100;
+	}
+}
+
+int Weapon::operator >> (Unit &e) 
 {
 	int hitRatio;
 	switch type(enenmy) {
@@ -21,7 +37,7 @@ int Weapon::operand>>(Unit &enenmy)
 			hitRatio = hitRatioVsArmor;
 			break;
 		case: AirUnit
-			hitRatio = hitRatioVSAir
+			hitRatio = hitRatioVSAir;
 			break;
 		case: ShipUnit
 			hitRatio = hitRatioVsShip;
@@ -37,12 +53,21 @@ int Weapon::operand>>(Unit &enenmy)
 	int dice = randomDice(100);				//0~99사이의 수를 리턴하는 유틸함수
 	playSound();
 	drawVisual();
-	if (dice  >= hitRatio * (100 - enenmy.getEvadeRatio())/100 { 
+	if (dice  >= hitRatio * (100 - enenmy.getEvadeRatio())/100 {
 		enenmy.currentHealth -= firePower;
 	}
 	return dice;
 }
 
+Clip* fire_range()
+{
+	IPoint p; 
+	p.x = shootingRangeMax + 1; 
+	p.y = shootingRangeMax + 1;
+	Clip* cl = new Clip(p, shootingRangeMax);
+	cl->bit_arc_circle(p, shootingRangeMin, shootingRangeMax, shootingAngleFrom, shootingAngleTo);
+	return cl;
+}
 
 Unit* Weapon::selectTarget() 
 {

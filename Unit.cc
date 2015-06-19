@@ -73,7 +73,7 @@ WhereAbout<> ArmorUnit::time_pass(int time) const
 	float elapse = 0;
 	for(int i=0; i < time*10; i++) {
 		wh.time_pass(0.1 * i);
-		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
+		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
 			case city: 		elapse += 10 / (100 - City::movePenaltyVsArmor); 	break;
 			case capital: 	elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
@@ -104,7 +104,7 @@ WhereAbout<int> InfantryUnit::time_pass(int time) const
 	float elapse = 0;
 	for(int i=0; i < time*10; i++) {
 		wh.time_pass(0.1 * i);
-		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
+		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {
 			case city:		elapse += 10 / (100 - City::movePenaltyVsInfantry);		break;
 			case capital:	elapse += 10 / (100 - Capital::movePenaltyVsInfantry); 	break;
@@ -135,8 +135,8 @@ WhereAbout<int> ShipUnit::time_pass(int time) const
 	TerrainType tt;
 	float elapse = 0;
 	for(int i=0; i <= time*10; i++) {
-		wh.time_pass(0.1 * i);
-		tt = t_bitmap.get_pixel_data((int)wh.position.x, (int)wh.position.y);
+		wh.time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
+		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {
 			case sea: elapse += 10 / (100 - Sea::movePenaltyVsShip); break;
 			case river: elapse += 10 / (100 - River::movePenaltyVsShip); break;
@@ -147,6 +147,44 @@ WhereAbout<int> ShipUnit::time_pass(int time) const
 	}
 	WhereAbout<int> ret;
 	ret = wh;
+	return ret;
+}
+
+int Unit::movable_line(IPoint tc, int time, Clip *cl)
+{
+	float start_angle = angle(tc, this->position);
+	
+	WhereAbout<int> wh = *this;
+	this->speed = maximumSpeed;
+	this->turn_center = tc;
+	time_pass(time);//call the time_pass of this Unit
+	float angle_to = angle(tc, this->position);
+	float radius = distance_between(tc, wh.position);
+	this = &wh;//restore member value
+	
+	if(angle_to >= start_angle) ret->bit_arc_line(tc, radius, start_angle, angle_to);
+	else {
+		cl->bit_arc_line(tc, radius, start_angle, 2 * M_PI);
+		cl->bit_arc_line(tc, radius, 0, angle_to);
+	}
+	return radius * (angle_to - angle_from);
+}
+
+Clip* Unit::movable_area(int time)
+{
+	IPoint tc;
+	distance_to(tc)
+	tc.y = -1 / heading_toward * (tc.x - position.x) + position.y;
+	Clip *ret = new Clip(position, maximumSpeed * time);
+	IPoint p;
+	for(int r=minimumTurnRadius; r <= maximumSpeed * time * 10; r++) {//10? enough?
+		for(int i=-1; i<= 1; i += 2) {//to calculate both side
+			p = polar_to_xy(r, M_PI / 2 * i + heading_toward);
+			p.x += position.x;
+			p.y += position.y;
+			movable_line(p, time, ret);//set_pixel이 OR로 작동함.
+		}
+	}
 	return ret;
 }
 
@@ -162,7 +200,7 @@ int TerrainUnit::insert_waypoint(FPoint turn, int spd, int dur)
 		waypoints[i].duration = dur;
 		WhereAbout *tmp = this;
 		this = &waypoints[i];//maybe error
-		waypoints[i+1] = time_pass(dur);//reach here by this waypoint, use own time_pass
+		waypoints[i+1] = time_pass(dur);//reach here by this waypoint, use own time_pass, including 지형효과
 		this = tmp;
 		waypoints[i+1].duration = 0;//work as a mark
 	} else message("Way points limit reached!!");
@@ -182,67 +220,16 @@ int Unit::move(int start, int end)//increase durong a turn, move by one_tick
 		position = waypiont.time_pass(reach);
 	} 
 }
-//CGPoint Unit::getTurnCenter(CGPoint destination) 
-//{
-//    float a = positionInfo.position.x;
-//    float b = positionInfo.position.y;
-//    float c = destination.x;
-//    float d = destination.y;
-//   
-//    float cota = 1/tanf(positionInfo.headingToward);
-//    CGPoint center;
-//    center.x = ( (b-d)/2+(a*a-c*c)/(2*(d-b)) ) / (cota+(a-c)/(d-b));
-//    center.y = cota*(a-center.x)+b;
-//    return center;
-//}
 
-//float Unit::getMovedAngleInRadian(CGPoint destination) 
-//{
-//    CGPoint center = getTurnCenter(destination);
-//    return atan2f(point.y - center.y, point.x - center.x) - atan2f(currentPosition.y - center.y, currentPosition.x - point.x); 
-//}
-
-//float Unit::getTurnRadius (CGPoint destination) 
-//{
-//    CGPoint center = getTurnCenter(destination);
-//    return distanceBetween(destination, center);
-//}
-
-
-float Unit::calculateMovableDistanceForPolar(float theta) 
+int Unit::operator + (Unit &e)
 {
-    float relativeRadius = self.headingToward + theta;
-    return (2 * maximumSpeed  * cosf(relativeRadius))/ (M_PI - 2 * relativeRadius);
-    
+	if(!ptr_recon_bitmap->get_pixel(e.position)) return -3;
+	Clip* cl;
+	int arr[10];
+	for(int i=0; i<maxWeapon; i++) {
+		cl = weaponSlot[i].fire_range();
+		cl->lower_left = position;
+		if(!cl->get_pixel(e.position)) break;
+		arr[i] = weaponSlot[i] + e;
+	}
 }
-
-
-/*- (void)calculateMovableAreaOnMap:(Map *)map
-{
-    int numIterations = 0;
-    float * x = malloc(numIterations*sizeof(float));
-    float * cosx = malloc(numIterations*sizeof(float));
-    float * sinx = malloc(numIterations*sizeof(float));
-    
-    for(int i=0; i < numIterations; i++){
-        
-        x[i] = 0;//loopCalculatedValue;
-    }
-    
-    vvsincosf(sinx,cosx,x,&numIterations);
-    //vvcosf(<#float *#>, <#const float *#>, <#const int *#>)
-    
-    //self.currentPosition = 
-}
- */
-
-float Unit::distance_to(Unit* u) const
-{
-	return sqrtf((u.position.x - position.x) * (u.position.x - position.x) + 
-			(u.position.y - position.y) * (u.position.y - position.y));
-}
-
-float Unit::anglt_to(Unit& u) const
-{
-	u.
-	

@@ -115,3 +115,21 @@ int Waypoint::delete_waypoint()
 	return i;
 }
 
+float WhereAbout::distance_between(IPoint a, IPoint b)
+{
+	return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
+
+float WhereAbout::angle(IPoint c, IPoint a)
+{
+	return arctanf((a.y - c.y) / (a.x - c.x));
+}
+
+float WhereAbout::polar_to_xy(flaot r, float th)
+{
+	IPoint p;
+	p.x = cosf(th) * r;
+	p.y = sinf(th) * r;
+	return p;
+}
+

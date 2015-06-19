@@ -5,49 +5,50 @@ struct IPoint {
 class Clip 
 {
 public:
-	Clip* circle_clip(IPoint center, int radius);//원을 포함하는 직사각형 영역
-	Clip(IPoint lower_left, int width, int height);//직사각형 영역, 반드시 u_int형의 크기에 맞춤
-	Clip() {}
-	~Clip();
-	Clip* join_clip(Clip *cl1, Clip* cl2, bitOperation op);
-	int flat_line(IPoint starting_point, int length);
-	IPoint bit_circle(Clip *cl, IPoint center, int radius);//클립된 후의 중심좌표
-
-	unsigned int **clip;
+	size_t **clip;
 	IPoint lower_left;//lower left array의 비트맵에서의 uint 좌표
 	int width, height;//width is * intSize
+
+	Clip(IPoint center, int radius);//원을 포함하는 직사각형 영역
+	Clip(IPoint lower_left, int width, int height);//직사각형 영역, 반드시 u_int형의 크기에 맞춤, basic
+	Clip(Clip &cl1, Clip &cl2, bitOperation op);//두 개의 클립을 조인해서 만든다.
+	Clip(Clip &cl, IPoint center, int radius);//다른 클립의 영역을 카피해서 만든다.
+	Clip(Clip &cl) {this = new Clip(cl.lower_left, cl.width, cl.height;}
+	~Clip();
+	int clear();
+	bool get_pixel(IPoint p);
+	bool set_pixel(IPoint p, bool on_off);
+	operator=(Clip &clip);
+	int paste_from(Clip* source, bitOperation option);
+
+	IPoint bit_circle(IPoint center, int radius);//클립된 후의 중심좌표
+	IPoint bit_arc(IPoint center, float angle_from, float angle_to);
+	IPoint bit_arc_circle(IPoint center, int radius_from, int radius_to, float angle_from, float angle_to);
+	float bit_arc_line(IPoint center, int radius, float angle_from, float angle_to);
+
+protected:
+	int flat_line(IPoint starting_point, int length);
+	float bit_line(IPoint center, float theta);//중심점을 지나는 직선을 기준으로 좌우를 비트마스크 처리
+	enum bitOption {SUBST, OR, AND, XOR, MINUS, NOT};
+
+private:
+	bool boundary_check(IPoint p);
+
 };
 
 class Bitmap : public Clip
 {
 public:
-//	int width, height;// in pixel
-	unsigned int ***bitmap;
+	Clip *bitmap;
 	int bit_per_pixel;
-	int bitSize, intSize;
 	
-	~Bitmap();
-	int alloc(int width, int height, int bit_per_pixel);
-	IPoint bit_arc_circle(Clip *cl, IPoint center, int radius_from, int radius_to, float angle_from, float angle_to);
-	clear();
+	Bitmap(int width, int height, int bpp);
+	~Bitmap() {for(int i=0; i<bpp; i++) delete bitmap[i];}
+	void clear() {for(int i=0; i<bit_per_pixel; i++) bitmap[i].clear();}
 	
 protected:
-	int get_pixel_data(int x, int y);
-	bool get_pixel_of_layer(int x, int y, int layer);
-	int get_near_data(int x, int y);
-	int set_pixel_data(int x, int y, unsigned char value);
-	unsigned int* create_pane(){return new unsigned int[width * height / intSize + 1];}
-	bool free_clip(Clip* cl);
-	Clip copy_clip(IPoint center, int radius, int from_layer = 0);//원을 둘러싼 정사각형을 클립한다.
-	void paste_clip(Clip* cl, int to_layer = 0);
-	int paste_clip(Clip* source, Clip* destination, bitOperation option);
-	IPoint bit_arc(Clip* cl, IPoint center, float angle_from, float angle_to);
+	int get_pixel(IPoint p);
+	void set_pixel(IPoint p, unsigned char value);
 	
 private:
-	float bit_line(Clip* cl, IPoint center, float theta);
-	int flat_line(unsigned int* pane, IPoint start_point, int longevity);
-	int flat_line(Clip* pane, IPoint start_point, int longevity);
-	enum bitOption {SUBST, OR, AND, XOR, MINUS, NOT};
-	int find_num(int* array, int value, int size_of_array);
-	int find_big(int* array, int size_of_array);
 };

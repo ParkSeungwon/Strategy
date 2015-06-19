@@ -17,32 +17,34 @@ PNG_interface::png_to_terrain_city_bitmap(char* filename, Bitmap& t, Bitmap& c)
 	png::image< png::rgb_pixel > image(filename);
 	int h = image.get_height();
 	int w = image.get_width();
-	t.alloc(w, h, 4);
-	c.alloc(w, h, 8);
+	&t = new Bitmap(w, h, 4);
+	&c = new Bitmap(w, h, 8);
 	int i = 0;
+	IPoint p;
 
 	for (size_t y = 0; y < h; ++y) {
 		for (size_t x = 0; x < w; ++x) {
+			p.x = x; p.y = y;
 			if(image[y][x].blue == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
-				c.set_pixel_data(x, y, image[y][x].green);//도시의 고유번호를 부여함
+				c.set_pixel(x, y, image[y][x].green);//도시의 고유번호를 부여함
 				switch(image[y][x]) {
-					case City::color_code : t.set_pixel_data(x, y, city); break;
-					case Capital::color_code : t.set_pixel_data(x, y, capital); break;
-					case Harbor::color_code : t.set_pixel_data(x, y, harbor); break;
-					case Airport::color_code : t.set_pixel_data(x, y, airport);
+					case City::color_code : t.set_pixel(p, city); break;
+					case Capital::color_code : t.set_pixel(p, capital); break;
+					case Harbor::color_code : t.set_pixel(p, harbor); break;
+					case Airport::color_code : t.set_pixel(p, airport);
 				}
 			} 
 			else {
 				switch(image[y][x]) {
-					case Field::color_code : t.set_pixel_data(x, y, field); break;
-					case Mountain::color_code : t.set_pixel_data(x, y, mountain); break;
-					case Sea::color_code : t.set_pixel_data(x, y, sea); break;
-					case Road::color_code : t.set_pixel_data(x, y, road); break;
-					case Hill::color_code : t.set_pixel_data(x, y, hill); break;
-					case Swamp::color_code : t.set_pixel_data(x, y, swamp); break;
-					case Fort::color_code : t.set_pixel_data(x, y, fort); break;
-					case Forest::color_code : t.set_pixel_data(x, y, forest); break;
-					default : t.set_pixel_data(x, y, river);
+					case Field::color_code : t.set_pixel(p, field); break;
+					case Mountain::color_code : t.set_pixel(p, mountain); break;
+					case Sea::color_code : t.set_pixel(p, sea); break;
+					case Road::color_code : t.set_pixel(p, road); break;
+					case Hill::color_code : t.set_pixel(p, hill); break;
+					case Swamp::color_code : t.set_pixel(p, swamp); break;
+					case Fort::color_code : t.set_pixel(p, fort); break;
+					case Forest::color_code : t.set_pixel(p, forest); break;
+					default : t.set_pixel(p, river);
 				}
 			}
 		}

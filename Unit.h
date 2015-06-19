@@ -12,47 +12,43 @@
 
 class Unit : public Waypoint<T>
 {
+public:
+	int team;
+	static unsigned int unitPrice;
+	static unsigned int maxHealth;
+	int currentHealth;
+	int minimumTurnRadius;
+	int minimumSpeed;
+	int maximumSpeed;
+	Weapon* weaponSlot[10];
+	unsigned int intelligenceRadius;
+
+	Clip* movable_area(int time);//generate clip of movable area within time
+	
+	BOOL canEquip:(Weapon *)weapon;
+	
+	Unit(string _unitName, CGPoint _position, float _headingToward);
+
 	Unit(terrain_bitmap& tb) {t_bitmap = tb;};
 	string unitName;
 	const static int maxWayPoint = 10;
-	int minimumSpeed;
-	int maximumSpeed;
 	terrain_bitmap* ptr_terrain_bitmap;
 	recon_bitmap* ptr_recon_bitmap;
 	weapon_range_bitmap* ptr_weapon_range_bitmap;
-	CGPoint getTurnCenter(CGPoint destination);
-	//CGPoint getTurnCenterByRadiusAndTheta(float r, float theta);
-	float getTurnRadius(CGPoint destination);
-	float getMovedAngleInRadian(CGPoint destination);
-	//CGPoint getMovedPointByRadiusAndTheta(float r, float theta);
+
+	Clip* movable_area(int time);
+	int operator + (Unit& enemy);//target enemy, return 기대값 
 	
-	int minimumTurnRadius;
 	
 protected:
 	static int evadeRatio;
 	int fuelCapacity;
 	int fuel;
 	unsigned int experience;
-	terrain_bitmap& t_bitmap;
 
-public:
-	int team;
-	static unsigned int unitPrice;
-	static unsigned int maxHealth;
-	int currentHealth;
-	
-	Weapon* weaponSlot[10];
-	unsigned int intelligenceRadius;
-	
-	int move(int start_time, int end_time);
-	CGPoint getCurrentPosition() {return *this->currentPosition;}
-	BOOL canEquip:(Weapon *)weapon;
-	
-	Unit(string _unitName, CGPoint _position, float _headingToward);
 
 private:
-	float distance_to(Unit& unit) const;
-	float angle_to(Unit& unit) const;
+	int movable_line(IPoint turn_center, int time, Clip *cl);
 };
 
 unsigned int Unit::price;
@@ -61,7 +57,6 @@ class TerrainUnit : public Unit//지형효과를 받는 유닛들의 모클래�
 {
 public:
 	int insert_waypoint(FPoint turn_center, int spd, int dur);//return inserted nth waypoint 지형효과를 고려함
-	virtual WhereAbout<int> time_pass(int time);//버추얼
 	static unsigned int terrainPenaltyPercent;
 };
 

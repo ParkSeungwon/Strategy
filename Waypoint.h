@@ -21,6 +21,11 @@ public:
 	void set_headingToward(float f) {headingToward = correct_angle(f)}
 	float get_headingToward() {return headingToward;}
 
+protected:
+	float distance_between(IPoint a, IPoint b);
+	float angle(IPoint center, IPoint a);
+	IPoint polar_to_xy(float radius, float theta);
+
 private:
 	float correct_angle(float);
 	float heading_toward;
