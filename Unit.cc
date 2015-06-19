@@ -221,15 +221,41 @@ int Unit::move(int start, int end)//increase durong a turn, move by one_tick
 	} 
 }
 
-int Unit::operator + (Unit &e)
+bool Unit::operator + (Unit &e, Weapon* w)
 {
-	if(!ptr_recon_bitmap->get_pixel(e.position)) return -3;
+	if(!w->check_weapon()) return false;
+	if(!ptr_recon_bitmap->get_pixel(e.position)) return false;
 	Clip* cl;
-	int arr[10];
-	for(int i=0; i<maxWeapon; i++) {
-		cl = weaponSlot[i].fire_range();
-		cl->lower_left = position;
-		if(!cl->get_pixel(e.position)) break;
-		arr[i] = weaponSlot[i] + e;
+	cl = w->fire_range();
+	cl->lower_left = position;
+	return cl->get_pixel(e.position);
+}
+
+int Unit::operator + (Unit e[], Weapon* w)
+{
+	if(!w->check_weapon()) return 0;
+	int v = 0;
+	int ret;
+	for(int i=0; e[i] != NULL; i++) {
+		if(e[i].currentHealth <= 0) break;
+		if(*this + e[i]) {
+			if(v < *w + e[i]) {
+				v = *w + e[i];
+				ret = i;
+			}
+		}
 	}
+}
+
+int Unit::operator >> (Unit &e, Weapon *w)
+{
+	int dice = *w >> e;
+	experience += dice;
+	return dice;
+}
+
+int Unit::operator >> (Unit e[], Weapon *w)
+{
+	int dice = *w >> e[*this + e];
+	return dice;
 }

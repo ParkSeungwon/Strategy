@@ -10,19 +10,60 @@
 #include "Util.h"
 #include "Weapon.h"
 
+bool Weapon::check_weapon()
+{
+	if(currentRounds <= 0) return false;
+	if(lapsedTimeAfterFire < fireRate) return false;
+	return true;
+}
+	
+
 int Weapon::operator + (Unit &e) 
 {
-	if(currentRounds == 0) return -1;
-	if(lapsedTimeAfterFire < fireRate) return -2;
-	switch(e.type) {
-		case AirUnit:
-			return firePower * hitRatioVSAir * e.evadeRatio / 100;
+	if(currentRounds <= 0) return -10000;
+	if(lapsedTimeAfterFire < fireRate) return -10001;
+	if(e.currentHealth <= 0) return -10004;
+	switch(preference) {
+		case HIGH_DAMAGE:
+			switch(typeid(e)) {
+				case AirUnit:
+					return firePower * hitRatioVSAir * e.evadeRatio / 100;
+				case InfantryUnit:
+					return firePower * hitRatioVsInfantry * e.evadeRatio /100;
+				case ArmorUnit:
+					return firePower * hitRatioVsArmor * e.evadeRatio /100;
+				default:
+					return firePower * hitRatioVsShip * e.evadeRatio / 100;
+			}
+		case LOW_HEALTH: return  -e.currentHealth;
+		case EXPENSIVE: return e.unitPrice;
+		case HIGH_RATIO:
+			switch(typeid(e)) {
+				case AirUnit:
+					return hitRatioVSAir * e.evadeRatio / 100;
+				case InfantryUnit:
+					return hitRatioVsInfantry * e.evadeRatio /100;
+				case ArmorUnit:
+					return hitRatioVsArmor * e.evadeRatio /100;
+				default:
+					return hitRatioVsShip * e.evadeRatio / 100;
+			}
+		case CHEAP: return -e.unitPrice;
+	}
+}
+
+
+int Weapon::hitRate(Unit& e)
+{
+	switch(typeid(e)) {
 		case InfantryUnit:
-			return firePower * hitRatioVsInfantry * e.evadeRatio /100;
+			return hitRatioVsInfantry * e.evadeRatio /100;
+		case AirUnit:
+			return hitRatioVSAir * e.evadeRatio /100;
 		case ArmorUnit:
-			return firePower * hitRatioVsArmor * e.evadeRatio /100;
-		default:
-			return firePower * hitRatioVsShip * e.evadeRatio / 100;
+			return hitRatioVsArmor * e.evadeRatio /100;
+		case ShipUnit:
+			return hitRatioVsShip * e.evadeRatio /100;
 	}
 }
 

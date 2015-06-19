@@ -37,8 +37,10 @@ public:
 	weapon_range_bitmap* ptr_weapon_range_bitmap;
 
 	Clip* movable_area(int time);
-	int operator + (Unit& enemy);//target enemy, return 기대값 
-	
+	bool operator + (Unit& enemy, Weapon *w);//target 공격가능한지  
+	int operator + (Unit enemy[], Weapon *w);//프레퍼런스에 따라 배열 중의 유닛을 선택한다.
+	int operator >> (Unit &enemy, Weapon *w);
+	int operator >> (Unit enemy[], Weapon *w);//여럿중의 하나를 선택하여 공격
 	
 protected:
 	static int evadeRatio;
@@ -64,6 +66,7 @@ class AirUnit : public Unit
 {
 	terrainPenaltyPercent = 0;
 	AirUnit(string _unitName, CGPoint _currentPosition) : Unit(_unitName, _currentPosition);
+	int land_on(Airport* airport);
 };
 
 class ArmorUnit : public TerrainUnit 
@@ -74,6 +77,7 @@ class ArmorUnit : public TerrainUnit
 class InfantryUnit : public TerrainUnit 
 {
 	WhereAbout<int> time_pass(int time);
+	int occupy(City* city);
 };
 
 class ShipUnit : public TerrainUnit 
