@@ -1,15 +1,27 @@
-//
-//  Weapon.m
-//  Strategygame
-//
-//  Created by 승원 박 on 12. 7. 13..
-//  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
-//
-
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
 
+Weapon::Weapon()
+{
+	IPoint z;
+	z.x = 0;
+	z.y = 0;
+
+	fire_range_clip = new Clip(z, shootingRangeMax * 2 + 1, shootingRangeMax * 2 + 1);
+	dice_record = new int[TURN_TIME / fireRate];//maximum attack possible
+	current_dice = dice_record;
+}
+
+Weapon::~Weapon()
+{
+	delete fire_range_clip;
+	delete dice_record;
+}
+
+int Weapon::adjust_range_clip(WhereAbout& wh)
+{
+	fire_range_clip->lower_left = wh.position;
 bool Weapon::check_weapon()
 {
 	if(currentRounds <= 0) return false;
@@ -91,7 +103,13 @@ int Weapon::operator >> (Unit &e)
 	}
 	else return 0;
 	
-	int dice = randomDice(100);				//0~99사이의 수를 리턴하는 유틸함수
+	int dice;
+	if(*current_dice == 0) {//if this is not replay
+		dice = randomDice(100);//1~100사이의 수를 리턴하는 유틸함수
+		*current_dice = dice;
+	} else dice = *current_dice;
+	current_dice++;
+
 	playSound();
 	drawVisual();
 	if (dice  >= hitRatio * (100 - enenmy.getEvadeRatio())/100 {
@@ -100,6 +118,16 @@ int Weapon::operator >> (Unit &e)
 	return dice;
 }
 
+int Weapon::operator >> (Unit* e[])
+{
+	int pref[MAX_UNIT];
+	for(int i=0; e[i] != NULL; i++) int pref[i] = *this + *e[i];
+	int target = find_big(pref);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
+	int dice = *this >> *e[target];
+	return dice;
+}
+
+		
 Clip* fire_range()
 {
 	IPoint p; 

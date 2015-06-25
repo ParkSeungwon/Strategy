@@ -1,15 +1,3 @@
-//
-//  Unit.h
-//  Strategygame
-//
-//  Created by 승원 박 on 12. 7. 13..
-//  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
-//
-
-//#include <iostream>
-
-//#include "Terrain.h"
-
 class Unit : public Waypoint<T>
 {
 public:
@@ -21,6 +9,7 @@ public:
 	int minimumSpeed;
 	int maximumSpeed;
 	Weapon* weaponSlot[10];
+	Clip* recon_clip;
 	unsigned int intelligenceRadius;
 
 	Clip* movable_area(int time);//generate clip of movable area within time
@@ -41,7 +30,8 @@ public:
 	int operator + (Unit enemy[], Weapon *w);//프레퍼런스에 따라 배열 중의 유닛을 선택한다.
 	int operator >> (Unit &enemy, Weapon *w);
 	int operator >> (Unit enemy[], Weapon *w);//여럿중의 하나를 선택하여 공격
-	
+	int operator + (Weapon& weapon);//equip weapon
+	int operator - (Weapon& weapon);//unload weapon
 protected:
 	static int evadeRatio;
 	int fuelCapacity;
@@ -66,7 +56,7 @@ class AirUnit : public Unit
 {
 	terrainPenaltyPercent = 0;
 	AirUnit(string _unitName, CGPoint _currentPosition) : Unit(_unitName, _currentPosition);
-	int land_on(Airport* airport);
+	int land_on(Airport& airport);
 };
 
 class ArmorUnit : public TerrainUnit 
@@ -77,7 +67,7 @@ class ArmorUnit : public TerrainUnit
 class InfantryUnit : public TerrainUnit 
 {
 	WhereAbout<int> time_pass(int time);
-	int occupy(City* city);
+	int occupy(City& city);
 };
 
 class ShipUnit : public TerrainUnit 

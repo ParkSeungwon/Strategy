@@ -38,7 +38,7 @@ public:
 	
 	WhereAbout time_pass(T time);//return nth waypoint, and construct the data of it
 	int moved_distance(int start_time, int end_time);
-	int how_long_can_i_go(int start_time, int remainning_fuel);
+	int how_long_can_i_go(int start_time, int remainning_fuel);//return maximum time 
 	int insert_waypoint(CGPoint turn, int spd, int dur);//return inserted nth waypoint
 	int delete_waypoint();
 	Nth nth_way(T time);//time in at which waypoint & moment

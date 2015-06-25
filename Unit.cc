@@ -1,10 +1,3 @@
-//
-//  Unit.m
-//  Straegygame
-//
-//  Created by 승원 박 on 12. 7. 13..
-//  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
-//
 #include "Waypoint.h"
 #include "Weapon.h"
 #include "Unit.h"
@@ -24,11 +17,9 @@ int Unit::in_range(Weapon& weapon, Unit& enemy)
 {
 	if(lapsedTimeAfterFire < fireRate) return 0;
 	if(currentRounds <= 0) return 0;
-	(enemy.position.x - position.x)
-	weapon.shootingRangeMin;
-	weapon.shootingRangeMax;
-	weapon.shootingAngleFrom;
-	weapon.shootingAngleTo;
+	weapon.adjust_range_clip();
+	return weapon.fire_range_clip.get_pixel(enemy.position);
+}
 
 Unit::Unit(string _unitName, CGPoint _currentPosition) 
 {
@@ -46,6 +37,17 @@ Unit::Unit(string _unitName, CGPoint _currentPosition)
 	fin.close();
 }
 
+Unit::move(int time)
+{
+	time_pass(time);
+	for(int i=0; weaponSlot[i] != NULL; i++) {
+		weaponSlot[i].adjust_weapon_range();
+		ptr_weapon_range_bitmap->paste_from(weaponSlot[i].fire_range_clip, OR);
+	}
+	adjust_recon();
+	ptr_recon_bitmap->paste_from(this->recon_clip, OR);
+}
+		
 void Unit::setDirectionInRadians(float direction)
 {
     while (direction >= 2 * M_PI) direction -= 2 * M_PI;
@@ -138,9 +140,9 @@ WhereAbout<int> ShipUnit::time_pass(int time) const
 		wh.time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
 		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
 		switch(tt) {
-			case sea: elapse += 10 / (100 - Sea::movePenaltyVsShip); break;
-			case river: elapse += 10 / (100 - River::movePenaltyVsShip); break;
-			case harbor: elapse += 10 / (100 - Harbor::movePenaltyVsShip); break;
+			case sea: 		elapse += 10 / (100 - Sea::movePenaltyVsShip); 		break;
+			case river: 	elapse += 10 / (100 - River::movePenaltyVsShip); 	break;
+			case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsShip); 	break;
 			default: elapse += 10000; 
 		}
 		if(elapse >= time) break;
@@ -247,6 +249,20 @@ int Unit::operator + (Unit e[], Weapon* w)
 	}
 }
 
+int Unit::operator + (Weapon& w)
+{
+	w.fire_range_clip = new Clip(position, w.shootingRangeMax);
+	adjust_weapon_range(w);
+}
+
+int Unit::adjust_weapon_range(Weapon &w)
+{
+	w.fire_range_clip.clear();
+	w.fire_range_clip.bit_arc_circle(position, w.shootingRangeMin, w.shootingRangeMax, correct_angle(heading_toward + shootingAngleFrom), correct_angle(heading_toward + shootingAngleTo));
+	w.fire_range_clip.lower_left.x = position.x - width / 2;
+	w.fire_range_clip.lower_left.y = position.y - width / 2;
+}
+
 int Unit::operator >> (Unit &e, Weapon *w)
 {
 	int dice = *w >> e;
@@ -259,3 +275,13 @@ int Unit::operator >> (Unit e[], Weapon *w)
 	int dice = *w >> e[*this + e];
 	return dice;
 }
+
+int InfantryUnit::occupy(City& city)
+{
+	city.owner = team;
+	return city.identifier;
+}
+
+AirUnit::land_on(Airport& airport)
+{
+	
