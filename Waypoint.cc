@@ -1,35 +1,36 @@
 #include <typeinfo>
 #include <cmath>
+#include <stdio.h>
 #include "Waypoint.h"
 #include "Util.h"
 
-float WhereAbout::correct_angle(float f)
+template <class T> float WhereAbout<T>::correct_angle(float f)
 {
 	while(f >= M_PI) f -= M_PI;
 	while(f < 0) f += M_PI;
 	return f;
 }
 
-WhereAbout WhereAbout::time_pass(T time)
+template <class T> WhereAbout<T> WhereAbout<T>::time_pass(T time)
 {
 //	if(duration == 0) return *this;
-	WhereAbout<int> wh;
+	WhereAbout<T> wh;
 	int rt = 0;
 	if(time > duration) time = duration;
-	float x = position.x - turn_center.x;
-	float y = position.y - turn_center.y;
+	T x = position.x - turn_center.x;
+	T y = position.y - turn_center.y;
 	float r = sqrtf(x*x + y*y);
 	float center_angle = acosf(x/r);
 	if(y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
 	float theta = speed * time / r;
 	
-	float diff = abs(center_angle - correct_angle(initial_heading_toward + M_PI/2));
+	float diff = abs(center_angle - correct_angle(heading_toward + M_PI/2));
 	if(diff < 0.1 || diff > 3) { //if center is at the left of heading direction
 		wh.heading_toward = heading_toward + theta;
 		wh.position.x = turn_center.x + r * cosf(center_angle + theta);
 		wh.position.y = turn_center.y + r * sinf(center_angle + theta);
 	} else {
-		wh.heading_toward = initial_heading_toward - theta;
+		wh.heading_toward = heading_toward - theta;
 		wh.position.x = turn_center.x + r * cosf(center_angle - theta);
 		wh.position.y = turn_center.y + r * sinf(center_angle - theta);
 	}
@@ -40,17 +41,18 @@ WhereAbout WhereAbout::time_pass(T time)
 }
 
 
-WhereAbout Waypoint::time_pass(T time)
+template <class T> WhereAbout<T> Waypoint<T>::time_pass(T time)
 {
-	int i, t;
-	for(i=0, time > 0; i++) {
+	int i;
+	T t;
+	for(i=0; time > 0; i++) {
 		t = time;
 		time -= waypoints[i].duration;
 	}
 	return waypoints[i].time_pass[time];
 }
 
-int Waypoint::moved_distance(int start, int end) {
+template <class T> int Waypoint<T>::moved_distance(int start, int end) {
 	Nth nth1 = nth_way(start);
 	Nth nth2 = nth_way(end);
 	int distance = 0;
@@ -62,9 +64,9 @@ int Waypoint::moved_distance(int start, int end) {
 	return distance;
 }
 
-Nth Waypoint::nth_way(T time) {
+template <class T> Nth Waypoint<T>::nth_way(T time) {
 	int i, t;
-	for(i=0, time > 0; i++) {
+	for(i=0; time > 0; i++) {
 		t = time;
 		time -= waypoints[i].duration;
 	}
@@ -74,7 +76,7 @@ Nth Waypoint::nth_way(T time) {
 	return nth;
 }
 
-int Waypoint::how_long_can_i_go(int start, int fuel) {
+template <class T> int Waypoint<T>::how_long_can_i_go(int start, int fuel) {
 	Nth nth = nth_way(start);
 	int tmp = fuel;
 	int dur;
@@ -88,7 +90,7 @@ int Waypoint::how_long_can_i_go(int start, int fuel) {
 	return start + dur;
 }
 
-int Waypoint::insert_waypoint(CGPoint turn, int spd, int dur)
+template <class T> int Waypoint<T>::insert_waypoint(Point<T> turn, int spd, int dur)
 {
 	int i;
 	for(i = 0; i < MAX_Waypoints; i++) {
@@ -100,34 +102,34 @@ int Waypoint::insert_waypoint(CGPoint turn, int spd, int dur)
 		waypoints[i].duration = dur;
 		waypoints[i+1] = waypoints[i].time_pass(dur);//reach here by this waypoint
 		waypoints[i+1].duration = 0;//work as a mark
-	} else message("Way points limit reached!!");
+	} else printf("Way points limit reached!!");
 	return i;
 }
 
-int Waypoint::delete_waypoint()
+template <class T> int Waypoint<T>::delete_waypoint()
 {
 	int i;
 	for(i = 0; i <= MAX_Waypoints; i++) {
 		if(waypoints[i].duration == 0) break;
 	}
-	if(i == 0) message("No waypoint!!")
+	if(i == 0) printf("No waypoint!!");
 	else waypoints[--i].duration = 0;
 	return i;
 }
 
-float WhereAbout::distance_between(IPoint a, IPoint b)
+template <class T> float WhereAbout<T>::distance_between(Point<T> a, Point<T> b)
 {
 	return sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-float WhereAbout::angle(IPoint c, IPoint a)
+template <class T> float WhereAbout<T>::angle(Point<T> c, Point<T> a)
 {
 	return arctanf((a.y - c.y) / (a.x - c.x));
 }
 
-float WhereAbout::polar_to_xy(flaot r, float th)
+template <class T> Point<T> WhereAbout<T>::polar_to_xy(T r, float th)
 {
-	IPoint p;
+	Point<T> p;
 	p.x = cosf(th) * r;
 	p.y = sinf(th) * r;
 	return p;

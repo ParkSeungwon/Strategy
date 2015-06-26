@@ -4,6 +4,6 @@ class Util {
 	protected:
 		
 	public:
-		static float distanceBetween(CGPoint A, CGPoint B);
+		template <typename T> static float distanceBetween(Point<T> A, Point<T> B);
 		
 };
