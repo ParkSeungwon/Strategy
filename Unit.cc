@@ -1,4 +1,5 @@
 #include "Waypoint.h"
+#include "map.h"
 #include "Weapon.h"
 #include "Unit.h"
 #include "time.h"
@@ -6,42 +7,43 @@
 
 #include <string>
 
-Unit::Unit(terrain_bitmap *tb, recon_bitmap *rb, weapon_range_bitmap *wb)
+Unit::Unit(Point<int> pos, float heading, Map &map) 
 {
-	ptr_terrain_bitmap = tb;
-	ptr_recon_bitmap = rb;
-	ptr_weapon_range_bitmap = wb;
-}
+	terrain_bitmap = map.terrain_bitmap;
+	recon_bitmap = map.recon_bitmap;
+	weapon_range_bitmap = map.weapon_range_bitmap;
+	heading_toward = heading;
+	position = pos;
+	currentHealth = maxHealth;
+	fuel = fuelCapacity;
+	experience = 0;
+	unitName = typeid(*this);
 
-int Unit::in_range(Weapon& weapon, Unit& enemy)
-{
-	if(lapsedTimeAfterFire < fireRate) return 0;
-	if(currentRounds <= 0) return 0;
-	weapon.adjust_range_clip();
-	return weapon.fire_range_clip.get_pixel(enemy.position);
-}
-
-Unit::Unit(string _unitName, CGPoint _currentPosition) 
-{
 	ifstream fin("Unit.def");
 	string s;
 	do {
 		if (fin.eof()) throw 3; 
 		fin >> s;
 	}
-	while (s != _unitName)
+	while (s != _unitName);
 	
-	unitName = _unitName;
-	currentPosition = _currentPosition;
-	fin >> maxHealth >> fuelCapacity >> price >> minimumSpeed ;
+	fin >> maxHealth >> fuelCapacity >> unitPrice >> minimumSpeed >> maximumSpeed >> intelligenceRadius >>evadeRatio;
 	fin.close();
+	recon_clip = new Clip(pos, intelligenceRadius);
+	recon_clip->bit_circle(pos, intelligenceRadius);
+}
+
+Unit::~Unit()
+{
+	delete recon_clip;
+	for(int i=0; weaponSlot[i] != NULL; i++) delete weaponSlot[i];
 }
 
 Unit::move(int time)
 {
 	time_pass(time);
 	for(int i=0; weaponSlot[i] != NULL; i++) {
-		weaponSlot[i].adjust_weapon_range();
+		weaponSlot[i].adjust_weapon_range(this);
 		ptr_weapon_range_bitmap->paste_from(weaponSlot[i].fire_range_clip, OR);
 	}
 	adjust_recon();
@@ -67,15 +69,15 @@ Unit::time_pass(int time) {
 	weapon.time_pass();
 }
 
-WhereAbout<> ArmorUnit::time_pass(int time) const
+int ArmorUnit::time_pass(int time) 
 {
-	WhereAbout<float> wh = *this;
-	wh = this->position;
+	Nth n = nth_way(time);
+	*this = waypoints[n.n];
 	TerrainType tt;
 	float elapse = 0;
-	for(int i=0; i < time*10; i++) {
-		wh.time_pass(0.1 * i);
-		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
+	for(int i=0; i < n.sec * 10; i++) {
+		time_pass(0.1 * i);
+		tt = t_bitmap.get_pixel((int)position.x, (int)position.y);
 		switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
 			case city: 		elapse += 10 / (100 - City::movePenaltyVsArmor); 	break;
 			case capital: 	elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
@@ -92,21 +94,20 @@ WhereAbout<> ArmorUnit::time_pass(int time) const
 			case desert: elapse += 10 / (100 - Desert::movePenaltyVsArmor); 	break;
 			case sea: elapse += 10000; 
 		}
-		if(elapse >= time) break;
+		if(elapse >= n.sec) break;
 	}
-	WhereAbout<> ret;
-	ret = wh;
-	return ret;
+	return i;
 }
 
-WhereAbout<int> InfantryUnit::time_pass(int time) const
+int InfantryUnit::time_pass(int time) const
 {
-	WhereAbout<float> wh = *this;//여기에서만 유일하게 float형이 쓰임
+	Nth n = nth_way(time);
+	*this = waypoints[n.n];
 	TerrainType tt;
 	float elapse = 0;
-	for(int i=0; i < time*10; i++) {
-		wh.time_pass(0.1 * i);
-		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
+	for(int i=0; i < n.sec * 10; i++) {
+		time_pass(0.1 * i);
+		tt = t_bitmap.get_pixel((int)position.x, (int)position.y);
 		switch(tt) {
 			case city:		elapse += 10 / (100 - City::movePenaltyVsInfantry);		break;
 			case capital:	elapse += 10 / (100 - Capital::movePenaltyVsInfantry); 	break;
@@ -123,36 +124,32 @@ WhereAbout<int> InfantryUnit::time_pass(int time) const
 			case desert:	elapse += 10 / (100 - Desert::movePenaltyVsInfantry); 	break;
 			case sea:		elapse += 10000; 
 		}
-		if(elapse >= time) break;
+		if(elapse >= n.sec) break;
 	}
-	WhereAbout<int> ret;
-	ret = wh;
-	return ret;
+	return i;
 }
 
-WhereAbout<int> ShipUnit::time_pass(int time) const
+int ShipUnit::time_pass(int time) 
 {
-	WhereAbout<float> wh = *this;
-	
+	Nth n = nth_way(time);
+	*this = waypoints[n.n];
 	TerrainType tt;
 	float elapse = 0;
-	for(int i=0; i <= time*10; i++) {
-		wh.time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
-		tt = t_bitmap.get_pixel((int)wh.position.x, (int)wh.position.y);
+	for(int i=0; i <= n.sec*10; i++) {
+		time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
+		tt = t_bitmap.get_pixel((int)position.x, (int)position.y);
 		switch(tt) {
 			case sea: 		elapse += 10 / (100 - Sea::movePenaltyVsShip); 		break;
 			case river: 	elapse += 10 / (100 - River::movePenaltyVsShip); 	break;
 			case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsShip); 	break;
 			default: elapse += 10000; 
 		}
-		if(elapse >= time) break;
+		if(elapse >= n.sec) break;
 	}
-	WhereAbout<int> ret;
-	ret = wh;
-	return ret;
+	return i;
 }
 
-int Unit::movable_line(IPoint tc, int time, Clip *cl)
+int Unit::movable_line(Point<int> tc, int time, Clip *cl)
 {
 	float start_angle = angle(tc, this->position);
 	
@@ -174,11 +171,11 @@ int Unit::movable_line(IPoint tc, int time, Clip *cl)
 
 Clip* Unit::movable_area(int time)
 {
-	IPoint tc;
+	Point<int> tc;
 	distance_to(tc)
 	tc.y = -1 / heading_toward * (tc.x - position.x) + position.y;
 	Clip *ret = new Clip(position, maximumSpeed * time);
-	IPoint p;
+	Point<int> p;
 	for(int r=minimumTurnRadius; r <= maximumSpeed * time * 10; r++) {//10? enough?
 		for(int i=-1; i<= 1; i += 2) {//to calculate both side
 			p = polar_to_xy(r, M_PI / 2 * i + heading_toward);
@@ -190,7 +187,7 @@ Clip* Unit::movable_area(int time)
 	return ret;
 }
 
-int TerrainUnit::insert_waypoint(FPoint turn, int spd, int dur)
+int TerrainUnit::insert_waypoint(Point<int> turn, int spd, int dur)
 {
 	int i;
 	for(i = 0; i < MAX_Waypoints; i++) {

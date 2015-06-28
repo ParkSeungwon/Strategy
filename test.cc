@@ -1,8 +1,10 @@
-#include "Unit.h"
-#include <iostream>
+enum A {B};
 
-int test() {
-	Unit u("Infantry", (30, 30), 0);
-	cout << u.minimumSpeed;
-	
+class C {
+	void p(A a) {a = B;}
+};
+
+int main() {
+A a;
+a = B;
 }

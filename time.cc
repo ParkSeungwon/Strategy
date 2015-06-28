@@ -5,7 +5,8 @@ int Time::oneTurnPass()
 	for(int k=0; k < turn; k++) {
 		for(int i=0; i<MAX_TEAM; i++) {
 			for(int j=0; j<MAX_UNIT; j++) {
-				deployed_units[i][j]->move(one_tick * k);//유닛 위치 이동, 정찰, 무기 범위 갱신
+				deployed_units[i][j]->time_pass(one_tick * k);//유닛 위치 이동, 정찰, 무기 범위 갱신
+				deployed_units[i][j]->adjust_recon();
 				deployed_units[i][j]->weapon
 				deployed_units[i][j]->
 			}

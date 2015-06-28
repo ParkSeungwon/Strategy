@@ -20,7 +20,7 @@ PNG_interface::png_to_terrain_city_bitmap(char* filename, Bitmap& t, Bitmap& c)
 	&t = new Bitmap(w, h, 4);
 	&c = new Bitmap(w, h, 8);
 	int i = 0;
-	IPoint p;
+	Point<int> p;
 
 	for (size_t y = 0; y < h; ++y) {
 		for (size_t x = 0; x < w; ++x) {

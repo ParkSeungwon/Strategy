@@ -1,14 +1,18 @@
+//#include "Unit.h"
+#include <stdio.h>
+#include "Waypoint.h"
+#include "map.h"
 #include "Unit.h"
-#include "Util.h"
+#include "bitmap.h"
 #include "Weapon.h"
 
 Weapon::Weapon()
 {
-	IPoint z;
-	z.x = 0;
-	z.y = 0;
+	Point<int> p; 
+	p.x = shootingRangeMax + 1; 
+	p.y = shootingRangeMax + 1;
+	fire_range_clip = new Clip(p, shootingRangeMax);
 
-	fire_range_clip = new Clip(z, shootingRangeMax * 2 + 1, shootingRangeMax * 2 + 1);
 	dice_record = new int[TURN_TIME / fireRate];//maximum attack possible
 	current_dice = dice_record;
 }
@@ -21,20 +25,17 @@ Weapon::~Weapon()
 
 int Weapon::adjust_range_clip(WhereAbout& wh)
 {
-	fire_range_clip->lower_left = wh.position;
-bool Weapon::check_weapon()
-{
-	if(currentRounds <= 0) return false;
-	if(lapsedTimeAfterFire < fireRate) return false;
-	return true;
+	fire_range_clip->lower_left.x = wh.position.x - shootingRangeMax;
+	fire_range_clip->lower_left.y = wh.position.y - shootingRangeMax;
+	fire_range_clip->bit_arc_circle(wh.position, shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
 }
-	
 
 int Weapon::operator + (Unit &e) 
 {
 	if(currentRounds <= 0) return -10000;
 	if(lapsedTimeAfterFire < fireRate) return -10001;
 	if(e.currentHealth <= 0) return -10004;
+	if(!fire_range_clip->get_pixel(e)) return -10002;
 	switch(preference) {
 		case HIGH_DAMAGE:
 			switch(typeid(e)) {
@@ -61,21 +62,6 @@ int Weapon::operator + (Unit &e)
 					return hitRatioVsShip * e.evadeRatio / 100;
 			}
 		case CHEAP: return -e.unitPrice;
-	}
-}
-
-
-int Weapon::hitRate(Unit& e)
-{
-	switch(typeid(e)) {
-		case InfantryUnit:
-			return hitRatioVsInfantry * e.evadeRatio /100;
-		case AirUnit:
-			return hitRatioVSAir * e.evadeRatio /100;
-		case ArmorUnit:
-			return hitRatioVsArmor * e.evadeRatio /100;
-		case ShipUnit:
-			return hitRatioVsShip * e.evadeRatio /100;
 	}
 }
 
@@ -112,8 +98,8 @@ int Weapon::operator >> (Unit &e)
 
 	playSound();
 	drawVisual();
-	if (dice  >= hitRatio * (100 - enenmy.getEvadeRatio())/100 {
-		enenmy.currentHealth -= firePower;
+	if (dice  >= hitRatio * (100 - e.evadeRatio)/100 {
+		e.currentHealth -= firePower;
 	}
 	return dice;
 }
@@ -126,38 +112,3 @@ int Weapon::operator >> (Unit* e[])
 	int dice = *this >> *e[target];
 	return dice;
 }
-
-		
-Clip* fire_range()
-{
-	IPoint p; 
-	p.x = shootingRangeMax + 1; 
-	p.y = shootingRangeMax + 1;
-	Clip* cl = new Clip(p, shootingRangeMax);
-	cl->bit_arc_circle(p, shootingRangeMin, shootingRangeMax, shootingAngleFrom, shootingAngleTo);
-	return cl;
-}
-
-Unit* Weapon::selectTarget() 
-{
-	//프레퍼런스, 체력이 0 이상, 비트마스크, 적군, 디텍티드, 
-	
-}
-
-unsigned int *Weapon::bitmask(int mapWidth, int mapHeight, CGPoint unitPosition) {
-	
-}
-
-Weapon::playSound() {
-	cout << "Shoot !!!" <<endl;
-}
-
-Weapon::drawVisual() {
-	cout << "Showing some graphics!" << endl;
-}
-
-Weapon::reload() {
-	currentRounds = maxRounds;
-}
-
-

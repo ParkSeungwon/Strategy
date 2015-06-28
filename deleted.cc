@@ -1,4 +1,6 @@
 
+	void set_headingToward(float f) {heading_toward = correct_angle(f);}
+	float get_headingToward() {return heading_toward;}
 
 void Bitmap::paste_clip(Clip* cl, int layer)
 {

@@ -44,7 +44,7 @@ void deployUnit(Unit &unit)
 int Map::generate_recon_bitmap() const
 {
 	Unit* u;
-	IPoint p;
+	Point<int> p;
 	Clip *cl;
 	recon_bitmap.clear();
 	for(int i=0; i<maxTeam; i++) {
@@ -64,7 +64,7 @@ int Map::generate_recon_bitmap() const
 int Map::generate_weapon_range_bitmap() const
 {
 	Unit* u;
-	IPoint p;
+	Point<int> p;
 	Clip *cl;
 	Weapon* w;
 	weapon_range_bitmap.clear();

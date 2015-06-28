@@ -1,46 +1,48 @@
-class Unit : public Waypoint<T>
+class Weapon;
+
+class Unit : public Waypoint
 {
 public:
-	int team;
-	static unsigned int unitPrice;
-	static unsigned int maxHealth;
-	int currentHealth;
-	int minimumTurnRadius;
-	int minimumSpeed;
-	int maximumSpeed;
-	Weapon* weaponSlot[10];
-	Clip* recon_clip;
-	unsigned int intelligenceRadius;
-
-	Clip* movable_area(int time);//generate clip of movable area within time
-	
-	BOOL canEquip:(Weapon *)weapon;
-	
-	Unit(string _unitName, CGPoint _position, float _headingToward);
-
-	Unit(terrain_bitmap& tb) {t_bitmap = tb;};
-	string unitName;
-	const static int maxWayPoint = 10;
-	terrain_bitmap* ptr_terrain_bitmap;
-	recon_bitmap* ptr_recon_bitmap;
-	weapon_range_bitmap* ptr_weapon_range_bitmap;
-
-	Clip* movable_area(int time);
+	Unit(Point<int> _position, float _headingToward, Map& map);
 	bool operator + (Unit& enemy, Weapon *w);//target 공격가능한지  
 	int operator + (Unit enemy[], Weapon *w);//프레퍼런스에 따라 배열 중의 유닛을 선택한다.
 	int operator >> (Unit &enemy, Weapon *w);
 	int operator >> (Unit enemy[], Weapon *w);//여럿중의 하나를 선택하여 공격
 	int operator + (Weapon& weapon);//equip weapon
 	int operator - (Weapon& weapon);//unload weapon
-protected:
+	Clip* recon_clip;
+
+	static string unitName;
+	static unsigned int unitPrice;
+	static unsigned int maxHealth;
 	static int evadeRatio;
-	int fuelCapacity;
+	static int fuelCapacity;
+	static int minimumTurnRadius;
+	static int minimumSpeed;
+	static int maximumSpeed;
+	static unsigned int intelligenceRadius;
+
+	int team;
+	int currentHealth;
 	int fuel;
 	unsigned int experience;
 
+	Weapon* weaponSlot[10];
+
+	Clip* movable_area(int time);//generate clip of movable area within time
+	
+	BOOL canEquip:(Weapon *)weapon;
+	
+
+	
+protected:
+	const static int maxWayPoint = 10;
+	Bitmap* terrain_bitmap;
+	Bitmap* recon_bitmap;
+	Bitmap* weapon_range_bitmap;
 
 private:
-	int movable_line(IPoint turn_center, int time, Clip *cl);
+	int movable_line(Point<int> turn_center, int time, Clip *cl);
 };
 
 unsigned int Unit::price;
