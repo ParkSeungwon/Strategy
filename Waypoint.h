@@ -1,3 +1,4 @@
+
 struct Nth {
 	int n, sec;
 };

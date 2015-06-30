@@ -8,5 +8,9 @@ public:
 	float operator % (Point<T> a) {return atanf((a.y - y) / (a.x - x));}//angle
 	void operator = (Point<int> p) {x = (T)p.x; y = (T)p.y;}
 	void operator = (Point<float> p) {x = (T)p.x; y = (T)p.y;}
+	void operator + (int i) {x += i; y += i;}
+	void operator - (int i) {x -= i; y =- i;}
+	Point<int> to_int();
+	Point<float> to_float();
 	Point<T> polar_to_xy(T r, float theta);
 };
