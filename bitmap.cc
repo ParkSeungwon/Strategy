@@ -2,6 +2,7 @@
 #include <cmath>
 #include "point.hpp"
 #include "bitmap.h"
+#include "Util.h"
 
 Clip::Clip(Point<int> p, int w, int h)
 {
@@ -207,24 +208,24 @@ Point<int> Clip::bit_arc_circle(Point<int> c, int rf, int rt, float af, float at
 	return c;
 }
 
-Clip::Clip(Clip &cl1, Clip &cl2, bitOpion op)//join two into one
+Clip::Clip(Clip &cl1, Clip &cl2, bit_operation op)//join two into one
 {	
 	//new clip region to include both clips
-	int x = min(cl1.lower_left.x, cl2.lower_left.x);
-	int y = min(cl1.lower_left.y, cl2.lower_left.y);
-	int width = max(cl1.lower_left.x + cl1.width, cl2.lower_left.x + cl2.width) - cl.lower_left.x;
-	width = cl.width / 32;
-	int height = max(cl1.lower_left.y + cl1.height, cl2.lower_left.y + cl2.height) - cl.lower_left.y;
-	Point<int> p; p.x = x; p.y = y;
-	this = new Clip(p, width, height);
-	paste_from(cl1, SUBST);
-	paste_from(cl2, op);
+	int x = Util::min(cl1.lower_left.x, cl2.lower_left.x);
+	int y = Util::min(cl1.lower_left.y, cl2.lower_left.y);
+	int width = Util::max(cl1.lower_left.x + cl1.width, cl2.lower_left.x + cl2.width) - x;
+	int height = Util::max(cl1.lower_left.y + cl1.height, cl2.lower_left.y + cl2.height) - y;
+	Clip* cl = new Clip(Point<int>(x, y), width, height);
+	*this = *cl;
+	delete cl;
+	paste_from(&cl1, SUBST);
+	paste_from(&cl2, op);
 }
 
-int Clip::paste_from(Clip *source, bitOption op)
+int Clip::paste_from(Clip *source, bit_operation op)
 {
-	int diffx = source->x - lower_left.x;
-	int diffy = source->y - lower_left.y;
+	int diffx = source->lower_left.x - lower_left.x;
+	int diffy = source->lower_left.y - lower_left.y;
 	for(int y = 0; y <= source->height; y++) {
 		if(diffy + y >= 0 && diffy + y < height) {
 			for(int x = 0; x <= source->width; x++) {
@@ -267,19 +268,17 @@ float Clip::correct_angle(float th)
 	return th;
 }
 
-Bitmap::Bitmap(int w, int h, int bpp) : Clip(z, w, h)
+Bitmap::Bitmap(int w, int h, int bpp) : Clip(Point<int>(0,0), w, h) 
 {
 	bit_per_pixel = bpp;
-	for(int i=0; i<bpp; i++) bitmap[i] = new Clip(this);
+	for(int i=0; i<bpp; i++) bitmap[i] = new Clip(Point<int>(0, 0), w, h);
 }
-
 
 int Bitmap::get_pixel(Point<int> p)
 {
-	int b;
+	int b, ret;
 	for(int i=0; i<bit_per_pixel; i++) {
 		b = bitmap[i]->get_pixel(p);
-		b = b >> shift;
 		ret += b << i;
 	}
 	return ret;

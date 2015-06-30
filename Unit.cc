@@ -1,11 +1,13 @@
+#include <string>
+#include <vector>
+using namespace std;
+
 #include "Waypoint.h"
 #include "map.h"
 #include "Weapon.h"
 #include "Unit.h"
 #include "time.h"
 #include "Terrain.h"
-
-#include <string>
 
 Unit::Unit(Point<int> pos, float heading, Map &map) 
 {
@@ -77,7 +79,7 @@ int ArmorUnit::time_pass(int time)
 	float elapse = 0;
 	for(int i=0; i < n.sec * 10; i++) {
 		time_pass(0.1 * i);
-		tt = t_bitmap.get_pixel((int)position.x, (int)position.y);
+		tt = t_bitmap.get_pixel(position);
 		switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
 			case city: 		elapse += 10 / (100 - City::movePenaltyVsArmor); 	break;
 			case capital: 	elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
@@ -187,26 +189,6 @@ Clip* Unit::movable_area(int time)
 	return ret;
 }
 
-int TerrainUnit::insert_waypoint(Point<int> turn, int spd, int dur)
-{
-	int i;
-	for(i = 0; i < MAX_Waypoints; i++) {
-		if(waypoints[i].duration == 0) break;
-	}
-	if(i < MAX_Waypoints) {
-		waypoints[i].speed = spd;
-		waypoints[i].turn_center = turn;
-		waypoints[i].duration = dur;
-		WhereAbout *tmp = this;
-		this = &waypoints[i];//maybe error
-		waypoints[i+1] = time_pass(dur);//reach here by this waypoint, use own time_pass, including 지형효과
-		this = tmp;
-		waypoints[i+1].duration = 0;//work as a mark
-	} else message("Way points limit reached!!");
-	return i;
-}
-
-
 int Unit::move(int start, int end)//increase durong a turn, move by one_tick
 {
 	int dis = waypoint.moved_distance(start, end);
@@ -219,58 +201,10 @@ int Unit::move(int start, int end)//increase durong a turn, move by one_tick
 		position = waypiont.time_pass(reach);
 	} 
 }
-
-bool Unit::operator + (Unit &e, Weapon* w)
-{
-	if(!w->check_weapon()) return false;
-	if(!ptr_recon_bitmap->get_pixel(e.position)) return false;
-	Clip* cl;
-	cl = w->fire_range();
-	cl->lower_left = position;
-	return cl->get_pixel(e.position);
-}
-
-int Unit::operator + (Unit e[], Weapon* w)
-{
-	if(!w->check_weapon()) return 0;
-	int v = 0;
-	int ret;
-	for(int i=0; e[i] != NULL; i++) {
-		if(e[i].currentHealth <= 0) break;
-		if(*this + e[i]) {
-			if(v < *w + e[i]) {
-				v = *w + e[i];
-				ret = i;
-			}
-		}
-	}
-}
-
 int Unit::operator + (Weapon& w)
 {
 	w.fire_range_clip = new Clip(position, w.shootingRangeMax);
 	adjust_weapon_range(w);
-}
-
-int Unit::adjust_weapon_range(Weapon &w)
-{
-	w.fire_range_clip.clear();
-	w.fire_range_clip.bit_arc_circle(position, w.shootingRangeMin, w.shootingRangeMax, correct_angle(heading_toward + shootingAngleFrom), correct_angle(heading_toward + shootingAngleTo));
-	w.fire_range_clip.lower_left.x = position.x - width / 2;
-	w.fire_range_clip.lower_left.y = position.y - width / 2;
-}
-
-int Unit::operator >> (Unit &e, Weapon *w)
-{
-	int dice = *w >> e;
-	experience += dice;
-	return dice;
-}
-
-int Unit::operator >> (Unit e[], Weapon *w)
-{
-	int dice = *w >> e[*this + e];
-	return dice;
 }
 
 int InfantryUnit::occupy(City& city)

@@ -17,12 +17,6 @@ Map::~Map()
 	delete city_bitmap;
 }
 
-bool Map::inRange(unsigned int *bitmask, CGPoint position) {
-	int share = (position.y * width + position.x) / 32;//CGPoint int
-	int rest = (position.y * width + position.x) % 32;
-	return *(bitmask+share+1) | 1 << (intSize-rest-1);
-}
-
 void deployUnit(Unit &unit) 
 {
 	int i;

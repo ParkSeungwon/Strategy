@@ -1,6 +1,8 @@
 //#include "Unit.h"
 #include <stdio.h>
+#include "point.hpp"
 #include "Waypoint.h"
+#include "Terrain.h"
 #include "map.h"
 #include "Unit.h"
 #include "bitmap.h"
@@ -8,10 +10,7 @@
 
 Weapon::Weapon()
 {
-	Point<int> p; 
-	p.x = shootingRangeMax + 1; 
-	p.y = shootingRangeMax + 1;
-	fire_range_clip = new Clip(p, shootingRangeMax);
+	fire_range_clip = new Clip(Point<int>(shootingRangeMax + 1, shootingRangeMax + 1), shootingRangeMax);
 
 	dice_record = new int[TURN_TIME / fireRate];//maximum attack possible
 	current_dice = dice_record;

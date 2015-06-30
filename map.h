@@ -1,3 +1,5 @@
+class Bitmap;
+
 class Map : public Terrain
 {
 private:
@@ -5,7 +7,6 @@ private:
 	const static int maxUnit = 100;
 	
 protected:
-	static bool inRange(unsigned int *bitmask, CGPoint position);
 	Bitmap *terrain_bitmap, *recon_bitmap, *weapon_range_bitmap, *city_bitmap;
 	
 public:

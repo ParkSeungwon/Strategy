@@ -1,7 +1,9 @@
 #include <typeinfo>
 #include <cmath>
 #include <stdio.h>
+#include <vector>
 #include <stdlib.h>
+using namespace std;
 #include "point.hpp"
 #include "Waypoint.h"
 #include "Util.h"
@@ -19,8 +21,8 @@ template <class T> int WhereAbout<T>::time_pass(T time)
 	if(time > duration) time = duration;
 	T x = position.x - turn_center.x;
 	T y = position.y - turn_center.y;
-	float r = sqrtf(x*x + y*y);
-	float center_angle = acosf(x/r);
+	float r = position - turn_center;
+	float center_angle = position % turn_center;
 	if(y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
 	float theta = speed * time / r;
 	
@@ -48,6 +50,16 @@ int Waypoint::time_pass(int time)
 }
 
 template <class T> int WhereAbout<T>::operator = (WhereAbout<int> &wh)
+{
+	position = wh.position;
+	turn_center = wh.turn_center;
+	speed = wh.speed;
+	heading_toward = wh.heading_toward;
+	duration = (T)wh.duration;
+	return duration;
+}
+
+template <class T> int WhereAbout<T>::operator = (WhereAbout<float> &wh)
 {
 	position = wh.position;
 	turn_center = wh.turn_center;
@@ -97,29 +109,27 @@ int Waypoint::how_long_can_i_go(int start, int fuel) {
 
 int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur)
 {
-	int i;
-	for(i = 0; i < MAX_Waypoints; i++) {
-		if(waypoints[i].duration == 0) break;
-	}
-	if(i < MAX_Waypoints) {
-		waypoints[i].speed = spd;
-		waypoints[i].turn_center = turn;
-		waypoints[i].duration = dur;
-		waypoints[i+1] = waypoints[i];
-		waypoints[i+1].time_pass(dur);//duration = 0 이 됨.
-	} else printf("Way points limit reached!!");
-	return i;
-}
+	int ret = waypoints.size();
+	WhereAbout<float> tmp = *this;
+	WhereAbout<int> mediator;
 
-int Waypoint::delete_waypoint()
-{
-	int i;
-	for(i = 0; i <= MAX_Waypoints; i++) {
-		if(waypoints[i].duration == 0) break;
+	if(ret == 0) {
+		mediator = *this;
+		waypoints.push_back(mediator);
+		ret++;
 	}
-	if(i == 0) printf("No waypoint!!");
-	else waypoints[--i].duration = 0;
-	return i;
-}
 
+	vector<WhereAbout<int> >::iterator it = waypoints.end();
+	speed = it->speed = spd;
+	it->turn_center = turn;
+	turn_center = turn;
+	duration = it->duration = dur;
+
+	time_pass(dur);//duration = 0 이 됨.
+
+	mediator = *this;
+	waypoints.push_back(mediator);
+	*this = tmp;
+	return ret + 1;
+}
 

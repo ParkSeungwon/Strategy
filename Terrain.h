@@ -1,4 +1,9 @@
-enum TerrainType city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river;
+enum TerrainType {
+	city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river
+};
+
+class Unit;
+
 class Terrain 
 {
 private:
@@ -17,7 +22,7 @@ class Land : public Terrain
 public:
 	Unit* produce_unit() {return NULL;}
 
-}
+};
 
 class City : public Terrain 
 {
@@ -30,7 +35,7 @@ public:
 class Capital : public City
 {
 public:
-	lose();
+	void lose();
 };
 
 class Airport : public City

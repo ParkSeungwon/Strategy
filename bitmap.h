@@ -1,4 +1,4 @@
-enum bitOption {SUBST, OR, AND, XOR, MINUS, NOT};
+enum bit_operation {SUBST, OR, AND, XOR, MINUS, NOT};
 
 class Clip 
 {
@@ -9,14 +9,14 @@ public:
 
 	Clip(Point<int> lower_left, int width, int height);//직사각형 영역, 반드시 u_int형의 크기에 맞춤, basic
 	Clip(Point<int> center, int radius);//원을 포함하는 직사각형 영역
-	Clip(Clip &cl1, Clip &cl2, bitOption op);//두 개의 클립을 조인해서 만든다.
+	Clip(Clip &cl1, Clip &cl2, bit_operation op);//두 개의 클립을 조인해서 만든다.
 	Clip(Clip &cl, Point<int> center, int radius);//다른 클립의 영역을 카피해서 만든다.
 	~Clip();
 	void clear();
 	bool get_pixel(Point<int> p);
 	bool set_pixel(Point<int> p, bool on_off);
 	int operator = (Clip &clip);
-	int paste_from(Clip* source, bitOption option);
+	int paste_from(Clip* source, bit_operation op);
 
 	Point<int> bit_circle(Point<int> center, int radius);//클립된 후의 중심좌표
 	Point<int> bit_arc(Point<int> center, float angle_from, float angle_to);
