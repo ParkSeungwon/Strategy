@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <cmath>
-#include "point.hpp"
 #include "bitmap.h"
 #include "Util.h"
 
@@ -19,11 +18,19 @@ Clip::Clip(Point<int> p, int w, int h)
 	}
 }
 
+int Clip::set_lower_left(Point<int> p)
+{
+	lower_left.y = p.y;
+	int rest = p.x % 32;
+	lower_left.x = p.x - rest;
+	return rest;
+}
+
 Clip::Clip(Point<int> c, int r)
 {
 	c.x -= r;
 	c.y -= r;
-	Clip* tmp = new Clip(c, (2*r+1)/32, 2*r+1);
+	Clip* tmp = new Clip(c, (2*r+1)/32 + 1, 2*r+1);
 	*this = *tmp;
 	delete tmp;
 }

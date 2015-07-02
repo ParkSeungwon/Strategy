@@ -1,3 +1,4 @@
+#include "Terrain.h"
 #include "map.h"
 
 Map::Map(char* filename)

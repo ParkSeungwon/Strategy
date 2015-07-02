@@ -1,17 +1,25 @@
-class Weapon;
-class Clip;
+#pragma once
+#include <vector>
+#include <string>
+#include "Weapon.h"
+#include "bitmap.h"
+#include "Waypoint.h"
+#include "map.h"
 
 class Unit : public Waypoint
 {
 public:
 	Unit(Point<int> _position, float _headingToward, Map& map);
+	~Unit() {delete recon_clip;}
 	int operator + (Weapon& weapon);//equip weapon
 	int operator - (Weapon& weapon);//unload weapon
 	Clip* recon_clip;
 	Clip* movable_area(int time);//generate clip of movable area within time
+	void move(int time);
+	int attack(std::vector<Unit> enemy);
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
-	static string unitName;
+	static std::string unitName;
 	static unsigned int unitPrice;
 	static unsigned int maxHealth;
 	static int evadeRatio;
@@ -26,7 +34,7 @@ public:
 	int fuel;
 	unsigned int experience;
 
-	vector<Weapon> weapon;
+	std::vector<Weapon> weapon;
 
 protected:
 	Bitmap* terrain_bitmap;
@@ -64,4 +72,3 @@ class ShipUnit : public TerrainUnit
 	int time_pass(int time);
 
 };
-

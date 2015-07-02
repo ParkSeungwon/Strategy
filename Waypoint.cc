@@ -1,12 +1,10 @@
 #include <typeinfo>
 #include <cmath>
 #include <stdio.h>
-#include <vector>
 #include <stdlib.h>
-using namespace std;
-#include "point.hpp"
 #include "Waypoint.h"
 #include "Util.h"
+using namespace std;
 
 template <class T> float WhereAbout<T>::correct_angle(float f)
 {
@@ -69,6 +67,24 @@ template <class T> int WhereAbout<T>::operator = (WhereAbout<float> &wh)
 	return duration;
 }
 
+template <class T> void WhereAbout<T>::save()
+{
+	save_pos = position;
+	save_tc = turn_center;
+	save_speed = speed;
+	save_head = heading_toward;
+	save_dur = duration;
+}
+
+template <class T> void WhereAbout<T>::restore()
+{
+	position = save_pos;
+	turn_center = save_tc;
+	speed = save_speed;
+	heading_toward = save_head;
+	duration = save_dur;
+}
+
 int Waypoint::moved_distance(int start, int end) {
 	Nth nth1 = nth_way(start);
 	Nth nth2 = nth_way(end);
@@ -110,9 +126,8 @@ int Waypoint::how_long_can_i_go(int start, int fuel) {
 int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur)
 {
 	int ret = waypoints.size();
-	WhereAbout<float> tmp = *this;
 	WhereAbout<int> mediator;
-
+	save();
 	if(ret == 0) {
 		mediator = *this;
 		waypoints.push_back(mediator);
@@ -129,7 +144,8 @@ int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur)
 
 	mediator = *this;
 	waypoints.push_back(mediator);
-	*this = tmp;
+	restore();
+
 	return ret + 1;
 }
 

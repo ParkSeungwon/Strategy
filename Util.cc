@@ -1,12 +1,5 @@
 #include "Util.h"
-int randomDice(int eyes) {
-	srand(time());
-	return rand()%eyes;
-}
-
-int randomDice() {
-	return randomDice(100);
-}
+#include <math.h>
 
 float Util::correct_angle(float theta)
 {

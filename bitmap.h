@@ -1,3 +1,6 @@
+#pragma once
+#include "point.hpp"
+
 enum bit_operation {SUBST, OR, AND, XOR, MINUS, NOT};
 
 class Clip 
@@ -13,6 +16,7 @@ public:
 	Clip(Clip &cl, Point<int> center, int radius);//다른 클립의 영역을 카피해서 만든다.
 	~Clip();
 	void clear();
+	int set_lower_left(Point<int> p);
 	bool get_pixel(Point<int> p);
 	bool set_pixel(Point<int> p, bool on_off);
 	int operator = (Clip &clip);
@@ -42,10 +46,11 @@ public:
 	Bitmap(int width, int height, int bpp);
 	~Bitmap() {for(int i=0; i<bit_per_pixel; i++) delete bitmap[i];}
 	void clear() {for(int i=0; i<bit_per_pixel; i++) bitmap[i]->clear();}
-	
-protected:
 	int get_pixel(Point<int> p);
 	void set_pixel(Point<int> p, unsigned char value);
 	
+protected:
+	
 private:
 };
+

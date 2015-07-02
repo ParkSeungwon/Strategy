@@ -1,3 +1,6 @@
+#pragma once
+#include <vector>
+#include "point.hpp"
 
 struct Nth {
 	int n, sec;
@@ -19,19 +22,25 @@ public:
 
 protected:
 	float correct_angle(float);
+	void save();
+	void restore();
 
 private:
+	Point<T> save_pos, save_tc;
+	int save_speed;
+	float save_head;
+	T save_dur;
 };
 
 class Waypoint : public WhereAbout<float>
 {
 public:
-	vector<WhereAbout<int> > waypoints;//last array for storing init value
+	std::vector<WhereAbout<int> > waypoints;//last array for storing init value
 	int time_pass(int time);//return nth waypoint, and construct the data of it
 	int insert_waypoint(Point<int> turn, int spd, int dur);//return inserted nth waypoint
 	void delete_waypoint() {waypoints.erase(waypoints.end());}
 	Nth nth_way(int time);//time in at which waypoint & moment
-	void operator = (WhereAbout<float> &wh) {*this = wh;}
+	//void operator = (WhereAbout<float> &wh) {*this = wh;}
 
 protected:
 	int moved_distance(int start_time, int end_time);
@@ -40,3 +49,4 @@ protected:
 private:
 	
 };
+

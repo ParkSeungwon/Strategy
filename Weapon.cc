@@ -1,19 +1,16 @@
 //#include "Unit.h"
 #include <stdio.h>
-#include <vector>
 #include <string>
 #include <stdlib.h>
 #include <time.h>
 #include <cmath>
-using namespace std;
 #include "point.hpp"
-#include "Waypoint.h"
 #include "Terrain.h"
 #include "map.h"
 #include "Unit.h"
 #include "Util.h"
-#include "bitmap.h"
 #include "Weapon.h"
+using namespace std;
 
 Weapon::Weapon()
 {
@@ -27,8 +24,9 @@ Weapon::~Weapon()
 
 int Weapon::adjust_range_clip(WhereAbout<float> &wh)
 {
-	fire_range_clip->lower_left = wh.position;
-	fire_range_clip->lower_left - shootingRangeMax;
+	wh.position - shootingRangeMax;
+	fire_range_clip->set_lower_left(wh.position.to_int());
+	fire_range_clip->clear();
 	fire_range_clip->bit_arc_circle(wh.position.to_int(), shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
 }
 

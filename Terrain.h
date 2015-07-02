@@ -1,18 +1,16 @@
+#pragma once
+
 enum TerrainType {
-	city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river
+	city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
 };
 
 class Unit;
 
 class Terrain 
 {
-private:
-	static int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
-			
-protected:
-	static int evadeBonus; 
-		
 public:
+	static int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
+	static int evadeBonus; 
 	static unsigned int color_code;
 	virtual Unit* produce_unit() = 0;
 };

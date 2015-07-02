@@ -1,3 +1,4 @@
+#pragma once
 
 template <class T> class Point {
 public:
@@ -14,3 +15,4 @@ public:
 	Point<float> to_float();
 	Point<T> polar_to_xy(T r, float theta);
 };
+
