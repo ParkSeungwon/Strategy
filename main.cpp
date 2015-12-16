@@ -1,3 +1,4 @@
+#include <gtkmm/main.h>
 #include "gtkmain.hpp"
 #include "main.hpp"
 
