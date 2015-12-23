@@ -7,6 +7,8 @@ gtkmmLIB = $(shell pkg-config gtkmm-3.0 --libs)
 	
 war : $(OBJ)
 	$(CC) -o war $(OBJ) $(gtkmmLIB)
+test : test.cc
+	g++ test.cc -o test `pkg-config gtkmm-3.0 --cflags --libs`
 	
 main.o : main.cpp
 	$(CC) $(C_OPTION) main.cpp $(gtkmmCFLAG) 
