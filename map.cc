@@ -18,12 +18,16 @@ Map::~Map()
 	delete city_bitmap;
 }
 
-void deployUnit(Unit &unit) 
+void deployUnit(Unit &u, Point<int> p, float h) 
 {
+	if(city_bitmap->get_pixel(p) == 0) return NULL;
+	u.team = city_bitmap->get_pixel(p);
+	u.headingToward = h;
+	u.position = p;
 	int i;
-	while (deployedUnit[unit.team][i++ ] != null);
-	deployedUnit[unit.team][i] = &unit;
- }
+	while (deployedUnit[u.team][i++ ] != null);
+	deployedUnit[u.team][i] = &unit;
+ 
 	int share = (position.y * width + position.x) / intSize;//CGPoint int
 	int rest = (position.y * width + position.x) % intSize;
 	return *(bitmask+share+1) | 1 << (intSize-rest-1);

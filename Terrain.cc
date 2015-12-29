@@ -56,4 +56,6 @@ Map::create_terrain_bitmap(char *filename)
 	bit_per_pixel = 4;
 }
 
-Unit* City::produce_unit(
+Unit* City::produce_unit(char* unit_name, Point<int> p, float heading_toward) {
+	//should access Map
+	

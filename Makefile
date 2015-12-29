@@ -22,3 +22,4 @@ Terrain.o :
 test.o :
 gtkmap.o :
 	$(CC) $(C_OPTION) main.cc $(gtkmmCFLAG) 
+blank.o :

@@ -45,7 +45,7 @@ void Unit::move(int time)
 	recon_bitmap->paste_from(recon_clip, OR);
 }
 
-int Unit::attack(vector<Unit> e)
+int Unit::operator >> (vector<Unit> e)
 {
 	int dice;
 	for(vector<Weapon>::iterator it = weapon.begin(); it != weapon.end(); it++) dice = *it >> e;

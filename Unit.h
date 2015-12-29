@@ -1,9 +1,6 @@
 #pragma once
-#include <vector>
 #include <string>
 #include "Weapon.h"
-#include "bitmap.h"
-#include "Waypoint.h"
 #include "map.h"
 
 class Unit : public Waypoint
@@ -16,7 +13,7 @@ public:
 	Clip* recon_clip;
 	Clip* movable_area(int time);//generate clip of movable area within time
 	void move(int time);
-	int attack(std::vector<Unit> enemy);
+	int operator >> (std::vector<Unit> enemy);
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
 	static std::string unitName;

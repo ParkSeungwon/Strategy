@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>//to pre define NULL  pointer
 
 enum TerrainType {
 	city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
@@ -18,14 +19,14 @@ public:
 class Land : public Terrain
 {
 public:
-	Unit* produce_unit() {return NULL;}
+	Unit* produce_unit() {return NULL;}//Land cannot produce Units
 
 };
 
 class City : public Terrain 
 {
 public:
-	Unit* produce_unit(char* _unitName, float _headingToward);
+	Unit* produce_unit(char* _unitName, Point<int> p, float _headingToward);
 	int owner;
 	int identifier;//connected pixels have same identifier, because they are one city
 };
