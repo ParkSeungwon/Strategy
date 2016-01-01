@@ -1,5 +1,5 @@
 CC = g++
-C_OPTION = -g -c
+C_OPTION = -g -c -std=c++11
 OBJ = main.o  gtkmain.o #Util.o Unit.o Weapon.o 
 
 gtkmmCFLAG = $(shell pkg-config gtkmm-3.0 --cflags)
@@ -18,6 +18,7 @@ time.o :
 Util.o :
 Unit.o :
 Weapon.o :
+	$(CC) $(C_OPTION) -o Weapon.o Weapon.cc
 Terrain.o :
 test.o :
 gtkmap.o :

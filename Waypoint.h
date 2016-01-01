@@ -7,7 +7,8 @@ struct Nth {
 };
 
 
-template <class T = int> class WhereAbout
+template <class T = int> 
+class WhereAbout
 {
 public:
 	Point<T> position, turn_center;

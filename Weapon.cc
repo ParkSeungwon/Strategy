@@ -103,10 +103,12 @@ int Weapon::operator >> (Unit &e)
 
 int Weapon::operator >> (vector<Unit> e)
 {
-	int pref[e.size()];
+	//int pref[e.size()];
+	int* pref = new int[e.size()];
 	int i = 0;
-	for(vector<Unit>::iterator it = e.begin(); it != e.end(); it++) pref[i++] = *this + *it;
+	for(auto& a : e) pref[i++] = *this + a;
 	int target = Util::find_big(pref, e.size());//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
 	int dice = *this >> e[target];
+	delete pref;
 	return dice;
 }

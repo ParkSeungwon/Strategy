@@ -6,20 +6,22 @@
 #include "Util.h"
 using namespace std;
 
-template <class T> float WhereAbout<T>::correct_angle(float f)
+template <class T> 
+float WhereAbout<T>::correct_angle(float f)
 {
 	while(f >= M_PI) f -= M_PI;
 	while(f < 0) f += M_PI;
 	return f;
 }
 
-template <class T> int WhereAbout<T>::time_pass(T time)
+template <class T> 
+int WhereAbout<T>::time_pass(T time)
 {
 //	if(duration == 0) return *this;
 	if(time > duration) time = duration;
 	T x = position.x - turn_center.x;
 	T y = position.y - turn_center.y;
-	float r = position - turn_center;
+	float r = position ^ turn_center;
 	float center_angle = position % turn_center;
 	if(y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
 	float theta = speed * time / r;
@@ -47,7 +49,8 @@ int Waypoint::time_pass(int time)
 	return n.sec;
 }
 
-template <class T> int WhereAbout<T>::operator = (WhereAbout<int> &wh)
+template <class T> 
+int WhereAbout<T>::operator = (WhereAbout<int> &wh)
 {
 	position = wh.position;
 	turn_center = wh.turn_center;
@@ -57,7 +60,8 @@ template <class T> int WhereAbout<T>::operator = (WhereAbout<int> &wh)
 	return duration;
 }
 
-template <class T> int WhereAbout<T>::operator = (WhereAbout<float> &wh)
+template <class T> 
+int WhereAbout<T>::operator = (WhereAbout<float> &wh)
 {
 	position = wh.position;
 	turn_center = wh.turn_center;
@@ -67,7 +71,8 @@ template <class T> int WhereAbout<T>::operator = (WhereAbout<float> &wh)
 	return duration;
 }
 
-template <class T> void WhereAbout<T>::save()
+template <class T> 
+void WhereAbout<T>::save()
 {
 	save_pos = position;
 	save_tc = turn_center;
@@ -76,7 +81,8 @@ template <class T> void WhereAbout<T>::save()
 	save_dur = duration;
 }
 
-template <class T> void WhereAbout<T>::restore()
+template <class T> 
+void WhereAbout<T>::restore()
 {
 	position = save_pos;
 	turn_center = save_tc;

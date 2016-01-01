@@ -1,5 +1,5 @@
 #pragma once
-#include <iostream>//to pre define NULL  pointer
+#include "point.hpp"
 
 enum TerrainType {
 	city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
@@ -10,22 +10,28 @@ class Unit;
 class Terrain 
 {
 public:
-	static int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
+	Terrain();
 	static int evadeBonus; 
-	static unsigned int color_code;
-	virtual Unit* produce_unit() = 0;
+	unsigned int get_color_code() {return color_code;}
+	int get_movePenaltyVsShip() {return movePenaltyVsShip;}
+	int get_movePenaltyVsArmor() {return movePenaltyVsArmor;}
+	int get_movePenaltyVsInfantry() {return movePenaltyVsInfantry;}
+
+protected:
+	unsigned int color_code;
+	int movePenaltyVsInfantry, movePenaltyVsArmor, movePenaltyVsShip; //0~100
 };
 
 class Land : public Terrain
 {
 public:
-	Unit* produce_unit() {return NULL;}//Land cannot produce Units
 
 };
 
 class City : public Terrain 
 {
 public:
+	City();
 	Unit* produce_unit(char* _unitName, Point<int> p, float _headingToward);
 	int owner;
 	int identifier;//connected pixels have same identifier, because they are one city
@@ -34,12 +40,14 @@ public:
 class Capital : public City
 {
 public:
+	Capital();
 	void lose();
 };
 
 class Airport : public City
 {
 public:
+	Airport();
 };
 
 class Harbor : public City
@@ -81,23 +89,25 @@ public:
 class River : public Land
 {
 public:
+	River();
 };
 
 class Field : public Land
 {
 public:
+	Field();
 };
 
 class Road : public Land
 {
 public:
-
+	Road();
 };
 
 class Fort : public Land
 {
 public:
-	Fort() {evadeBonus = 70;}
+	Fort();
 };
 
 class Hill : public Land

@@ -48,7 +48,8 @@ void Unit::move(int time)
 int Unit::operator >> (vector<Unit> e)
 {
 	int dice;
-	for(vector<Weapon>::iterator it = weapon.begin(); it != weapon.end(); it++) dice = *it >> e;
+	//for(vector<Weapon>::iterator it = weapon.begin(); it != weapon.end(); it++) dice = *it >> e;
+	for(auto& au : e) dice = au >> e;
 	return dice;
 }
 		

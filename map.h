@@ -1,5 +1,6 @@
 #pragma once
 #include "Terrain.h"
+#include "point.hpp"
 
 class Bitmap;
 

@@ -8,6 +8,7 @@ Map::Map(char* filename)
 	int height = terrain_bitmap->height;
 	recon_bitmap = new Bitmap(width, height, joined_teams);
 	weapon_range_bitmap = new Bitmap(width, height, joined_teams);
+	count_cities(const &city_bitmap);
 }
 
 Map::~Map()
@@ -25,8 +26,8 @@ void deployUnit(Unit &u, Point<int> p, float h)
 	u.headingToward = h;
 	u.position = p;
 	int i;
-	while (deployedUnit[u.team][i++ ] != null);
-	deployedUnit[u.team][i] = &unit;
+	while (deployedUnit[u.team][i++ ] != NULL);
+	deployedUnit[u.team][i] = &u;
  
 	int share = (position.y * width + position.x) / intSize;//CGPoint int
 	int rest = (position.y * width + position.x) % intSize;
