@@ -18,8 +18,7 @@ public:
 
 	virtual int time_pass(T time);	//return left duration, change members
 	//지형의 영향력을 고려한다. 호를 100개 내지 일정한 개수의 점으로 나누어서 각 점의 지형을 샘플로 뽑아 속도를 계산한다.
-	int operator = (WhereAbout<int> &wh);
-	int operator = (WhereAbout<float> &wh);
+	template <typename T2> void operator = (WhereAbout<T2> &wh);
 
 protected:
 	float correct_angle(float);

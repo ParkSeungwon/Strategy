@@ -22,12 +22,15 @@ Weapon::~Weapon()
 	delete fire_range_clip;
 }
 
-int Weapon::adjust_range_clip(WhereAbout<float> &wh)
+int Weapon::adjust_range_clip(WhereAbout<float> &wh) const
 {
-	wh.position - shootingRangeMax;
-	fire_range_clip->set_lower_left(wh.position.to_int());
+	Point<int> p;
+	p = wh.position;
+	p.x = wh.position.x - shootingRangeMax;
+	p.y = wh.position.y - shootingRangeMax;
+	fire_range_clip->set_lower_left(p);
 	fire_range_clip->clear();
-	fire_range_clip->bit_arc_circle(wh.position.to_int(), shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
+	fire_range_clip->bit_arc_circle(p, shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
 }
 
 int Weapon::operator + (Unit &e) 
@@ -63,8 +66,9 @@ int Weapon::operator + (Unit &e)
 			}
 		case CHEAP: return -e.unitPrice;
 		case NEAR: 
-			fire_range_clip->lower_left + shootingRangeMax;
-			return -(fire_range_clip->lower_left - e.position.to_int());
+			fire_range_clip->lower_left.x += shootingRangeMax;
+			fire_range_clip->lower_left.y += shootingRangeMax;
+			return -(int)(fire_range_clip->lower_left ^ e.position.to_int());
 	}
 }
 

@@ -40,7 +40,6 @@ int WhereAbout<T>::time_pass(T time)
 	return duration;
 }
 
-
 int Waypoint::time_pass(int time)
 {
 	Nth n = nth_way(time);
@@ -49,26 +48,14 @@ int Waypoint::time_pass(int time)
 	return n.sec;
 }
 
-template <class T> 
-int WhereAbout<T>::operator = (WhereAbout<int> &wh)
+template <class T> template <typename T2>
+void WhereAbout<T>::operator = (WhereAbout<T2> &wh)
 {
 	position = wh.position;
 	turn_center = wh.turn_center;
 	speed = wh.speed;
 	heading_toward = wh.heading_toward;
 	duration = (T)wh.duration;
-	return duration;
-}
-
-template <class T> 
-int WhereAbout<T>::operator = (WhereAbout<float> &wh)
-{
-	position = wh.position;
-	turn_center = wh.turn_center;
-	speed = wh.speed;
-	heading_toward = wh.heading_toward;
-	duration = (T)wh.duration;
-	return duration;
 }
 
 template <class T> 
