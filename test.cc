@@ -1,15 +1,7 @@
-#include <gtkmm.h>
-
+#include "cout.h"
+using namespace std;
 int main(int argc, char *argv[])
 {
-  Glib::RefPtr<Gtk::Application> app =
-    Gtk::Application::create(argc, argv,
-      "org.gtkmm.examples.base");
-
-  Gtk::Window window;
-  Gtk::Button m_button;
-  add(m_button);
-  window.set_default_size(200, 200);
-
-  return app->run(window);
+	Cout c;
+	c << "testds" << 4 << endl;
 }

@@ -1,4 +1,3 @@
-//#include "Unit.h"
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
@@ -10,6 +9,8 @@
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
+#include "bitmap.h"
+#include "Waypoint.h"
 using namespace std;
 
 Weapon::Weapon()
@@ -22,10 +23,9 @@ Weapon::~Weapon()
 	delete fire_range_clip;
 }
 
-int Weapon::adjust_range_clip(WhereAbout<float> &wh) const
+void Weapon::adjust_range_clip(WhereAbout<int> &wh) const
 {
 	Point<int> p;
-	p = wh.position;
 	p.x = wh.position.x - shootingRangeMax;
 	p.y = wh.position.y - shootingRangeMax;
 	fire_range_clip->set_lower_left(p);

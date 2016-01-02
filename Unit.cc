@@ -3,9 +3,10 @@
 #include <cmath>
 #include "Unit.h"
 #include "Util.h"
+#include "bitmap.h"
 using namespace std;
 
-Unit::Unit(Point<int> pos, float heading, Map &map) 
+Unit::Unit(Point<int> pos, float heading) 
 {
 	terrain_bitmap = map.terrain_bitmap;
 	recon_bitmap = map.recon_bitmap;
@@ -31,14 +32,20 @@ Unit::Unit(Point<int> pos, float heading, Map &map)
 	recon_clip->bit_circle(pos, intelligenceRadius);
 }
 
+Unit::~Unit()
+{
+	delete recon_clip;
+}
+
 void Unit::move(int time)
 {
 	time_pass(time);
-	for(vector<Weapon>::iterator it = weapon.begin(); it != weapon.end(); it++) {
-		it->adjust_range_clip(*this);
-		weapon_range_bitmap->paste_from(it->fire_range_clip, OR);
+	for(auto& au : weapon) {
+		au.adjust_range_clip(*this);
+		weapon_range_bitmap->paste_from(au.fire_range_clip, OR);
 	}
-	position - intelligenceRadius;
+	position.x -= intelligenceRadius;
+	position.y -= intelligenceRadius;
 	recon_clip->set_lower_left(position.to_int());
 	recon_clip->clear();
 	recon_clip->bit_circle(position.to_int(), intelligenceRadius);
@@ -69,15 +76,15 @@ int ArmorUnit::time_pass(int time)
 			case harbor: 	elapse += 10 / (100 - Harbor::movePenaltyVsArmor); 	break;
 			case airport: 	elapse += 10 / (100 - Airport::movePenaltyVsArmor); break;
 			case field: 	elapse += 10 / (100 - Field::movePenaltyVsArmor); 	break;
-			case mountain: 	elapse += 10 / (100 - Mountain::movePenaltyVsArmor);break;
+			case mountain: 	elapse += 10000;									break;
 			case river: 	elapse += 10 / (100 - River::movePenaltyVsArmor); 	break;
 			case forest: 	elapse += 10 / (100 - Forest::movePenaltyVsArmor); 	break;
 			case swamp: 	elapse += 10 / (100 - Swamp::movePenaltyVsArmor); 	break;
 			case road: 		elapse += 10 / (100 - Road::movePenaltyVsArmor); 	break;
 			case hill: 		elapse += 10 / (100 - Hill::movePenaltyVsArmor); 	break;
 			case fort: 		elapse += 10 / (100 - Fort::movePenaltyVsArmor); 	break;
-			case desert: elapse += 10 / (100 - Desert::movePenaltyVsArmor); 	break;
-			case sea: elapse += 10000; 
+			case desert: 	elapse += 10 / (100 - Desert::movePenaltyVsArmor); 	break;
+			case sea: 		elapse += 10000; 
 		}
 		if(elapse >= n.sec) break;
 	}
@@ -148,7 +155,7 @@ int Unit::movable_line(Point<int> tc, int time, Clip *cl)
 	time_pass(time);//call the time_pass of this Unit
 	float angle_to = tc % position.to_int();
 	Util::correct_angle(angle_to);
-	float radius = tc - position.to_int();
+	float radius = tc ^ position.to_int();
 	restore();
 	
 	if(angle_to >= angle_from) cl->bit_arc_line(tc, radius, start_angle, angle_to);

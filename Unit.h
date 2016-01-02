@@ -2,12 +2,13 @@
 #include <string>
 #include "Weapon.h"
 #include "map.h"
+#include "Waypoint.h"
 
 class Unit : public Waypoint
 {
 public:
-	Unit(Point<int> _position, float _headingToward, Map& map);
-	~Unit() {delete recon_clip;}
+	Unit(Point<int> _position, float _headingToward);
+	~Unit();
 	int operator + (Weapon& weapon);//equip weapon
 	int operator - (Weapon& weapon);//unload weapon
 	Clip* recon_clip;

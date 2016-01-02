@@ -19,11 +19,9 @@ int WhereAbout<T>::time_pass(T time)
 {
 //	if(duration == 0) return *this;
 	if(time > duration) time = duration;
-	T x = position.x - turn_center.x;
-	T y = position.y - turn_center.y;
 	float r = position ^ turn_center;
 	float center_angle = position % turn_center;
-	if(y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
+	if(position.y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
 	float theta = speed * time / r;
 	
 	float diff = abs(center_angle - correct_angle(heading_toward + M_PI/2));

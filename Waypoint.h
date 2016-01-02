@@ -32,7 +32,7 @@ private:
 	T save_dur;
 };
 
-class Waypoint : public WhereAbout<float>
+class Waypoint : public WhereAbout<>
 {
 public:
 	std::vector<WhereAbout<int> > waypoints;//last array for storing init value
