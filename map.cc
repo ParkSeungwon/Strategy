@@ -1,14 +1,48 @@
 #include "Terrain.h"
 #include "map.h"
+#include "bitmap.h"
+#define TERRAIN_COUNT 14
 
-Map::Map(char* filename)
+Map::Map(int w, int h, size_t **image, int joined_teams)
 {
-	PNG_interface::png_to_terrain_city_bitmap(filename, terrain_bitmap, city_bitmap);
-	int width = terrain_bitmap->width;
-	int height = terrain_bitmap->height;
-	recon_bitmap = new Bitmap(width, height, joined_teams);
-	weapon_range_bitmap = new Bitmap(width, height, joined_teams);
-	count_cities(const &city_bitmap);
+	width = w;
+	height = h;
+	recon_bitmap = new Bitmap(w, h, joined_teams);
+	weapon_range_bitmap = new Bitmap(w, h, joined_teams);
+	terrain_bitmap = new Bitmap(w, h, get_log2(TERRAIN_COUNT));
+	city_bitmap = new Bitmap(w, h, get_log2(count_cities(image)));
+	
+	Bitmap *t = terrain_bitmap;
+	Bitmap *c = city_bitmap;
+	Point<int> p;
+
+	for (size_t y = 0; y < h; y++) {
+		for (size_t x = 0; x < w; x++) {
+			p.x = x; p.y = y;
+			if(image[y][x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
+				c->set_pixel(p, image[y][x] & 0xff00);//도시의 고유번호를 부여함green
+				switch(image[y][x]) {
+					case City::color_code : 	t->set_pixel(p, city); 	break;
+					case Capital::color_code : 	t->set_pixel(p, capital);break;
+					case Harbor::color_code : 	t->set_pixel(p, harbor); break;
+					case Airport::color_code : 	t->set_pixel(p, airport);
+				}
+			} 
+			else {
+				switch(image[y][x]) {
+					case Field::color_code : 	t->set_pixel(p, field); 	break;
+					case Mountain::color_code : t->set_pixel(p, mountain); 	break;
+					case Sea::color_code : 		t->set_pixel(p, sea); 		break;
+					case Road::color_code : 	t->set_pixel(p, road); 		break;
+					case Hill::color_code : 	t->set_pixel(p, hill); 		break;
+					case Swamp::color_code : 	t->set_pixel(p, swamp); 	break;
+					case Fort::color_code : 	t->set_pixel(p, fort); 		break;
+					case Forest::color_code : 	t->set_pixel(p, forest); 	break;
+					default : 					t->set_pixel(p, river);
+				}
+			}
+		}
+	}
 }
 
 Map::~Map()
@@ -19,7 +53,7 @@ Map::~Map()
 	delete city_bitmap;
 }
 
-void deployUnit(Unit &u, Point<int> p, float h) 
+void Map::deployUnit(Unit &u, Point<int> p, float h) 
 {
 	if(city_bitmap->get_pixel(p) == 0) return NULL;
 	u.team = city_bitmap->get_pixel(p);
@@ -34,7 +68,7 @@ void deployUnit(Unit &u, Point<int> p, float h)
 	return *(bitmask+share+1) | 1 << (intSize-rest-1);
 }
 
-void deployUnit(Unit &unit) 
+void Map::deployUnit(Unit &unit) 
 {
 	int i;
 	while (deployedUnit[unit.team][i++ ] != null);
@@ -83,3 +117,12 @@ int Map::generate_weapon_range_bitmap() const
 	}
 	return i * j;
 }
+
+int Map::get_log2(int cc)
+{
+	int i=1;//to get log 2 cc
+	for (int j=2; j<cc; j *= 2) i++;
+	return i;
+}
+
+
