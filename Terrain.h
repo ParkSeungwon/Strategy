@@ -3,7 +3,7 @@
 #include "point.hpp"
 
 enum TerrainType {
-	city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
+	city=1, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
 };
 
 class Unit;
@@ -26,6 +26,7 @@ public:
 
 class City : public Terrain {
 public:
+	bool operator==(size_t id) const {return id == identifier;}
 	const static unsigned int color_code = 0xff00ff;//분홍색
 	const static int movePenaltyVsInfantry = 0;
 	const static int movePenaltyVsArmor = 0;

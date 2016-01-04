@@ -1,21 +1,28 @@
 #pragma once
+#include <vector>
 #include "Terrain.h"
 #include "point.hpp"
 
 class Bitmap;
 
-class Map : public Terrain
+class MapInterface 
+{
+public:
+	int occupy(Point<int> p) = 0;
+};
+
+class Map : public MapInterface
 {
 private:
 	const static int maxTeam = 8;
-	const static int maxUnit = 100;
 	int count_cities(size_t** image);
 	
 protected:
 	
 public:
 	int width, height;
-	Unit* deployedUnits[maxTeam][maxUnit];
+	std::vector<Unit> deployedUnits[maxTeam];
+	std::vector<City> cities;
 	Bitmap *terrain_bitmap, *recon_bitmap, *weapon_range_bitmap, *city_bitmap;
 	Map(int width, int height, size_t **pixel, int teams);
 	virtual ~Map();

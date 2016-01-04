@@ -6,6 +6,7 @@ template <class T> class WhereAbout;
 
 class Weapon 
 {
+friend class Map;
 public:
 	Clip* fire_range_clip;
 	void adjust_range_clip(WhereAbout<int> &wh) const;

@@ -62,8 +62,12 @@ class ArmorUnit : public TerrainUnit
 
 class InfantryUnit : public TerrainUnit 
 {
+public:
 	int time_pass(int time);
-	int occupy(City& city);
+
+private:
+	int in_city_time;
+	int occupy();
 };
 
 class ShipUnit : public TerrainUnit 

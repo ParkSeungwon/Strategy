@@ -119,6 +119,10 @@ int InfantryUnit::time_pass(int time)
 		}
 		if(elapse >= n.sec) break;
 	}
+	int c = city_bitmap->get_pixel(position);
+	if (c != 0 && c != team) in_city_time += oneTick;
+	else in_city_time = 0;
+	if (in_city_time >= oneTick * 100) occupy();
 	return i;
 }
 
