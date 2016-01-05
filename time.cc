@@ -1,31 +1,35 @@
 #include "time.h"
-Time::Time(){}
-int Time::oneTurnPass()
+#include "Unit.h"
+#include <vector>
+
+void Time::time_pass(int time)
 {
-	for(int k=0; k < turn; k++) {
-		for(int i=0; i<MAX_TEAM; i++) {
-			for(int j=0; j<MAX_UNIT; j++) {
-				deployed_units[i][j]->time_pass(one_tick * k);//유닛 위치 이동, 정찰, 무기 범위 갱신
-				deployed_units[i][j]->adjust_recon();
-				deployed_units[i][j]->weapon
-				deployed_units[i][j]->
-			}
+	//change position
+	for(int i=0; i<maxTeam; i++) {
+		for(auto& u : deployedUnits[i]) {
+			u.time_pass(time);
 		}
-		for(int i=0; i<MAX_TEAM; i++) {
-			for(int j=0; j<MAX_UNIT; j++) {
-				deployed_units[i][j]->attck();//공격
+	}
+	//attck
+	for(int i=0; i<maxTeam; i++) {
+		for(auto& u : deployedUnits[i]) {
+			for(auto& w : u.weapon) {
+				w.adjust_range_clip(u);
+				w >> deployedUnits[!i];
 			}
 		}
 	}
-	return 0;
+	//remove destroyed units
+	std::vector<Unit>::iterator it;
+	for(int i=0; i<maxTeam; i++) {
+		it = deployedUnits[i].begin();
+		while(it != deployedUnits[i].end()) {
+			it = find(it, deployedUnits[i].end(), 0);
+			deployedUnits[i].erase(it);
+		}
+	}
+
+	generate_recon_bitmap();
+	generate_weapon_range_bitmap();
 }
-
-Time::end_turn()
-{//eliminate destroyed units from array queue
-	if(deployed_units[target]->currentHealth <= 0) {
-		delete e[terget];//유닛큐를 비우고 뒤에서 채워 넣는다.
-		e[target] = e[i-1];
-		e[i-1] = NULL;
-	}
-
 

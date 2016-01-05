@@ -1,5 +1,6 @@
 #define Turn = 100 Tick
 #define Tick = 3 sec
+#include "map.h"
 
 class Time : public Map
 {
@@ -10,6 +11,5 @@ class Time : public Map
 	public:
 		double clock;
 		int oneTickPass() ;
-		void time_pass(int time) {clock += time;}
-		Unit* deployed_units[MAX_TEAM][MAX_UNIT];
+		void time_pass(int time);
 };

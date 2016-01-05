@@ -8,18 +8,19 @@ class Bitmap;
 class MapInterface 
 {
 public:
-	int occupy(Point<int> p) = 0;
+	virtual int occupy(Point<int> p, int team) = 0;
 };
 
 class Map : public MapInterface
 {
 private:
-	const static int maxTeam = 8;
 	int count_cities(size_t** image);
 	
 protected:
+	const static int maxTeam = 8;
 	
 public:
+	virtual int occupy(Point<int> p, int team);
 	int width, height;
 	std::vector<Unit> deployedUnits[maxTeam];
 	std::vector<City> cities;

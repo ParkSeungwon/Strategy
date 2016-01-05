@@ -21,16 +21,12 @@ Map::Map(int w, int h, size_t **image, int joined_teams)
 	City ct;
 	size_t dot = 0;
 
-	for (size_t y = 0; y < h; y++) {
-		for (size_t x = 0; x < w; x++) {
+	for(size_t y = 0; y < h; y++) {
+		for(size_t x = 0; x < w; x++) {
 			p.x = x; p.y = y;
 			if(image[y][x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
 				dot = (image[y][x] & 0xff00) >> 2;
 				c->set_pixel(p, dot);//도시의 고유번호를 부여함green
-				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
-					ct.identifier = dot;
-					cities.push_back(ct);
-				}
 				switch(image[y][x]) {
 					case City::color_code : 	t->set_pixel(p, (UC)city); 		break;
 					case Capital::color_code : 	t->set_pixel(p, (UC)capital);	break;
@@ -54,6 +50,32 @@ Map::Map(int w, int h, size_t **image, int joined_teams)
 	}
 }
 
+int Map::occupy(Point<int> p, int team)
+{
+	auto it = find(cities.begin(), cities.end(), city_bitmap->get_pixel(p));
+	if(it != cities.end()) it->owner = team;
+}
+
+int Map::count_cities(size_t **image)
+{
+	Point<int> p;
+	size_t dot = 0;
+	City ct;
+	for (size_t y = 0; y < height; y++) {
+		for (size_t x = 0; x < width; x++) {
+			p.x = x; p.y = y;
+			if(image[y][x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
+				dot = (image[y][x] & 0xff00) >> 2;
+				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
+					ct.identifier = dot;
+					cities.push_back(ct);
+				}
+			}
+		}
+	}
+	return cities.size();
+}
+	
 Map::~Map()
 {
 	delete terrain_bitmap;

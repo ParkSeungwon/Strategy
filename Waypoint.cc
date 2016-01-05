@@ -16,7 +16,7 @@ float WhereAbout<T>::correct_angle(float f)
 
 template <class T> 
 int WhereAbout<T>::time_pass(T time)
-{
+{//change position & duration according to turncenter, duration, heading
 //	if(duration == 0) return *this;
 	if(time > duration) time = duration;
 	float r = position ^ turn_center;
@@ -118,25 +118,23 @@ int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur)
 {
 	int ret = waypoints.size();
 	WhereAbout<int> mediator;
-	save();
-	if(ret == 0) {
+	if(ret == 0) {//if none push current position
 		mediator = *this;
 		waypoints.push_back(mediator);
 		ret++;
 	}
 
 	vector<WhereAbout<int> >::iterator it = waypoints.end();
-	speed = it->speed = spd;
-	it->turn_center = turn;
-	turn_center = turn;
-	duration = it->duration = dur;
-
-	time_pass(dur);//duration = 0 이 됨.
-
-	mediator = *this;
+	it--;
+	it->save();
+	it->time_pass(it->duration);
+	mediator = *it;//reuse mediator, change position
+	it->restore();
+	mediator.speed = spd;
+	mediator.turn_center = turn;
+	mediator.duration = dur;
 	waypoints.push_back(mediator);
-	restore();
 
-	return ret + 1;
+	return ret + 1;//size of waypoints
 }
 

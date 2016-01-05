@@ -15,6 +15,7 @@ public:
 	Clip* movable_area(int time);//generate clip of movable area within time
 	void move(int time);
 	int operator >> (std::vector<Unit> enemy);//attack
+	bool operator==(int health) {return currentHealth <= health;}
 	int capture(City& city);
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
