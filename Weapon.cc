@@ -97,8 +97,8 @@ int Weapon::operator >> (Unit &e)
 	else return 0;
 	
 	srand(time(NULL));
-	int dice = rand() % 100;//1~100사이의 수를 리턴하는 유틸함수
-	if (dice >= hitRatio * (100 - e.evadeRatio)/100) {
+	int dice = rand() % 100;//0~99사이의 수를 리턴하는 유틸함수
+	if (dice <= hitRatio * (100 - e.evadeRatio)/100) {
 		e.currentHealth -= firePower;
 	}
 	dice_record.push_back(dice);

@@ -29,7 +29,7 @@ public:
 	static int maximumSpeed;
 	static unsigned int intelligenceRadius;
 
-	int team;
+	int team, ally;
 	int currentHealth;
 	int fuel;
 	unsigned int experience;

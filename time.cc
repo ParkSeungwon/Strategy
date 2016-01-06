@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "time.h"
 #include "Unit.h"
 #include <vector>
@@ -24,7 +25,7 @@ void Time::time_pass(int time)
 	for(int i=0; i<maxTeam; i++) {
 		it = deployedUnits[i].begin();
 		while(it != deployedUnits[i].end()) {
-			it = find(it, deployedUnits[i].end(), 0);
+			it = find(it, deployedUnits[i].end(), 0);//find health <=0
 			deployedUnits[i].erase(it);
 		}
 	}
