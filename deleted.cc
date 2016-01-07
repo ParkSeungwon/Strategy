@@ -145,4 +145,29 @@ int Weapon::operator ++ (Unit e[])
 	return ret;
 }
 
+int Waypoint::how_long_can_i_go(int start, int fuel) {
+	Nth nth = nth_way(start);
+	int tmp = fuel;
+	int dur;
+	fuel -= waypoints[nth.n].speed * (waypoints[nth.n].duration - nth.sec);
+	while(fuel > 0) {
+		tmp = fuel;
+		dur += waypoints[nth.n].duration;
+		fuel -= waypoints[++nth.n].duration * waypoints[nth.n].speed;
+	}
+	dur += tmp / waypoints[nth.n].speed;
+	return start + dur;
+}
+
+int Waypoint::moved_distance(int start, int end) {
+	Nth nth1 = nth_way(start);
+	Nth nth2 = nth_way(end);
+	int distance = 0;
+	for(int i = nth1.n; i <= nth2.n; i++) {
+		distance += waypoints[i].speed * waypoints[i].duration;
+	}
+	distance -= waypoints[nth1.n].speed * nth1.sec;
+	distance -= waypoints[nth2.n].speed * (waypoints[nth2.n].duration - nth2.sec);
+	return distance;
+}
 

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <typeinfo>
 #include "Terrain.h"
 #include "map.h"
 #include "bitmap.h"
@@ -137,6 +138,76 @@ int Map::get_log2(int cc)
 	int i=1;//to get log 2 cc
 	for (int j=2; j<cc; j *= 2) i++;
 	return i;
+}
+
+float Map::calculate_terrain_penalty(int t, WhereAbout& wh)
+{
+	float elapse = 0;
+	int i;
+	TerrainType tt;
+	wh.save();
+	switch(typeid(wh).name()) {
+		case InfantryUnit :
+			for(i=0; i < t*10; i++) {
+				wh.time_pass(0.1 * i);
+				tt = terrain_bitmap->get_pixel(wh.position.to_int());
+				switch(tt) {
+					case city:		elapse += 10 / (100 - City::movePenaltyVsInfantry);		break;
+					case capital:	elapse += 10 / (100 - Capital::movePenaltyVsInfantry); 	break;
+					case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsInfantry); 	break;
+					case airport:	elapse += 10 / (100 - Airport::movePenaltyVsInfantry); 	break;
+					case field:		elapse += 10 / (100 - Field::movePenaltyVsInfantry); 	break;
+					case mountain:	elapse += 10 / (100 - Mountain::movePenaltyVsInfantry); break;
+					case river:		elapse += 10 / (100 - River::movePenaltyVsInfantry); 	break;
+					case forest:	elapse += 10 / (100 - Forest::movePenaltyVsInfantry); 	break;
+					case swamp:		elapse += 10 / (100 - Swamp::movePenaltyVsInfantry); 	break;
+					case road:		elapse += 10 / (100 - Road::movePenaltyVsInfantry); 	break;
+					case hill:		elapse += 10 / (100 - Hill::movePenaltyVsInfantry); 	break;
+					case fort:		elapse += 10 / (100 - Fort::movePenaltyVsInfantry); 	break;
+					case desert:	elapse += 10 / (100 - Desert::movePenaltyVsInfantry); 	break;
+					case sea:		elapse += 10000; 
+				}
+				if(elapse >= t) break;
+			}
+			break;
+		case ArmorUnit :
+			for(i=0; i < t*10; i++) {
+				time_pass(0.1 * i);
+				tt = terrain_bitmap->get_pixel(position.to_int());
+				switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
+					case city: 		elapse += 10 / (100 - City::movePenaltyVsArmor); 	break;
+					case capital: 	elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
+					case harbor: 	elapse += 10 / (100 - Harbor::movePenaltyVsArmor); 	break;
+					case airport: 	elapse += 10 / (100 - Airport::movePenaltyVsArmor); break;
+					case field: 	elapse += 10 / (100 - Field::movePenaltyVsArmor); 	break;
+					case mountain: 	elapse += 10000;									break;
+					case river: 	elapse += 10 / (100 - River::movePenaltyVsArmor); 	break;
+					case forest: 	elapse += 10 / (100 - Forest::movePenaltyVsArmor); 	break;
+					case swamp: 	elapse += 10 / (100 - Swamp::movePenaltyVsArmor); 	break;
+					case road: 		elapse += 10 / (100 - Road::movePenaltyVsArmor); 	break;
+					case hill: 		elapse += 10 / (100 - Hill::movePenaltyVsArmor); 	break;
+					case fort: 		elapse += 10 / (100 - Fort::movePenaltyVsArmor); 	break;
+					case desert: 	elapse += 10 / (100 - Desert::movePenaltyVsArmor); 	break;
+					case sea: 		elapse += 10000; 
+				}
+				if(elapse >= t) break;
+			}
+			break;
+		case ShipUnit :
+			for(i=0; i <= t*10; i++) {
+				time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
+				tt = terrain_bitmap->get_pixel(position.to_int());
+				switch(tt) {
+					case sea: 		elapse += 10 / (100 - Sea::movePenaltyVsShip); 		break;
+					case river: 	elapse += 10 / (100 - River::movePenaltyVsShip); 	break;
+					case harbor:	elapse += 10 / (100 - Harbor::movePenaltyVsShip); 	break;
+					default: elapse += 10000; 
+				}
+				if(elapse >= t) break;
+			}
+			break;
+	}
+	return i / (10 * t);
 }
 
 

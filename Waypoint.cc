@@ -15,14 +15,14 @@ float WhereAbout<T>::correct_angle(float f)
 }
 
 template <class T> 
-int WhereAbout<T>::time_pass(T time)
+int WhereAbout<T>::time_pass(int time, float penalty)
 {//change position & duration according to turncenter, duration, heading
 //	if(duration == 0) return *this;
 	if(time > duration) time = duration;
 	float r = position ^ turn_center;
 	float center_angle = position % turn_center;
 	if(position.y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
-	float theta = speed * time / r;
+	float theta = speed * time * penalty/ r;//moved angle affected by penalty
 	
 	float diff = abs(center_angle - correct_angle(heading_toward + M_PI/2));
 	if(diff < 0.1 || diff > 3) { //if center is at the left of heading direction
@@ -35,15 +35,8 @@ int WhereAbout<T>::time_pass(T time)
 		position.y = turn_center.y + r * sinf(center_angle - theta);
 	}
 	duration -= time;//left duration of this waypiont
+	this->penalty = penalty;
 	return duration;
-}
-
-int Waypoint::time_pass(int time)
-{
-	Nth n = nth_way(time);
-	(WhereAbout)*this = waypoints[n.n];
-	time_pass(n.sec);
-	return n.sec;
 }
 
 template <class T> template <typename T2>
@@ -76,45 +69,17 @@ void WhereAbout<T>::restore()
 	duration = save_dur;
 }
 
-int Waypoint::moved_distance(int start, int end) {
-	Nth nth1 = nth_way(start);
-	Nth nth2 = nth_way(end);
-	int distance = 0;
-	for(int i = nth1.n; i <= nth2.n; i++) {
-		distance += waypoints[i].speed * waypoints[i].duration;
-	}
-	distance -= waypoints[nth1.n].speed * nth1.sec;
-	distance -= waypoints[nth2.n].speed * (waypoints[nth2.n].duration - nth2.sec);
-	return distance;
-}
-
-Nth Waypoint::nth_way(int time) {
+int Waypoint::nth_way(int time) {
 	int i, t;
 	for(i=0; time > 0; i++) {
 		t = time;
 		time -= waypoints[i].duration;
 	}
-	Nth nth;
-	nth.n = i;
-	nth.sec = t;
-	return nth;
+	(WhereAbout)*this = waypoints[i];
+	return t;
 }
 
-int Waypoint::how_long_can_i_go(int start, int fuel) {
-	Nth nth = nth_way(start);
-	int tmp = fuel;
-	int dur;
-	fuel -= waypoints[nth.n].speed * (waypoints[nth.n].duration - nth.sec);
-	while(fuel > 0) {
-		tmp = fuel;
-		dur += waypoints[nth.n].duration;
-		fuel -= waypoints[++nth.n].duration * waypoints[nth.n].speed;
-	}
-	dur += tmp / waypoints[nth.n].speed;
-	return start + dur;
-}
-
-int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur)
+int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur, float p)
 {
 	int ret = waypoints.size();
 	WhereAbout<int> mediator;
@@ -127,12 +92,13 @@ int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur)
 	vector<WhereAbout<int> >::iterator it = waypoints.end();
 	it--;
 	it->save();
-	it->time_pass(it->duration);
+	it->time_pass(it->duration, it->penalty);
 	mediator = *it;//reuse mediator, change position
 	it->restore();
 	mediator.speed = spd;
 	mediator.turn_center = turn;
 	mediator.duration = dur;
+	mediator.penalty = p;
 	waypoints.push_back(mediator);
 
 	return ret + 1;//size of waypoints
