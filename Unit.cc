@@ -52,6 +52,23 @@ int Unit::operator + (Weapon& w)
 	weapon.push_back(w);
 }
 
+int Unit::operator >> (vector<Unit> deployed)
+{
+	int sz = deployed.size();
+	int* pref = new int[sz];
+	int i, target;
+	for(auto& w : weapon) {
+		if(w.get_currentRounds() > 0 && w.get_lapsedTimeAfterFire() >= w.get_fireRate()) {
+			i = 0;
+			for(auto& e : deployed) pref[i++] = (ally == e.ally ? -1 : w + e);
+			target = Util::find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
+			if(pref[target] > 0) w >> deployed[target];
+		}
+	}
+	delete pref;
+	return sz;
+}
+
 bool InfantryUnit::in_city()
 {
 	in_city_time += 4;

@@ -63,7 +63,7 @@ badd +1 ~/Programming/Strategy/Terrain.cc
 badd +1 ~/Programming/Strategy/Weapon.cc
 badd +1 ~/Programming/Strategy/time.h
 badd +1 ~/Programming/Strategy/time.cc
-badd +1 ~/.vimrc
+badd +10 ~/.vimrc
 badd +1 ~/Programming/deleted.cc
 badd +1 ~/Programming/Strategy/deleted.cc
 badd +1 ~/Programming/Strategy/Util.h
@@ -83,7 +83,8 @@ badd +1 ~/Programming/Strategy/Makefile
 badd +1 ~/Programming/Strategy/blank.cc
 badd +1 ~/Programming/Strategy/blanck.cc
 badd +1 ~/Programming/Strategy/cout.cc
-badd +1 ~/Programming/Strategy/cout.h
+badd +10 ~/Programming/Strategy/cout.h
+badd +0 ~/Programming/Strategy/session.vim
 silent! argdel *
 edit ~/Programming/Strategy/bitmap.cc
 set splitbelow splitright
@@ -326,7 +327,7 @@ lcd ~/Programming
 wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-tabedit ~/Programming/Strategy/cout.h
+tabedit ~/Programming/Strategy/map.cc
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -443,11 +444,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 10 - ((9 * winheight(0) + 26) / 52)
+let s:l = 1 - ((0 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-10
+1
 normal! 0
 lcd ~/Programming
 wincmd w
@@ -684,7 +685,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 51 - ((38 * winheight(0) + 26) / 52)
+let s:l = 51 - ((50 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -803,7 +804,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 10
-normal! 052|
+normal! 051|
 lcd ~/Programming
 wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
@@ -925,7 +926,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 24 - ((23 * winheight(0) + 26) / 52)
+let s:l = 24 - ((0 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1039,7 +1040,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 8 - ((3 * winheight(0) + 26) / 52)
+let s:l = 8 - ((7 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -2249,7 +2250,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 11
-normal! 08|
+normal! 0
 lcd ~/Programming
 wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
@@ -3941,13 +3942,133 @@ lcd ~/Programming
 wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-tabedit ~/.vimrc
+tabedit ~/Programming/Strategy/session.vim
 set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
+exe 'vert 1resize ' . ((&columns * 118 + 117) / 235)
+exe 'vert 2resize ' . ((&columns * 116 + 117) / 235)
 argglobal
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal cindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+set colorcolumn=81
+setlocal colorcolumn=81
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=/*%s*/
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal noexpandtab
+if &filetype != 'vim'
+setlocal filetype=vim
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldtext=foldtext()
+setlocal formatexpr=
+setlocal formatoptions=tcq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=0
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=
+setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255
+setlocal keywordprg=
+setlocal nolinebreak
+setlocal nolisp
+setlocal nolist
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal nomodeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal smartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'vim'
+setlocal syntax=vim
+endif
+setlocal tabstop=4
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+silent! normal! zE
+let s:l = 51 - ((50 * winheight(0) + 26) / 52)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+51
+normal! 05|
+lcd ~/Programming
+wincmd w
+argglobal
+edit ~/.vimrc
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -4052,14 +4173,17 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 10 - ((9 * winheight(0) + 26) / 53)
+let s:l = 10 - ((9 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 10
 normal! 09|
 lcd ~/Programming
-tabnext 4
+wincmd w
+exe 'vert 1resize ' . ((&columns * 118 + 117) / 235)
+exe 'vert 2resize ' . ((&columns * 116 + 117) / 235)
+tabnext 2
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

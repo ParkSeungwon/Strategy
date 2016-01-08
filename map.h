@@ -23,7 +23,7 @@ protected:
 public:
 	virtual int occupy(Point<int> p, int team);
 	int width, height;
-	std::vector<Unit> deployedUnits[maxTeam];
+	std::vector<Unit> deployedUnits;
 	std::vector<City> cities;
 	Bitmap *terrain_bitmap, *recon_bitmap, *weapon_range_bitmap, *city_bitmap;
 	Map(int width, int height, size_t **pixel, int teams);

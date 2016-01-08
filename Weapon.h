@@ -16,9 +16,13 @@ public:
 	
 	int operator + (const Unit& enemy) const;//target return expected value regards to preference 
 	int operator >> (Unit &enenmy);		//공격 함수
-	int operator >> (std::vector<Unit> enemy);//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
 
 	void set_preference(Preference p) {preference = p;}
+
+	//getter func
+	int get_currentRounds() {return currentRounds;}
+	int get_lapsedTimeAfterFire() {return lapsedTimeAfterFire;}
+	int get_fireRate() {return fireRate;}
 
 protected:
 	Preference preference;

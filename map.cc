@@ -49,7 +49,6 @@ Map::Map(int w, int h, size_t **image, int joined_teams)
 			}
 		}
 	}
-}
 
 int Map::occupy(Point<int> p, int team)
 {

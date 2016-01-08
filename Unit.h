@@ -11,6 +11,7 @@ public:
 	~Unit();
 	int operator + (Weapon& weapon);//equip weapon
 	int operator - (std::vector<Weapon>::iterator it) {weapon.erase(it);}//unload weapon
+	int operator >> (std::vector<Unit> deployed);//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
 	Clip* recon_clip;
 	void adjust_new_position();
 	bool operator==(int health) {return currentHealth <= health;}//for find function
