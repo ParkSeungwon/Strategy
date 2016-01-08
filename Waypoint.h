@@ -6,32 +6,32 @@ template <class T = int>
 class WhereAbout
 {
 public:
-	Point<T> position, turn_center;
-	int speed;
-	float heading_toward;
-	int duration;//how long will this keep on going like this
-	float penalty;// to store in waypoint
+	//main function of this class. return left duration, change members
+	virtual int time_pass(int time, float penalty = 1);
 
-	virtual int time_pass(int time, float penalty = 1);	//return left duration, change members
-	//지형의 영향력을 고려한다. 호를 100개 내지 일정한 개수의 점으로 나누어서 각 점의 지형을 샘플로 뽑아 속도를 계산한다.
 	template <typename T2> void operator = (WhereAbout<T2> &wh);
 	void save();
 	void restore();
 
+	Point<T> position, turn_center;
+	int speed;
+	int duration;//how long will it keep on going like this
+	float heading_toward;
+	float penalty;// to store in waypoint
+
 protected:
 	float correct_angle(float);
 
-private:
+private://for saving status temporarily
 	Point<T> save_pos, save_tc;
-	int save_speed;
-	float save_head;
-	int save_dur;
+	int save_speed, save_dur;
+	float save_head, save_penalty;
 };
 
 class Waypoint : public WhereAbout<>
 {
 public:
-	std::vector<WhereAbout<int> > waypoints;//last array for storing init value
+	std::vector<WhereAbout<int> > waypoints;
 	int insert_waypoint(Point<int> turn, int spd, int dur, float penalty);//return inserted nth waypoint
 	void delete_waypoint() {waypoints.pop_back();}
 	int nth_way(int time);//time in at which waypoint & moment

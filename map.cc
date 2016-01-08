@@ -140,14 +140,14 @@ int Map::get_log2(int cc)
 	return i;
 }
 
-float Map::calculate_terrain_penalty(int t, WhereAbout& wh)
-{
+float Map::calculate_terrain_penalty(int t, WhereAbout<>& wh)
+{ //지형의 영향력을 고려한다. 호를 100개 내지 일정한 개수의 점으로 나누어서 각 점의 지형을 샘플로 뽑아 속도를 계산한다.
 	float elapse = 0;
 	int i;
 	TerrainType tt;
 	wh.save();
 	switch(typeid(wh).name()) {
-		case InfantryUnit :
+		case "InfantryUnit" :
 			for(i=0; i < t*10; i++) {
 				wh.time_pass(0.1 * i);
 				tt = terrain_bitmap->get_pixel(wh.position.to_int());
@@ -172,8 +172,8 @@ float Map::calculate_terrain_penalty(int t, WhereAbout& wh)
 			break;
 		case ArmorUnit :
 			for(i=0; i < t*10; i++) {
-				time_pass(0.1 * i);
-				tt = terrain_bitmap->get_pixel(position.to_int());
+				wh.time_pass(0.1 * i);
+				tt = terrain_bitmap->get_pixel(wh.position.to_int());
 				switch(tt) {//0.1초기에 10을 나누어준다. 1초였음 100. 0.1초가 elapse로 바뀜 페널티 덕분에
 					case city: 		elapse += 10 / (100 - City::movePenaltyVsArmor); 	break;
 					case capital: 	elapse += 10 / (100 - Capital::movePenaltyVsArmor); break;
@@ -195,8 +195,8 @@ float Map::calculate_terrain_penalty(int t, WhereAbout& wh)
 			break;
 		case ShipUnit :
 			for(i=0; i <= t*10; i++) {
-				time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
-				tt = terrain_bitmap->get_pixel(position.to_int());
+				wh.time_pass(0.1 * i);//call the time_pass of WhereAbout<float>
+				tt = terrain_bitmap->get_pixel(wh.position.to_int());
 				switch(tt) {
 					case sea: 		elapse += 10 / (100 - Sea::movePenaltyVsShip); 		break;
 					case river: 	elapse += 10 / (100 - River::movePenaltyVsShip); 	break;
@@ -207,7 +207,7 @@ float Map::calculate_terrain_penalty(int t, WhereAbout& wh)
 			}
 			break;
 	}
-	return i / (10 * t);
+	return (float)i / (10 * t);
 }
 
 

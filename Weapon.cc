@@ -23,7 +23,7 @@ Weapon::~Weapon()
 	delete fire_range_clip;
 }
 
-void Weapon::adjust_range_clip(WhereAbout<int> &wh) const
+void Weapon::adjust_range_clip(const WhereAbout<int> &wh) const
 {
 	Point<int> p;
 	p.x = wh.position.x - shootingRangeMax;
@@ -33,7 +33,7 @@ void Weapon::adjust_range_clip(WhereAbout<int> &wh) const
 	fire_range_clip->bit_arc_circle(p, shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
 }
 
-int Weapon::operator + (Unit &e) 
+int Weapon::operator + (const Unit &e) const
 {
 	if(currentRounds <= 0) return -10000;
 	if(lapsedTimeAfterFire < fireRate) return -10001;
@@ -109,10 +109,10 @@ int Weapon::operator >> (vector<Unit> e)
 {
 	//int pref[e.size()];
 	int* pref = new int[e.size()];
-	int i = 0;
+	int i = 0, dice = -1;
 	for(auto& a : e) pref[i++] = *this + a;
 	int target = Util::find_big(pref, e.size());//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
-	int dice = *this >> e[target];
+	if(pref[target] > 0) dice = *this >> e[target];
 	delete pref;
 	return dice;
 }

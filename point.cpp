@@ -16,8 +16,16 @@ float Point<T>::operator^(Point<T> p) const//distance
 	return sqrtf((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
 }
 
+template <class T> template <typename T2>
+Point<T> Point<T>::operator = (Point<T2> p)
+{
+	x = (T)p.x;
+	y = (T)p.y;
+	return *this;
+}
+
 template <class T> 
-Point<int> Point<T>::to_int()
+Point<int> Point<T>::to_int() const
 {
 	Point<int> ret;
 	ret = *this;
@@ -25,7 +33,7 @@ Point<int> Point<T>::to_int()
 }
 
 template <class T> 
-Point<float> Point<T>::to_float()
+Point<float> Point<T>::to_float() const
 {
 	Point<float> ret;
 	ret = *this;

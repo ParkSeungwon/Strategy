@@ -2,6 +2,7 @@
 #include <vector>
 #include "Terrain.h"
 #include "point.hpp"
+#include "Waypoint.h"
 
 class Bitmap;
 
@@ -31,6 +32,6 @@ public:
 	int generate_recon_bitmap() const;//return showing unit count
 	int generate_weapon_range_bitmap() const;
 	static int get_log2(int i);
-	float calculate_terrain_penalty(int time, WhereAbout& wh);
+	float calculate_terrain_penalty(int time, WhereAbout<>& wh);
 };
 

@@ -7,15 +7,13 @@
 class Unit : public Waypoint
 {
 public:
-	Unit(Point<int> _position, float _headingToward, const Map& map);
+	Unit(Point<int> position, float headingToward);
 	~Unit();
 	int operator + (Weapon& weapon);//equip weapon
-	int operator - (Weapon& weapon);//unload weapon
+	int operator - (std::vector<Weapon>::iterator it) {weapon.erase(it);}//unload weapon
 	Clip* recon_clip;
-	Clip* movable_area(int time);//generate clip of movable area within time
-	void move(int time);
-	int operator >> (std::vector<Unit> enemy);//attack
-	bool operator==(int health) {return currentHealth <= health;}
+	void adjust_new_position();
+	bool operator==(int health) {return currentHealth <= health;}//for find function
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
 	static std::string unitName;
@@ -36,13 +34,8 @@ public:
 	std::vector<Weapon> weapon;
 
 protected:
-	static Bitmap* terrain_bitmap;
-	static Bitmap* recon_bitmap;
-	static Bitmap* weapon_range_bitmap;
-	static Bitmap* city_bitmap;
 
 private:
-	int movable_line(Point<int> turn_center, int time, Clip *cl);
 };
 
 class TerrainUnit : public Unit//지형효과를 받는 유닛들의 모클래스
@@ -58,21 +51,19 @@ class AirUnit : public Unit
 
 class ArmorUnit : public TerrainUnit 
 {
-	int time_pass(int time);	
 };
 
 class InfantryUnit : public TerrainUnit 
 {
 public:
-	int time_pass(int time);
-
+	bool in_city();
+	void out_of_city() {in_city_time = 0;}
+	
 private:
 	int in_city_time;
-	int occupy(City& city);
 };
 
 class ShipUnit : public TerrainUnit 
 {
-	int time_pass(int time);
 
 };

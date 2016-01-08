@@ -171,3 +171,48 @@ int Waypoint::moved_distance(int start, int end) {
 	return distance;
 }
 
+int Unit::operator >> (vector<Unit> enemy)
+{
+	int dice;
+	for(auto& w : weapon) dice = w >> e;
+	return dice;
+}
+		
+int Unit::movable_line(Point<int> tc, int time, Clip *cl)
+{//used by movable_area
+	float start_angle = tc % position.to_int();
+	
+	save();
+	speed = maximumSpeed;
+	turn_center = tc;
+	float angle_from = tc % position.to_int();
+	Util::correct_angle(angle_from);
+	time_pass(time);//call the time_pass of this Unit
+	float angle_to = tc % position.to_int();
+	Util::correct_angle(angle_to);
+	float radius = tc ^ position.to_int();
+	restore();
+	
+	if(angle_to >= angle_from) cl->bit_arc_line(tc, radius, start_angle, angle_to);
+	else {
+		cl->bit_arc_line(tc, radius, start_angle, 2 * M_PI);
+		cl->bit_arc_line(tc, radius, 0, angle_to);
+	}
+	return radius * (angle_to - angle_from);
+}
+
+Clip* Unit::movable_area(int time)
+{
+	Clip *ret = new Clip(position.to_int(), maximumSpeed * time);
+	Point<int> p;
+	for(int r=minimumTurnRadius; r <= maximumSpeed * time * 10; r++) {//10? enough?
+		for(int i=-1; i<= 1; i += 2) {//to calculate both side
+			p = p.polar_to_xy(r, M_PI / 2 * i + heading_toward);
+			p.x += position.x;
+			p.y += position.y;
+			movable_line(p, time, ret);//set_pixel이 OR로 작동함.
+		}
+	}
+	return ret;
+}
+

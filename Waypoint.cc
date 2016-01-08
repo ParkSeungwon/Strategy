@@ -57,6 +57,7 @@ void WhereAbout<T>::save()
 	save_speed = speed;
 	save_head = heading_toward;
 	save_dur = duration;
+	save_penalty = penalty;
 }
 
 template <class T> 
@@ -67,6 +68,7 @@ void WhereAbout<T>::restore()
 	speed = save_speed;
 	heading_toward = save_head;
 	duration = save_dur;
+	penalty = save_penalty;
 }
 
 int Waypoint::nth_way(int time) {
