@@ -14,7 +14,7 @@ float Point::operator^(Point p) const//distance
 	return sqrtf((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
 }
 
-float Point::operator%(Point p) const
+float Point::operator%(Point p) const//angle to p
 {
 	return atanf((p.y - y) / (p.x - x));
 }

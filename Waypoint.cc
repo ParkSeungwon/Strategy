@@ -16,7 +16,7 @@ WhereAbout::WhereAbout(Point p, float h, int t, int s, int d)
 	set_turning(t);
 }
 
-WhereAbout::set_turning(int t)
+void WhereAbout::set_turning(int t)
 {
 	turning = t;
 	if(t == 0) turn_center = *this;
@@ -38,23 +38,21 @@ int WhereAbout::time_pass(int time, float penalty)
 {//change position & duration according to turncenter, duration, heading
 //	if(duration == 0) return *this;
 	if(time > duration) time = duration;
-	int r = abs(turning);
-	float center_angle = position % turn_center;
-	if(position.y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
-	float theta = speed * time * penalty/ r;//moved angle affected by penalty
+	int i = turning > 0 ? 1 : -1;
+	int r = turning * i;//abs
+	float center_angle = correct_angle(heading_toward - i * M_PI / 2);//O = x,y
+	center_angle = correct_angle(center_angle + M_PI);//O = turn center
+	float theta = speed * time * penalty / r;//moved angle affected by penalty
 	
-	float diff = abs(center_angle - correct_angle(heading_toward + M_PI/2));
 	if(turning == 0) {//go straight
-		x += r * cosf(heading_toward);
-		y += r * sinf(heading_toward);
-	} else if(turning < 0) { //if center is at the left of heading direction
-		heading_toward += theta;
-		x = turn_center.x + r * cosf(center_angle + theta);
-		y = turn_center.y + r * sinf(center_angle + theta);
-	} else {
-		heading_toward -= theta;
-		x = turn_center.x + r * cosf(center_angle - theta);
-		y = turn_center.y + r * sinf(center_angle - theta);
+		float f = Point(0,0) ^ Point(1,1);//root2
+		f = speed * time * penalty / f;
+		x += f * cosf(heading_toward);
+		y += f * sinf(heading_toward);
+	} else { //if center is at the left or right of heading direction
+		heading_toward -= i * theta;
+		x = turn_center.x + r * cosf(center_angle - i * theta);
+		y = turn_center.y + r * sinf(center_angle - i * theta);
 	}
 	duration -= time;//left duration of this waypiont
 	this->penalty = penalty;
@@ -73,22 +71,24 @@ void WhereAbout::operator = (WhereAbout &wh)
 
 void WhereAbout::save()
 {
-	save_pos = position;
+	save_pos.x = x; save_pos.y = y;
 	save_tc = turn_center;
 	save_speed = speed;
 	save_head = heading_toward;
 	save_dur = duration;
 	save_penalty = penalty;
+	save_turning = turning;
 }
 
 void WhereAbout::restore()
 {
-	position = save_pos;
+	x = save_pos.x; y = save_pos.y;
 	turn_center = save_tc;
 	speed = save_speed;
 	heading_toward = save_head;
 	duration = save_dur;
 	penalty = save_penalty;
+	turning = save_turning;
 }
 
 int Waypoint::nth_way(int time) {

@@ -27,7 +27,7 @@ protected:
 
 private://for saving status temporarily
 	Point save_pos, save_tc;
-	int save_speed, save_dur;
+	int save_speed, save_dur, save_turning;
 	float save_head, save_penalty;
 };
 
