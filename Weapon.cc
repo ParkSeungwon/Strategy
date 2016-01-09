@@ -15,7 +15,7 @@ using namespace std;
 
 Weapon::Weapon()
 {
-	fire_range_clip = new Clip(Point<int>(shootingRangeMax + 1, shootingRangeMax + 1), shootingRangeMax);
+	fire_range_clip = new Clip(Point(shootingRangeMax + 1, shootingRangeMax + 1), shootingRangeMax);
 }
 
 Weapon::~Weapon()
@@ -23,11 +23,11 @@ Weapon::~Weapon()
 	delete fire_range_clip;
 }
 
-void Weapon::adjust_range_clip(const WhereAbout<int> &wh) const
+void Weapon::adjust_range_clip(const WhereAbout &wh) const
 {
-	Point<int> p;
-	p.x = wh.position.x - shootingRangeMax;
-	p.y = wh.position.y - shootingRangeMax;
+	Point p;
+	p.x = wh.x - shootingRangeMax;
+	p.y = wh.y - shootingRangeMax;
 	fire_range_clip->set_lower_left(p);
 	fire_range_clip->clear();
 	fire_range_clip->bit_arc_circle(p, shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
@@ -36,7 +36,7 @@ void Weapon::adjust_range_clip(const WhereAbout<int> &wh) const
 int Weapon::operator + (const Unit &e) const
 {
 	if(e.currentHealth <= 0) return -10004;
-	if(!fire_range_clip->get_pixel(e.position.to_int())) return -10002;
+	if(!fire_range_clip->get_pixel(e)) return -10002;
 	switch(preference) {
 		case HIGH_DAMAGE:
 			switch(e.unit_type) {
@@ -66,7 +66,7 @@ int Weapon::operator + (const Unit &e) const
 		case NEAR: 
 			fire_range_clip->lower_left.x += shootingRangeMax;
 			fire_range_clip->lower_left.y += shootingRangeMax;
-			return -(int)(fire_range_clip->lower_left ^ e.position.to_int());
+			return -(int)(fire_range_clip->lower_left ^ e);
 	}
 }
 

@@ -3,7 +3,7 @@
 #include "bitmap.h"
 #include "Util.h"
 
-Clip::Clip(Point<int> p, int w, int h)
+Clip::Clip(Point p, int w, int h)
 {
 	int rest = p.x % 32;
 	p.x = p.x - rest;
@@ -18,7 +18,7 @@ Clip::Clip(Point<int> p, int w, int h)
 	}
 }
 
-int Clip::set_lower_left(Point<int> p)
+int Clip::set_lower_left(Point p)
 {
 	lower_left.y = p.y;
 	int rest = p.x % 32;
@@ -26,7 +26,7 @@ int Clip::set_lower_left(Point<int> p)
 	return rest;
 }
 
-Clip::Clip(Point<int> c, int r)
+Clip::Clip(Point c, int r)
 {
 	c.x -= r;
 	c.y -= r;
@@ -36,7 +36,7 @@ Clip::Clip(Point<int> c, int r)
 }
 
 
-Clip::Clip(Clip &cl, Point<int> c, int r)
+Clip::Clip(Clip &cl, Point c, int r)
 {
 	Clip* tmp = new Clip(c, r);
 	*this = *tmp;
@@ -85,21 +85,21 @@ void Clip::clear()
 	}
 }
 
-bool Clip::get_pixel(Point<int> p)
+bool Clip::get_pixel(Point p)
 {
 	int shift = 32 - 1 - (p.x % 32);
 	size_t mask = 1 << shift;
 	return clip[p.y][p.x/32] & mask;
 }
 
-bool Clip::boundary_check(Point<int> p)
+bool Clip::boundary_check(Point p)
 {
 	if(p.x < lower_left.x || p.y < lower_left.y) return false;
 	if(p.x >= lower_left.x + width || p.y >= lower_left.y + height) return false;
 	return true;
 }
 
-bool Clip::set_pixel(Point<int> p, bool o)
+bool Clip::set_pixel(Point p, bool o)
 {
 	if(boundary_check(p)) {
 		int shift = 32 - 1 - (p.x % 32);
@@ -114,7 +114,7 @@ bool Clip::set_pixel(Point<int> p, bool o)
 	} else return false;
 }
 
-int Clip::flat_line(Point<int> s, int l)
+int Clip::flat_line(Point s, int l)
 {
 	//boundary check
 	if(s.y < 0 || s.y >= height || l <= 0) return -1;
@@ -141,11 +141,11 @@ int Clip::flat_line(Point<int> s, int l)
 	return l / 32;
 }
 
-Point<int> Clip::bit_circle(Point<int> c, int r)
+Point Clip::bit_circle(Point c, int r)
 {
 	c.x -= 32 * lower_left.x;
 	c.y -= lower_left.y;
-	Point<int> s;
+	Point s;
 	for(s.y = c.y - r; s.y <= c.y + r; s.y++) {
 		s.x = c.x - sqrtf(r*r - (c.y-s.y)*(c.y-s.y));
 		flat_line(s, 2*(s.x-c.x) +1);
@@ -153,7 +153,7 @@ Point<int> Clip::bit_circle(Point<int> c, int r)
 	return c;
 }
 
-float Clip::bit_line(Point<int> c, float theta)//if theta is over PI, right area of  the line
+float Clip::bit_line(Point c, float theta)//if theta is over PI, right area of  the line
 {
 	while(theta > 2 * M_PI) theta -= 2*M_PI;
 	while(theta < 0 ) theta += 2*M_PI;
@@ -174,7 +174,7 @@ float Clip::bit_line(Point<int> c, float theta)//if theta is over PI, right area
 	return tan;
 }
 
-Point<int> Clip::bit_arc(Point<int> c, float fr, float to)
+Point Clip::bit_arc(Point c, float fr, float to)
 {
 	c.x -= lower_left.x;
 	c.y -= lower_left.y;
@@ -188,9 +188,9 @@ Point<int> Clip::bit_arc(Point<int> c, float fr, float to)
 	return c;
 }
 
-float Clip::bit_arc_line(Point<int> c, int r, float af, float at)
+float Clip::bit_arc_line(Point c, int r, float af, float at)
 {
-	Point<int> p;
+	Point p;
 	for(;af<=at; af += 1/r) {
 		p.x = cosf(af) + c.x;
 		p.y = sinf(af) + c.y;
@@ -199,7 +199,7 @@ float Clip::bit_arc_line(Point<int> c, int r, float af, float at)
 	return r * (at - af);//return arc length
 }
 
-Point<int> Clip::bit_arc_circle(Point<int> c, int rf, int rt, float af, float at)
+Point Clip::bit_arc_circle(Point c, int rf, int rt, float af, float at)
 {
 	c.x -= lower_left.x;
 	c.y -= lower_left.y;
@@ -222,7 +222,7 @@ Clip::Clip(Clip &cl1, Clip &cl2, bit_operation op)//join two into one
 	int y = Util::min(cl1.lower_left.y, cl2.lower_left.y);
 	int width = Util::max(cl1.lower_left.x + cl1.width, cl2.lower_left.x + cl2.width) - x;
 	int height = Util::max(cl1.lower_left.y + cl1.height, cl2.lower_left.y + cl2.height) - y;
-	Clip* cl = new Clip(Point<int>(x, y), width, height);
+	Clip* cl = new Clip(Point(x, y), width, height);
 	*this = *cl;
 	delete cl;
 	paste_from(&cl1, SUBST);
@@ -275,13 +275,13 @@ float Clip::correct_angle(float th)
 	return th;
 }
 
-Bitmap::Bitmap(int w, int h, int bpp) : Clip(Point<int>(0,0), w, h) 
+Bitmap::Bitmap(int w, int h, int bpp) : Clip(Point(0,0), w, h) 
 {
 	bit_per_pixel = bpp;
-	for(int i=0; i<bpp; i++) bitmap[i] = new Clip(Point<int>(0, 0), w, h);
+	for(int i=0; i<bpp; i++) bitmap[i] = new Clip(Point(0, 0), w, h);
 }
 
-int Bitmap::get_pixel(Point<int> p)
+int Bitmap::get_pixel(Point p)
 {
 	int b, ret;
 	for(int i=0; i<bit_per_pixel; i++) {
@@ -291,7 +291,7 @@ int Bitmap::get_pixel(Point<int> p)
 	return ret;
 }
 
-void Bitmap::set_pixel(Point<int> p, unsigned char v)
+void Bitmap::set_pixel(Point p, unsigned char v)
 {
 	bool t;
 	for(int i=0; i<bit_per_pixel; i++) {

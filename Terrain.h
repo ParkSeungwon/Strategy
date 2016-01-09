@@ -33,7 +33,7 @@ public:
 	const static int movePenaltyVsShip = 100;
 	const static int evadeBonus = 20;
 
-	std::shared_ptr<Unit> produce_unit(char* _unitName, Point<int> p, float _headingToward);
+	std::shared_ptr<Unit> produce_unit(char* _unitName, Point p, float _headingToward);
 	int owner;
 	int identifier;//connected pixels have same identifier, because they are one city
 };

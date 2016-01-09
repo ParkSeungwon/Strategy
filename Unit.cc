@@ -6,10 +6,10 @@
 #include "bitmap.h"
 using namespace std;
 
-Unit::Unit(Point<int> pos, float heading) 
+Unit::Unit(Point pos, float heading) 
 {
 	heading_toward = heading;
-	position = pos;
+	x = pos.x; y = pos.y;
 	currentHealth = maxHealth;
 	fuel = fuelCapacity;
 	experience = 0;
@@ -34,16 +34,22 @@ Unit::~Unit()
 	delete recon_clip;
 }
 
-void Unit::adjust_new_position()
+
+int Unit::time_pass(int t, float p)
+{
+	Nth n = nth_way(t, fuel);
+	fuel -= n.fuel_usage;
+	fuel -= time_pass(n.sec, p);
+	
+	adjust_recon();
+}
+
+void Unit::adjust_recon() const
 {
 	for(auto& w : weapon) w.adjust_range_clip(*this);
-	save();
-	position.x -= intelligenceRadius;
-	position.y -= intelligenceRadius;
-	recon_clip->set_lower_left(position.to_int());
+	recon_clip->set_lower_left(Point(x-intelligenceRadius, y-intelligenceRadius));
 	recon_clip->clear();
-	recon_clip->bit_circle(position.to_int(), intelligenceRadius);
-	restore();
+	recon_clip->bit_circle(*this, intelligenceRadius);
 }
 
 int Unit::operator + (Weapon& w)

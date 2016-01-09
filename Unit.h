@@ -7,20 +7,21 @@
 class Unit : public Waypoint
 {
 public:
-	Unit(Point<int> position, float headingToward);
+	Unit(Point position, float headingToward);
 	~Unit();
 	int operator + (Weapon& weapon);//equip weapon
 	int operator - (std::vector<Weapon>::iterator it) {weapon.erase(it);}//unload weapon
 	int operator >> (std::vector<Unit> deployed);//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
+	virtual int time_pass(int time, float penalty = 1);
 	Clip* recon_clip;
-	void adjust_new_position();
 	bool operator==(int health) {return currentHealth <= health;}//for find function
+
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
 	static std::string unitName;
 	static unsigned int unitPrice;
 	static unsigned int maxHealth;
-	static int evadeRatio;
+	static int evadeRatio, orig_evade_ratio;//to apply terrain effect
 	static int fuelCapacity;
 	static int minimumTurnRadius;
 	static int minimumSpeed;
@@ -35,6 +36,7 @@ public:
 	std::vector<Weapon> weapon;
 
 protected:
+	void adjust_recon() const;
 
 private:
 };

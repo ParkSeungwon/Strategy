@@ -18,7 +18,7 @@ Map::Map(int w, int h, size_t **image, int joined_teams)
 	
 	Bitmap *t = terrain_bitmap;
 	Bitmap *c = city_bitmap;
-	Point<int> p;
+	Point p;
 	City ct;
 	size_t dot = 0;
 
@@ -50,7 +50,7 @@ Map::Map(int w, int h, size_t **image, int joined_teams)
 		}
 	}
 
-int Map::occupy(Point<int> p, int team)
+int Map::occupy(Point p, int team)
 {
 	auto it = find(cities.begin(), cities.end(), city_bitmap->get_pixel(p));
 	if(it != cities.end()) it->owner = team;
@@ -58,7 +58,7 @@ int Map::occupy(Point<int> p, int team)
 
 int Map::count_cities(size_t **image)
 {
-	Point<int> p;
+	Point p;
 	size_t dot = 0;
 	City ct;
 	for (size_t y = 0; y < height; y++) {
@@ -84,7 +84,7 @@ Map::~Map()
 	delete city_bitmap;
 }
 
-void Map::deployUnit(Unit &u, Point<int> p, float h) 
+void Map::deployUnit(Unit &u, Point p, float h) 
 {
 	int i = city_bitmap->get_pixel(p);
 	for(auto& au : cities) {//set the team according to the owner of city

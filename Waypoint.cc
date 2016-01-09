@@ -56,7 +56,7 @@ int WhereAbout::time_pass(int time, float penalty)
 	}
 	duration -= time;//left duration of this waypiont
 	this->penalty = penalty;
-	return duration;
+	return speed * time;//fuel usage
 }
 
 void WhereAbout::operator = (WhereAbout &wh)
@@ -91,17 +91,40 @@ void WhereAbout::restore()
 	turning = save_turning;
 }
 
-int Waypoint::nth_way(int time) {
-	int i, t;
-	for(i=0; time > 0; i++) {
-		t = time;
-		time -= waypoints[i].duration;
+Nth Waypoint::nth_way(int time, int fuel) {
+	Nth n1, n2;
+	int i, t = time, f = 0;
+	for(i=0; t > waypoints[i].duration; i++) {
+		t -= waypoints[i].duration;
+		f += waypoints[i].duration * waypoints[i].speed;
 	}
-	(WhereAbout)*this = waypoints[i];
-	return t;
+	n1.n = i;
+	n1.sec = t;
+	n1.fuel_usage = f;
+
+	t = time;
+	f = 0;
+	for(i=0; fuel > waypoints[i].duration * waypoints[i].speed; i++) {
+		fuel -= waypoints[i].duration * waypoints[i].speed;
+		f += waypoints[i].duration * waypoints[i].speed;
+		t -= waypoints[i].duration;
+	}
+	n2.n = i;
+	n2.sec = t;
+		
+	if(n2 < n1)  n1 = n2;
+	(WhereAbout)*this = waypoints[n1.n];
+	return n1;
 }
 
-int Waypoint::insert_waypoint(Point turn, int spd, int dur, float p)
+bool Nth::operator<(Nth nth)
+{
+	if(n < nth.n) return true;
+	else if(n > nth.n) return false;
+	else return sec < nth.sec ? true : false;
+}
+
+int Waypoint::insert_waypoint(int turning, int spd, int dur, float p)
 {
 	int ret = waypoints.size();
 	WhereAbout mediator;
@@ -118,7 +141,7 @@ int Waypoint::insert_waypoint(Point turn, int spd, int dur, float p)
 	mediator = *it;//reuse mediator, change position
 	it->restore();
 	mediator.speed = spd;
-	mediator.turn_center = turn;
+	mediator.set_turning(turning);
 	mediator.duration = dur;
 	mediator.penalty = p;
 	waypoints.push_back(mediator);

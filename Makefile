@@ -1,5 +1,5 @@
 CC = g++
-C_OPTION = -g -c -std=c++11 -fmax-errors=5
+C_OPTION = -g -c -std=c++11 -fmax-errors=3
 OBJ = main.o  gtkmain.o #Util.o Unit.o Weapon.o 
 
 gtkmmCFLAG = $(shell pkg-config gtkmm-3.0 --cflags)

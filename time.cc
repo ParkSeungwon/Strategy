@@ -6,28 +6,22 @@
 void Time::time_pass(int time)
 {
 	//change position
-	for(int i=0; i<maxTeam; i++) {
-		for(auto& u : deployedUnits[i]) {
-			u.time_pass(time);
-		}
+	for(auto& u : deployedUnits) {
+		u.time_pass(time);
 	}
 	//attck
-	for(int i=0; i<maxTeam; i++) {
-		for(auto& u : deployedUnits[i]) {
-			for(auto& w : u.weapon) {
-				w.adjust_range_clip(u);
-				w >> deployedUnits[!i];
-			}
+	for(auto& u : deployedUnits) {
+		for(auto& w : u.weapon) {
+			w.adjust_range_clip(u);
+			u >> deployedUnits;
 		}
 	}
 	//remove destroyed units
 	std::vector<Unit>::iterator it;
-	for(int i=0; i<maxTeam; i++) {
-		it = deployedUnits[i].begin();
-		while(it != deployedUnits[i].end()) {
-			it = find(it, deployedUnits[i].end(), 0);//find health <=0
-			deployedUnits[i].erase(it);
-		}
+	it = deployedUnits.begin();
+	while(it != deployedUnits.end()) {
+		it = find(it, deployedUnits.end(), 0);//find health <=0
+//		deployedUnits.erase(it);
 	}
 
 	generate_recon_bitmap();

@@ -2,17 +2,17 @@
 #include <vector>
 class Unit;
 class Clip;
-template <class T> class WhereAbout;
-enum Preference {LOW_HEALTH, HIGH_DAMAGE, HIGH_RATIO, EXPENSIVE, CHEAP, NEAR}; 
+class WhereAbout;
 
 class Weapon 
 {
 public:
+	enum Preference {LOW_HEALTH, HIGH_DAMAGE, HIGH_RATIO, EXPENSIVE, CHEAP, NEAR}; 
 	Weapon();
 	virtual ~Weapon();
 	
 	Clip* fire_range_clip;
-	void adjust_range_clip(const WhereAbout<int> &wh) const;
+	void adjust_range_clip(const WhereAbout &wh) const;
 	
 	int operator + (const Unit& enemy) const;//target return expected value regards to preference 
 	int operator >> (Unit &enenmy);		//공격 함수

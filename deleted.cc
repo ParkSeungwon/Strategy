@@ -215,4 +215,10 @@ Clip* Unit::movable_area(int time)
 	}
 	return ret;
 }
+bool Unit::operator()(const Unit& u)
+{
+	if(u.currentHealth <= 0) return true;
+	if(u.fuel <= 0 && u.unit_type == Air) return true;
+	return false;
+}
 
