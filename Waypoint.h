@@ -2,37 +2,40 @@
 #include <vector>
 #include "point.hpp"
 
-template <class T = int> 
-class WhereAbout
+class WhereAbout : public Point
 {
 public:
+	WhereAbout() {}
+	WhereAbout(Point position, float heading, int turning = 0, int speed = 0, int duration = 0);
+
 	//main function of this class. return left duration, change members
 	virtual int time_pass(int time, float penalty = 1);
 
-	template <typename T2> void operator = (WhereAbout<T2> &wh);
+	void operator = (WhereAbout& wh);
 	void save();
 	void restore();
+	void set_turning(int turning);
 
-	Point<T> position, turn_center;
+protected:
+	float correct_angle(float);
+	Point turn_center;
+	int turning; //if 0 straight, + right, - left
 	int speed;
 	int duration;//how long will it keep on going like this
 	float heading_toward;
 	float penalty;// to store in waypoint
 
-protected:
-	float correct_angle(float);
-
 private://for saving status temporarily
-	Point<T> save_pos, save_tc;
+	Point save_pos, save_tc;
 	int save_speed, save_dur;
 	float save_head, save_penalty;
 };
 
-class Waypoint : public WhereAbout<>
+class Waypoint : public WhereAbout
 {
 public:
-	std::vector<WhereAbout<int> > waypoints;
-	int insert_waypoint(Point<int> turn, int spd, int dur, float penalty);//return inserted nth waypoint
+	std::vector<WhereAbout> waypoints;
+	int insert_waypoint(Point turn, int spd, int dur, float penalty);//return inserted nth waypoint
 	void delete_waypoint() {waypoints.pop_back();}
 	int nth_way(int time);//time in at which waypoint & moment
 	//void operator = (WhereAbout<float> &wh) {*this = wh;}

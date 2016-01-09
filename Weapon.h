@@ -18,11 +18,9 @@ public:
 	int operator >> (Unit &enenmy);		//공격 함수
 
 	void set_preference(Preference p) {preference = p;}
-
-	//getter func
-	int get_currentRounds() {return currentRounds;}
-	int get_lapsedTimeAfterFire() {return lapsedTimeAfterFire;}
-	int get_fireRate() {return fireRate;}
+	void reload() {currentRounds = maxRounds;}
+	void time_pass(int time) {lapsedTimeAfterFire += time;}
+	bool can_fire() {return currentRounds > 0 && lapsedTimeAfterFire >= fireRate;}
 
 protected:
 	Preference preference;

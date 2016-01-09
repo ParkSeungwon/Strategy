@@ -6,51 +6,72 @@
 #include "Util.h"
 using namespace std;
 
-template <class T> 
-float WhereAbout<T>::correct_angle(float f)
+WhereAbout::WhereAbout(Point p, float h, int t, int s, int d)
 {
-	while(f >= M_PI) f -= M_PI;
-	while(f < 0) f += M_PI;
+	heading_toward = h;
+	x = p.x;
+	y = p.y;
+	speed = s;
+	duration = d;
+	set_turning(t);
+}
+
+WhereAbout::set_turning(int t)
+{
+	turning = t;
+	if(t == 0) turn_center = *this;
+	else {
+		int i = t > 0 ? 1 : -1;
+		turn_center.x = abs(t) * cosf(heading_toward - i * M_PI/2) + x;
+		turn_center.y = abs(t) * sinf(heading_toward - i * M_PI/2) + y;
+	}
+}
+
+float WhereAbout::correct_angle(float f)
+{
+	while(f >= 2*M_PI) f -= 2*M_PI;
+	while(f < 0) f += 2*M_PI;
 	return f;
 }
 
-template <class T> 
-int WhereAbout<T>::time_pass(int time, float penalty)
+int WhereAbout::time_pass(int time, float penalty)
 {//change position & duration according to turncenter, duration, heading
 //	if(duration == 0) return *this;
 	if(time > duration) time = duration;
-	float r = position ^ turn_center;
+	int r = abs(turning);
 	float center_angle = position % turn_center;
 	if(position.y > 0) center_angle += M_PI; //현 위치에서 센터로 가는 벡터의 각도
 	float theta = speed * time * penalty/ r;//moved angle affected by penalty
 	
 	float diff = abs(center_angle - correct_angle(heading_toward + M_PI/2));
-	if(diff < 0.1 || diff > 3) { //if center is at the left of heading direction
+	if(turning == 0) {//go straight
+		x += r * cosf(heading_toward);
+		y += r * sinf(heading_toward);
+	} else if(turning < 0) { //if center is at the left of heading direction
 		heading_toward += theta;
-		position.x = turn_center.x + r * cosf(center_angle + theta);
-		position.y = turn_center.y + r * sinf(center_angle + theta);
+		x = turn_center.x + r * cosf(center_angle + theta);
+		y = turn_center.y + r * sinf(center_angle + theta);
 	} else {
 		heading_toward -= theta;
-		position.x = turn_center.x + r * cosf(center_angle - theta);
-		position.y = turn_center.y + r * sinf(center_angle - theta);
+		x = turn_center.x + r * cosf(center_angle - theta);
+		y = turn_center.y + r * sinf(center_angle - theta);
 	}
 	duration -= time;//left duration of this waypiont
 	this->penalty = penalty;
 	return duration;
 }
 
-template <class T> template <typename T2>
-void WhereAbout<T>::operator = (WhereAbout<T2> &wh)
+void WhereAbout::operator = (WhereAbout &wh)
 {
-	position = wh.position;
+	x = wh.x; 
+	y = wh.y;
 	turn_center = wh.turn_center;
 	speed = wh.speed;
 	heading_toward = wh.heading_toward;
-	duration = (T)wh.duration;
+	duration = wh.duration;
 }
 
-template <class T> 
-void WhereAbout<T>::save()
+void WhereAbout::save()
 {
 	save_pos = position;
 	save_tc = turn_center;
@@ -60,8 +81,7 @@ void WhereAbout<T>::save()
 	save_penalty = penalty;
 }
 
-template <class T> 
-void WhereAbout<T>::restore()
+void WhereAbout::restore()
 {
 	position = save_pos;
 	turn_center = save_tc;
@@ -81,17 +101,17 @@ int Waypoint::nth_way(int time) {
 	return t;
 }
 
-int Waypoint::insert_waypoint(Point<int> turn, int spd, int dur, float p)
+int Waypoint::insert_waypoint(Point turn, int spd, int dur, float p)
 {
 	int ret = waypoints.size();
-	WhereAbout<int> mediator;
+	WhereAbout mediator;
 	if(ret == 0) {//if none push current position
 		mediator = *this;
 		waypoints.push_back(mediator);
 		ret++;
 	}
 
-	vector<WhereAbout<int> >::iterator it = waypoints.end();
+	vector<WhereAbout>::iterator it = waypoints.end();
 	it--;
 	it->save();
 	it->time_pass(it->duration, it->penalty);

@@ -52,17 +52,16 @@ int Unit::operator + (Weapon& w)
 	weapon.push_back(w);
 }
 
-int Unit::operator >> (vector<Unit> deployed)
+int Unit::operator >> (vector<Unit> dp)
 {
-	int sz = deployed.size();
+	int sz = dp.size();
 	int* pref = new int[sz];
-	int i, target;
+	int target;
 	for(auto& w : weapon) {
-		if(w.get_currentRounds() > 0 && w.get_lapsedTimeAfterFire() >= w.get_fireRate()) {
-			i = 0;
-			for(auto& e : deployed) pref[i++] = (ally == e.ally ? -1 : w + e);
+		if(w.can_fire()) {
+			for(int i=0; i<sz; i++) pref[i] = (ally == dp[i].ally ? -1 : w + dp[i]);
 			target = Util::find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
-			if(pref[target] > 0) w >> deployed[target];
+			if(pref[target] > 0) w >> dp[target];
 		}
 	}
 	delete pref;
