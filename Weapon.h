@@ -18,9 +18,9 @@ public:
 	int operator >> (Unit &enenmy);		//공격 함수
 
 	void set_preference(Preference p) {preference = p;}
-	void reload() {currentRounds = maxRounds;}
 	void time_pass(int time) {lapsedTimeAfterFire += time;}
 	bool can_fire() {return currentRounds > 0 && lapsedTimeAfterFire >= fireRate;}
+	void reload();
 
 	//getter
 	int get_shootingRangeMax() {return shootingRangeMax;}

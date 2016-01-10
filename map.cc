@@ -7,12 +7,11 @@
 #define TERRAIN_COUNT 14
 typedef unsigned char UC;
 
-Map::Map(int w, int h, size_t **image, int joined_teams)
+Map::Map(int w, int h, size_t **image, int ally)
 {
 	width = w;
 	height = h;
-	recon_bitmap = new Bitmap(w, h, joined_teams);
-	weapon_range_bitmap = new Bitmap(w, h, joined_teams);
+	recon_bitmap = new Bitmap(w, h, ally);
 	terrain_bitmap = new Bitmap(w, h, get_log2(TERRAIN_COUNT));
 	city_bitmap = new Bitmap(w, h, get_log2(count_cities(image)));
 	
@@ -76,12 +75,16 @@ int Map::count_cities(size_t **image)
 	}
 	return cities.size();
 }
+
+bool Map::in_city(Point p) 
+{
+	 return city_bitmap->get_pixel(p);
+}
 	
 Map::~Map()
 {
 	delete terrain_bitmap;
 	delete recon_bitmap;
-	delete weapon_range_bitmap;
 	delete city_bitmap;
 }
 
@@ -111,21 +114,6 @@ int Map::generate_recon_bitmap() const
 		cl->bit_circle((Point)*au, au->intelligenceRadius);//generate circle bit clip
 		recon_bitmap->bitmap[au->ally]->paste_from(cl, OR);//paste to own team(i)'s layer
 		delete cl;
-	}
-	return 0;
-}
-
-int Map::generate_weapon_range_bitmap() const
-{
-	Clip *cl;
-	weapon_range_bitmap->clear();
-	for(auto& u : deployedUnits) {
-		for(auto& w : u->weapon) {
-			cl = new Clip((Point)*u, w.get_shootingRangeMax());
-			cl->bit_arc_circle((Point)*u, w.get_shootingRangeMin(), w.get_shootingRangeMax(), w.get_shootingAngleFrom(), w.get_shootingAngleTo());
-			weapon_range_bitmap->bitmap[u->ally]->paste_from(cl, OR);
-			delete cl;
-		}
 	}
 	return 0;
 }

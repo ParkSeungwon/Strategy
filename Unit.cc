@@ -81,8 +81,16 @@ int Unit::operator >> (vector<shared_ptr<Unit>> dp)
 
 bool InfantryUnit::in_city()
 {
+	in_city();
 	in_city_time += 4;
 	if(in_city_time >= 200) return true;
 	else false;
 }
 	
+bool Unit::in_city()
+{
+	fuel += 10;
+	currentHealth += 1;
+	for(auto& w : weapon) w.reload();
+	return false;
+}

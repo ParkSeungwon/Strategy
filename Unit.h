@@ -20,6 +20,8 @@ public:
 	Clip* recon_clip;
 	bool operator==(int health) {return currentHealth <= health;}//for find function
 //	Unit& operator=(Unit& u){return u;} 
+	virtual bool in_city();
+	virtual void out_of_city() {}
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
 	static std::string unitName;

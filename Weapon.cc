@@ -70,6 +70,12 @@ int Weapon::operator + (const Unit &e) const
 	}
 }
 
+void Weapon::reload()
+{
+	lapsedTimeAfterFire += 4;
+	currentRounds += currentRounds < maxRounds ? maxRounds / 30 : 0;
+}
+
 int Weapon::operator >> (Unit &e) 
 {
 	int hitRatio;

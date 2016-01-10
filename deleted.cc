@@ -221,4 +221,18 @@ bool Unit::operator()(const Unit& u)
 	if(u.fuel <= 0 && u.unit_type == Air) return true;
 	return false;
 }
+int Map::generate_weapon_range_bitmap() const
+{
+	Clip *cl;
+	weapon_range_bitmap->clear();
+	for(auto& u : deployedUnits) {
+		for(auto& w : u->weapon) {
+			cl = new Clip((Point)*u, w.get_shootingRangeMax());
+			cl->bit_arc_circle((Point)*u, w.get_shootingRangeMin(), w.get_shootingRangeMax(), w.get_shootingAngleFrom(), w.get_shootingAngleTo());
+			weapon_range_bitmap->bitmap[u->ally]->paste_from(cl, OR);
+			delete cl;
+		}
+	}
+	return 0;
+}
 
