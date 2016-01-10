@@ -22,6 +22,12 @@ public:
 	void time_pass(int time) {lapsedTimeAfterFire += time;}
 	bool can_fire() {return currentRounds > 0 && lapsedTimeAfterFire >= fireRate;}
 
+	//getter
+	int get_shootingRangeMax() {return shootingRangeMax;}
+	int get_shootingRangeMin() {return shootingRangeMin;}
+	int get_shootingAngleTo() {return shootingAngleTo;}
+	int get_shootingAngleFrom() {return shootingAngleFrom;}
+
 protected:
 	Preference preference;
 	int fireRate, firePower, maxRounds;

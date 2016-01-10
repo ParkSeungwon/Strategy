@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "Terrain.h"
 #include "point.hpp"
 #include "Waypoint.h"
@@ -23,7 +24,7 @@ protected:
 public:
 	virtual int occupy(Point p, int team);
 	int width, height;
-	std::vector<Unit> deployedUnits;
+	std::vector<std::shared_ptr<Unit>> deployedUnits;
 	std::vector<City> cities;
 	Bitmap *terrain_bitmap, *recon_bitmap, *weapon_range_bitmap, *city_bitmap;
 	Map(int width, int height, size_t **pixel, int teams);

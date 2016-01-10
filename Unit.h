@@ -3,6 +3,7 @@
 #include "Weapon.h"
 #include "map.h"
 #include "Waypoint.h"
+#include <memory>
 
 class Unit : public Waypoint
 {
@@ -11,11 +12,14 @@ public:
 	~Unit();
 	int operator + (Weapon& weapon);//equip weapon
 	int operator - (std::vector<Weapon>::iterator it) {weapon.erase(it);}//unload weapon
-	int operator >> (std::vector<Unit> deployed);//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
+	
+	//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
+	int operator >> (std::vector<std::shared_ptr<Unit>> deployed);
+	
 	virtual int time_pass(int time, float penalty = 1);
 	Clip* recon_clip;
 	bool operator==(int health) {return currentHealth <= health;}//for find function
-
+//	Unit& operator=(Unit& u){return u;} 
 
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
 	static std::string unitName;
