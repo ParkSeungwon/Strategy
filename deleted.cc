@@ -235,4 +235,23 @@ int Map::generate_weapon_range_bitmap() const
 	}
 	return 0;
 }
+int Map::count_cities(size_t **image)
+{
+	Point p;
+	size_t dot = 0;
+	City ct;
+	for (size_t y = 0; y < height; y++) {
+		for (size_t x = 0; x < width; x++) {
+			p.x = x; p.y = y;
+			if(image[y][x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
+				dot = (image[y][x] & 0xff00) >> 2;
+				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
+					ct.identifier = dot;
+					cities.push_back(ct);
+				}
+			}
+		}
+	}
+	return cities.size();
+}
 

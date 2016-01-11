@@ -16,11 +16,10 @@ public:
 class Map : public MapInterface
 {
 private:
-	int count_cities(size_t** image);
 	static int get_log2(int i);
 	
 protected:
-	float calculate_terrain_penalty(int time, WhereAbout& wh);
+	float calculate_terrain_penalty(const Unit& u, int time) const;
 	int generate_recon_bitmap() const;//return showing unit count
 	Bitmap *terrain_bitmap, *recon_bitmap, *city_bitmap;
 	const static int maxTeam = 8;
@@ -34,6 +33,6 @@ public:
 	std::vector<std::shared_ptr<Unit>> deployedUnits;
 	std::vector<City> cities;
 	void deployUnit(Unit &unit, Point p, float heading_toward);
-	TerrainType get_terrain_type(Point p);
+	Terrain::TerrainType get_terrain_type(Point p);
 };
 

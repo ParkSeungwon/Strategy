@@ -4,6 +4,7 @@
 #include "map.h"
 #include "Waypoint.h"
 #include <memory>
+#include <vector>
 
 class Unit : public Waypoint
 {
@@ -21,7 +22,8 @@ public :
 //	Unit& operator=(Unit& u){return u;} 
 	virtual bool in_city();
 	virtual void out_of_city() {}
-	virtual void set_evadeRatio(TerrainType tt) {evadeRatio = orig_evade_ratio;}
+	virtual void set_evadeRatio(Terrain::Terrain::TerrainType tt) {evadeRatio = orig_evade_ratio;}
+	bool can_attack(const Unit& u) const;
 	
 	std::vector<Weapon> weapon;
 	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
@@ -35,10 +37,13 @@ public :
 	unsigned int get_unitPrice() const 			{return unitPrice;}
 	void set_currentHealth(int h) 				{currentHealth = h;}
 	void set_team(int t) 						{team = t;}
+	void set_evadeRatio(float bonus) {evadeRatio = bonus * orig_evade_ratio;}
+	void set_known_to(int i, bool b) 			{known_to[i] = b;}
 
 protected :
 	void adjust_recon() const;
 	
+	std::vector<bool> known_to;
 	Clip* recon_clip;
 	static std::string unitName;
 	static unsigned int unitPrice;
@@ -72,7 +77,7 @@ class AirUnit : public Unit
 class ArmorUnit : public TerrainUnit 
 {
 public :
-	void set_evadeRatio(TerrainType tt) {
+	void set_evadeRatio(Terrain::TerrainType tt) {
 		evadeRatio = orig_evade_ratio * terrain_evade_bonus[tt];}
 
 //city=1, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
@@ -86,7 +91,7 @@ class InfantryUnit : public TerrainUnit
 public:
 	bool in_city();
 	void out_of_city() {in_city_time = 0;}
-	void set_evadeRatio(TerrainType tt) {
+	void set_evadeRatio(Terrain::TerrainType tt) {
 		evadeRatio = orig_evade_ratio * terrain_evade_bonus[tt];}
 	
 private:

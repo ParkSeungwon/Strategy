@@ -72,13 +72,19 @@ int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 	int target;
 	for(auto& w : weapon) {
 		if(w.can_fire()) {
-			for(int i=0; i<sz; i++) pref[i] = (ally == dp[i]->ally ? -1 : w + *dp[i]);
+			for(int i=0; i<sz; i++) 
+				pref[i] = can_attack(*dp[i]) ? w + *dp[i] : -1;
 			target = Util::find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
 			if(pref[target] > 0) w >> *dp[target];
 		}
 	}
 	delete pref;
 	return sz;
+}
+
+bool Unit::can_attack(const Unit& u)
+{
+	return ally != u.ally && u.known_to[ally];
 }
 
 bool InfantryUnit::in_city()
