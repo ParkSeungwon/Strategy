@@ -93,11 +93,11 @@ void Map::deployUnit(Unit &u, Point p, float h)
 	int i = city_bitmap->get_pixel(p);
 	for(auto& au : cities) {//set the team according to the owner of city
 		if(au.identifier == i) {
-			u.team = au.owner;
+			u.set_team(au.owner);
 			break;
 		}
 	}
-	if(u.team != 0) {//verify
+	if(u.get_team() != 0) {//verify
 		u.heading_toward = h;
 		(Point)u = p;
 		std::shared_ptr<Unit> up(new Unit(u));
@@ -110,9 +110,9 @@ int Map::generate_recon_bitmap() const
 	Clip *cl;
 	recon_bitmap->clear();
 	for(auto& au : deployedUnits) {
-		cl = new Clip((Point)*au, au->intelligenceRadius);
-		cl->bit_circle((Point)*au, au->intelligenceRadius);//generate circle bit clip
-		recon_bitmap->bitmap[au->ally]->paste_from(cl, OR);//paste to own team(i)'s layer
+		cl = new Clip((Point)*au, au->get_intelligenceRadius());
+		cl->bit_circle((Point)*au, au->get_intelligenceRadius());//generate circle bit clip
+		recon_bitmap->bitmap[au->get_ally()]->paste_from(cl, OR);//paste to get_team()team(i)'s layer
 		delete cl;
 	}
 	return 0;
@@ -123,6 +123,11 @@ int Map::get_log2(int cc)
 	int i=1;//to get log 2 cc
 	for (int j=2; j<cc; j *= 2) i++;
 	return i;
+}
+
+TerrainType Map::get_terrain_type(Point p)
+{
+	return (TerrainType)terrain_bitmap->get_pixel(p);
 }
 
 float Map::calculate_terrain_penalty(int t, WhereAbout& wh)

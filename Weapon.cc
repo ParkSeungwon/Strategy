@@ -35,38 +35,39 @@ void Weapon::adjust_range_clip(const WhereAbout &wh) const
 
 int Weapon::operator + (const Unit &e) const
 {
-	if(e.currentHealth <= 0) return -10004;
+	if(e.get_currentHealth() <= 0) return -10004;
 	if(!fire_range_clip->get_pixel(e)) return -10002;
 	switch(preference) {
 		case HIGH_DAMAGE:
 			switch(e.unit_type) {
 				case Unit::Air:
-					return firePower * hitRatioVSAir * e.evadeRatio / 100;
+					return firePower * hitRatioVSAir * e.get_evadeRatio() / 100;
 				case Unit::Infantry:
-					return firePower * hitRatioVsInfantry * e.evadeRatio /100;
+					return firePower * hitRatioVsInfantry * e.get_evadeRatio() /100;
 				case Unit::Armor:
-					return firePower * hitRatioVsArmor * e.evadeRatio /100;
+					return firePower * hitRatioVsArmor * e.get_evadeRatio() /100;
 				default:
-					return firePower * hitRatioVsShip * e.evadeRatio / 100;
+					return firePower * hitRatioVsShip * e.get_evadeRatio() / 100;
 			}
-		case LOW_HEALTH: return  -e.currentHealth;
-		case EXPENSIVE: return e.unitPrice;
+		case LOW_HEALTH: return  10000 - e.get_currentHealth();
+		case EXPENSIVE: return e.get_unitPrice();
 		case HIGH_RATIO:
 			switch(e.unit_type) {
 				case Unit::Air:
-					return hitRatioVSAir * e.evadeRatio / 100;
+					return hitRatioVSAir * e.get_evadeRatio() / 100;
 				case Unit::Infantry:
-					return hitRatioVsInfantry * e.evadeRatio /100;
+					return hitRatioVsInfantry * e.get_evadeRatio() /100;
 				case Unit::Armor:
-					return hitRatioVsArmor * e.evadeRatio /100;
+					return hitRatioVsArmor * e.get_evadeRatio() /100;
 				default:
-					return hitRatioVsShip * e.evadeRatio / 100;
+					return hitRatioVsShip * e.get_evadeRatio() / 100;
 			}
-		case CHEAP: return -e.unitPrice;
+		case CHEAP: return 10000 - e.get_unitPrice();
 		case NEAR: 
 			fire_range_clip->lower_left.x += shootingRangeMax;
 			fire_range_clip->lower_left.y += shootingRangeMax;
-			return -(int)(fire_range_clip->lower_left ^ e);
+			return 10000 - (int)(fire_range_clip->lower_left + 
+					Point(shootingRangeMax, shootingRangeMax) ^ e);
 	}
 }
 
@@ -102,7 +103,8 @@ int Weapon::operator >> (Unit &e)
 	
 	srand(time(NULL));
 	int dice = rand() % 100;//0~99사이의 수를 리턴하는 유틸함수
-	if (dice <= hitRatio * (100 - e.evadeRatio)/100)  e.currentHealth -= firePower;
+	if (dice <= hitRatio * (100 - e.get_evadeRatio())/100)  
+		e.set_currentHealth(e.get_currentHealth()-firePower);
 	dice_record.push_back(dice);
 	return dice;
 }

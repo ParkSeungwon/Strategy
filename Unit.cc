@@ -44,26 +44,28 @@ int Unit::time_pass(int t, float p)
 {
 	Nth n = nth_way(t, fuel);
 	fuel -= n.fuel_usage;
-	fuel -= time_pass(n.sec, p);
-	
+	fuel -= WhereAbout::time_pass(n.sec, p);//this is from the start of waypoint
+	for(auto& w : weapon) {
+		w.time_pass();//this is from last tick	
+		w.adjust_range_clip(*this);
+	}
 	adjust_recon();
 }
 
 void Unit::adjust_recon() const
 {
-	for(auto& w : weapon) w.adjust_range_clip(*this);
 	recon_clip->set_lower_left(Point(x-intelligenceRadius, y-intelligenceRadius));
 	recon_clip->clear();
 	recon_clip->bit_circle(*this, intelligenceRadius);
 }
 
-int Unit::operator + (Weapon& w)
+int Unit::operator + (Weapon w)
 {
 	w.adjust_range_clip(*this);
 	weapon.push_back(w);
 }
 
-int Unit::operator >> (vector<shared_ptr<Unit>> dp)
+int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 {
 	int sz = dp.size();
 	int* pref = new int[sz];
@@ -81,7 +83,7 @@ int Unit::operator >> (vector<shared_ptr<Unit>> dp)
 
 bool InfantryUnit::in_city()
 {
-	in_city();
+	Unit::in_city();
 	in_city_time += 4;
 	if(in_city_time >= 200) return true;
 	else false;

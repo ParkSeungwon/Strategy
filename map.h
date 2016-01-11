@@ -34,5 +34,6 @@ public:
 	std::vector<std::shared_ptr<Unit>> deployedUnits;
 	std::vector<City> cities;
 	void deployUnit(Unit &unit, Point p, float heading_toward);
+	TerrainType get_terrain_type(Point p);
 };
 
