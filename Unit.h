@@ -20,7 +20,7 @@ public :
 	//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
 	int operator >> (std::vector<std::shared_ptr<Unit>>& deployed);
 	
-	int time_pass(int time, float penalty = 1);
+	int time_pass(float penalty = 1);
 //	bool operator==(int health) {return currentHealth <= health;}//for find function
 //	Unit& operator=(Unit& u){return u;} 
 	virtual bool in_city();
@@ -47,17 +47,17 @@ public :
 protected :
 	void adjust_recon() const;
 	
-	std::vector<bool> known_to;
+	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
 	Clip* recon_clip;
-	static std::string unitName;
-	static unsigned int unitPrice;
-	static unsigned int maxHealth;
-	static int evadeRatio, orig_evade_ratio;//to apply terrain effect
-	static int fuelCapacity;
-	static int minimumTurnRadius;
-	static int minimumSpeed;
-	static int maximumSpeed;
-	static unsigned int intelligenceRadius;
+	std::string unitName;
+	unsigned int unitPrice;
+	unsigned int maxHealth;
+	int evadeRatio, orig_evade_ratio;//to apply terrain effect
+	int fuelCapacity;
+	int minimumTurnRadius;
+	int minimumSpeed;
+	int maximumSpeed;
+	unsigned int intelligenceRadius;
 	int team, ally;
 	int currentHealth;
 	int fuel;

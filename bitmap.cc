@@ -2,6 +2,7 @@
 #include <cmath>
 #include "bitmap.h"
 #include "Util.h"
+using namespace Glob;
 
 Clip::Clip(Point p, int w, int h)
 {
@@ -218,10 +219,10 @@ Point Clip::bit_arc_circle(Point c, int rf, int rt, float af, float at)
 Clip::Clip(Clip &cl1, Clip &cl2, bit_operation op)//join two into one
 {	
 	//new clip region to include both clips
-	int x = Util::min(cl1.lower_left.x, cl2.lower_left.x);
-	int y = Util::min(cl1.lower_left.y, cl2.lower_left.y);
-	int width = Util::max(cl1.lower_left.x + cl1.width, cl2.lower_left.x + cl2.width) - x;
-	int height = Util::max(cl1.lower_left.y + cl1.height, cl2.lower_left.y + cl2.height) - y;
+	int x = min(cl1.lower_left.x, cl2.lower_left.x);
+	int y = min(cl1.lower_left.y, cl2.lower_left.y);
+	int width = max(cl1.lower_left.x + cl1.width, cl2.lower_left.x + cl2.width) - x;
+	int height = max(cl1.lower_left.y + cl1.height, cl2.lower_left.y + cl2.height) - y;
 	Clip* cl = new Clip(Point(x, y), width, height);
 	*this = *cl;
 	delete cl;

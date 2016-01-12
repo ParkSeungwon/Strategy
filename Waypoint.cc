@@ -5,6 +5,7 @@
 #include "Waypoint.h"
 #include "Util.h"
 using namespace std;
+using namespace Glob;
 
 WhereAbout::WhereAbout(Point p, float h, int t, int s, int d)
 {
@@ -22,8 +23,8 @@ void WhereAbout::set_turning(int t)
 	if(t == 0) turn_center = *this;
 	else {
 		int i = t > 0 ? 1 : -1;
-		turn_center.x = abs(t) * cosf(heading_toward - i * M_PI/2) + x;
-		turn_center.y = abs(t) * sinf(heading_toward - i * M_PI/2) + y;
+		turn_center.x = t * i * cosf(heading_toward - i * M_PI/2) + x;
+		turn_center.y = t * i * sinf(heading_toward - i * M_PI/2) + y;
 	}
 }
 
@@ -54,7 +55,7 @@ int WhereAbout::time_pass(int time, float penalty)
 		x = turn_center.x + r * cosf(center_angle - i * theta);
 		y = turn_center.y + r * sinf(center_angle - i * theta);
 	}
-	duration -= time;//left duration of this waypiont
+//	duration -= time;//left duration of this waypiont
 	this->penalty = penalty;
 	return speed * time;//fuel usage
 }
@@ -91,39 +92,6 @@ void WhereAbout::restore()
 	turning = save_turning;
 }
 
-Nth Waypoint::nth_way(int time, int fuel) {
-	Nth n1, n2;
-	int i, t = time, f = 0;
-	for(i=0; t > waypoints[i].duration; i++) {
-		t -= waypoints[i].duration;
-		f += waypoints[i].duration * waypoints[i].speed;
-	}
-	n1.n = i;
-	n1.sec = t;
-	n1.fuel_usage = f;
-
-	t = time;
-	f = 0;
-	for(i=0; fuel > waypoints[i].duration * waypoints[i].speed; i++) {
-		fuel -= waypoints[i].duration * waypoints[i].speed;
-		f += waypoints[i].duration * waypoints[i].speed;
-		t -= waypoints[i].duration;
-	}
-	n2.n = i;
-	n2.sec = t;
-		
-	if(n2 < n1)  n1 = n2;
-	(WhereAbout)*this = waypoints[n1.n];
-	return n1;
-}
-
-bool Nth::operator<(Nth nth)
-{
-	if(n < nth.n) return true;
-	else if(n > nth.n) return false;
-	else return sec < nth.sec ? true : false;
-}
-
 int Waypoint::insert_waypoint(int turning, int spd, int dur, float p)
 {
 	int ret = waypoints.size();
@@ -147,5 +115,17 @@ int Waypoint::insert_waypoint(int turning, int spd, int dur, float p)
 	waypoints.push_back(mediator);
 
 	return ret + 1;//size of waypoints
+}
+
+int Waypoint::time_pass(float penalty)
+{
+	(WhereAbout)*this = waypoints[cur_waypt];
+	cur_time_in_waypt += OneTick;
+	WhereAbout::time_pass(cur_time_in_waypt, penalty);
+	if(cur_time_in_waypt == waypoints[cur_waypt].duration) {
+		cur_waypt++;
+		cur_time_in_waypt = 0;
+	}
+	return cur_waypt;
 }
 

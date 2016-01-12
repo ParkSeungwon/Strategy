@@ -1,12 +1,12 @@
 CC = g++
 C_OPTION = -g -c -std=c++11 -fmax-errors=3
-OBJ = main.o  gtkmain.o #Util.o Unit.o Weapon.o 
+OBJ = Util.o Unit.o Weapon.o Waypoint.o time.o Terrain.o map.o point.o bitmap.o blank.o
 
 gtkmmCFLAG = $(shell pkg-config gtkmm-3.0 --cflags)
 gtkmmLIB = $(shell pkg-config gtkmm-3.0 --libs)
 	
-war : $(OBJ)
-	$(CC) -o war $(OBJ) $(gtkmmLIB)
+all : $(OBJ)
+
 test : test.cc
 	g++ -g -std=c++11 -fmax-errors=5 -o test test.cc
 	
@@ -24,7 +24,7 @@ Waypoint.o : Waypoint.cc Waypoint.h
 	$(CC) $(C_OPTION) Waypoint.cc
 point.o : point.cpp point.hpp
 	$(CC) $(C_OPTION) point.cpp
-bitmap : bitmap.cc bitmap.h
+bitmap.o : bitmap.cc bitmap.h
 	$(CC) $(C_OPTION) bitmap.cc
 map.o : map.cc map.h
 	$(CC) $(C_OPTION) map.cc

@@ -124,10 +124,10 @@ TerrainType Map::get_terrain_type(Point p)
 	return (TerrainType)terrain_bitmap->get_pixel(p);
 }
 
-float Map::calculate_terrain_penalty(Unit& u, int t) const
+float Map::calculate_terrain_penalty(Unit& u, int time) const
 { //지형의 영향력을 고려한다. 호를 100개 내지 일정한 개수의 점으로 나누어서 각 점의 지형을 샘플로 뽑아 속도를 계산한다.
 	float f, elapse = 0;
-	int i;
+	int i, t = time;
 	TerrainType tt;
 	
 	u.save();
@@ -143,4 +143,12 @@ float Map::calculate_terrain_penalty(Unit& u, int t) const
 	return (float)i / (10 * t);
 }
 
+float Map::calculate_terrain_penalty(Unit& u) const 
+{
+	u.save();
+	(WhereAbout)u = u.waypoints[u.get_cur_waypt()];
+	float p = calculate_terrain_penalty(u, u.get_cur_time_in_waypt() + OneTick);
+	u.restore();	
+	return p;
+}
 

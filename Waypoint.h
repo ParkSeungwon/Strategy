@@ -2,15 +2,6 @@
 #include <vector>
 #include "point.hpp"
 
-class Nth 
-{
-public:
-	int n;
-	int sec;
-	int fuel_usage;
-	bool operator<(Nth nth);
-};
-
 class WhereAbout : public Point
 {
 public:
@@ -52,10 +43,14 @@ public:
 	std::vector<WhereAbout> waypoints;
 	int insert_waypoint(int turning, int spd, int dur, float penalty);//return inserted nth waypoint
 	void delete_waypoint() {waypoints.pop_back();}
-	Nth nth_way(int time, int fuel);//time in at which waypoint & moment
+	int time_pass(float penalty = 1);
 	//void operator = (WhereAbout<float> &wh) {*this = wh;}
 
+	int get_cur_waypt() {return cur_waypt;}
+	int get_cur_time_in_waypt() {return cur_time_in_waypt;}
+
 protected:
+	int cur_waypt, cur_time_in_waypt;
 	int moved_distance(int start_time, int end_time);
 	int how_long_can_i_go(int start_time, int remainning_fuel);//return maximum time 
 

@@ -16,3 +16,13 @@ int Glob::find_big(int ar[], int s)
 	}
 	return index;
 }
+
+int Glob::min(int x, int y)
+{
+	return x<y ? x : y;
+}
+
+int Glob::max(int x, int y)
+{
+	return x>y ? x : y;
+}

@@ -42,16 +42,18 @@ Unit::~Unit()
 	return *this;
 }*/
 
-int Unit::time_pass(int t, float p)
+int Unit::time_pass(float p)
 {
-	Nth n = nth_way(t, fuel);
-	fuel -= n.fuel_usage;
-	fuel -= WhereAbout::time_pass(n.sec, p);//this is from the start of waypoint
+	int fuel_use = OneTick * waypoints[cur_waypt].speed; 
+	if(fuel_use > fuel) return 0;
+	fuel -= fuel_use;
+	Waypoint::time_pass(p);
 	for(auto& w : weapon) {
 		w.time_pass();//this is from last tick	
 		w.adjust_range_clip(*this);
 	}
 	adjust_recon();
+	return fuel;
 }
 
 void Unit::adjust_recon() const

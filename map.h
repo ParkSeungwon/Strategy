@@ -22,6 +22,7 @@ private:
 	
 protected:
 	float calculate_terrain_penalty(Unit& u, int time) const;
+	float calculate_terrain_penalty(Unit& u) const;
 	int generate_recon_bitmap() const;//return showing unit count
 	Bitmap *terrain_bitmap, *recon_bitmap, *city_bitmap;
 	const static int maxTeam = 8;
