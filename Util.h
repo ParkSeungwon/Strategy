@@ -1,10 +1,13 @@
 #pragma once
 
-class Util {
-public:
-	static int min(int a, int b) {return a<b ? a:b;}
-	static int max(int a, int b) {return a>b ? a:b;}
-	static int find_big(int array[], int size);
-	static float correct_angle(float theta);
+namespace Glob {
+	int find_big(int array[], int size);
+	float correct_angle(float theta);
+	const int OneTick = 4;
+	enum class UnitType : int {Air, Armor, Infantry, Ship};
+	enum class TerrainType : int {
+		city, capital, airport, harbor, mountain, forest, 
+		desert, sea, field, road, swamp, hill, river, fort
+	};
 };
 

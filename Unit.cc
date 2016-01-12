@@ -4,7 +4,9 @@
 #include "Unit.h"
 #include "Util.h"
 #include "bitmap.h"
+#include "Weapon.h"
 using namespace std;
+using namespace Glob;
 
 Unit::Unit(Point pos, float heading) 
 {
@@ -65,6 +67,11 @@ int Unit::operator + (Weapon w)
 	weapon.push_back(w);
 }
 
+int Unit::operator-(std::vector<Weapon>::iterator it)
+{
+	weapon.erase(it);
+}
+
 int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 {
 	int sz = dp.size();
@@ -74,7 +81,7 @@ int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 		if(w.can_fire()) {
 			for(int i=0; i<sz; i++) 
 				pref[i] = can_attack(*dp[i]) ? w + *dp[i] : -1;
-			target = Util::find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
+			target = find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
 			if(pref[target] > 0) w >> *dp[target];
 		}
 	}
@@ -82,7 +89,7 @@ int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 	return sz;
 }
 
-bool Unit::can_attack(const Unit& u)
+bool Unit::can_attack(const Unit& u) const
 {
 	return ally != u.ally && u.known_to[ally];
 }

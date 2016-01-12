@@ -1,7 +1,4 @@
 #include "Terrain.h"
-#include "Waypoint.h"
-#include <cstdlib>
-#include "Unit.h"
 using namespace std;
 
 //#include <ifstream>
@@ -36,7 +33,7 @@ const float Terrain::evade_bonus[4][14] = {
 	{1, 1, 1, 1.1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-Terrain::TerrainType Terrain::get_terraintype_by_color(unsigned int code)
+Glob::TerrainType Terrain::get_terraintype_by_color(unsigned int code)
 {
 	int i = 0;
 	switch(code) {
@@ -56,6 +53,15 @@ Terrain::TerrainType Terrain::get_terraintype_by_color(unsigned int code)
 		case 0x7f0000: i++;//짙은 붉은색
 		default : ; 
 	}
-	return (Terrain::TerrainType)(14-i);
+	return (Glob::TerrainType)(14-i);
 }
 	
+float Terrain::get_move_penalty(Glob::TerrainType tt, Glob::UnitType ut) 
+{
+	return move_penalty[(int)ut][(int)tt];
+}
+
+float Terrain::get_evade_bonus(Glob::TerrainType tt, Glob::UnitType ut)
+{
+	return evade_bonus[(int)ut][(int)tt];
+}

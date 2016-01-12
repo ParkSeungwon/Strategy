@@ -3,15 +3,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <cmath>
-#include "point.hpp"
 #include "Terrain.h"
 #include "map.h"
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
 #include "bitmap.h"
-#include "Waypoint.h"
 using namespace std;
+using namespace Glob;
 
 Weapon::Weapon()
 {
@@ -39,12 +38,12 @@ int Weapon::operator + (const Unit &e) const
 	if(!fire_range_clip->get_pixel(e)) return -10002;
 	switch(preference) {
 		case HIGH_DAMAGE:
-			switch(e.unit_type) {
-				case Unit::Air:
+			switch(e.get_unit_type()) {
+				case UnitType::Air:
 					return firePower * hitRatioVSAir * e.get_evadeRatio() / 100;
-				case Unit::Infantry:
+				case UnitType::Infantry:
 					return firePower * hitRatioVsInfantry * e.get_evadeRatio() /100;
-				case Unit::Armor:
+				case UnitType::Armor:
 					return firePower * hitRatioVsArmor * e.get_evadeRatio() /100;
 				default:
 					return firePower * hitRatioVsShip * e.get_evadeRatio() / 100;
@@ -52,20 +51,18 @@ int Weapon::operator + (const Unit &e) const
 		case LOW_HEALTH: return  10000 - e.get_currentHealth();
 		case EXPENSIVE: return e.get_unitPrice();
 		case HIGH_RATIO:
-			switch(e.unit_type) {
-				case Unit::Air:
+			switch(e.get_unit_type()) {
+				case UnitType::Air:
 					return hitRatioVSAir * e.get_evadeRatio() / 100;
-				case Unit::Infantry:
+				case UnitType::Infantry:
 					return hitRatioVsInfantry * e.get_evadeRatio() /100;
-				case Unit::Armor:
+				case UnitType::Armor:
 					return hitRatioVsArmor * e.get_evadeRatio() /100;
 				default:
 					return hitRatioVsShip * e.get_evadeRatio() / 100;
 			}
 		case CHEAP: return 10000 - e.get_unitPrice();
 		case NEAR: 
-			fire_range_clip->lower_left.x += shootingRangeMax;
-			fire_range_clip->lower_left.y += shootingRangeMax;
 			return 10000 - (int)(fire_range_clip->lower_left + 
 					Point(shootingRangeMax, shootingRangeMax) ^ e);
 	}
@@ -80,17 +77,17 @@ void Weapon::reload()
 int Weapon::operator >> (Unit &e) 
 {
 	int hitRatio;
-	switch (e.unit_type) {
-		case Unit::Infantry:
+	switch (e.get_unit_type()) {
+		case UnitType::Infantry:
 			hitRatio = hitRatioVsInfantry;
 			break;
-		case Unit::Armor:
+		case UnitType::Armor:
 			hitRatio = hitRatioVsArmor;
 			break;
-		case Unit::Air:
+		case UnitType::Air:
 			hitRatio = hitRatioVSAir;
 			break;
-		case Unit::Ship:
+		case UnitType::Ship:
 			hitRatio = hitRatioVsShip;
 	}
 	

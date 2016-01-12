@@ -1,10 +1,13 @@
 #pragma once
 #include <string>
-#include "Weapon.h"
-#include "map.h"
 #include "Waypoint.h"
 #include <memory>
 #include <vector>
+#include "Util.h"
+
+class Weapon;
+class Airport;
+class Clip;
 
 class Unit : public Waypoint
 {
@@ -12,7 +15,7 @@ public :
 	Unit(Point position, float headingToward);
 	~Unit();
 	int operator + (Weapon weapon);//equip weapon
-	int operator - (std::vector<Weapon>::iterator it) {weapon.erase(it);}//unload weapon
+	int operator - (std::vector<Weapon>::iterator it); //unload weapon
 	
 	//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
 	int operator >> (std::vector<std::shared_ptr<Unit>>& deployed);
@@ -22,11 +25,10 @@ public :
 //	Unit& operator=(Unit& u){return u;} 
 	virtual bool in_city();
 	virtual void out_of_city() {}
-	virtual void set_evadeRatio(Terrain::Terrain::TerrainType tt) {evadeRatio = orig_evade_ratio;}
+	virtual void set_evadeRatio(Glob::TerrainType tt) {evadeRatio = orig_evade_ratio;}
 	bool can_attack(const Unit& u) const;
 	
 	std::vector<Weapon> weapon;
-	enum UnitType {Air, Armor, Infantry, Ship} unit_type;
 
 	//setter, getter
 	int get_evadeRatio() const 					{return evadeRatio;}
@@ -34,6 +36,8 @@ public :
 	int get_ally() const 						{return ally;}
 	int get_team() const						{return team;}
 	int get_currentHealth() const 				{return currentHealth;}
+	Glob::UnitType get_unit_type() const		{return unit_type;}
+	int get_int_type() const					{return (int)unit_type;}
 	unsigned int get_unitPrice() const 			{return unitPrice;}
 	void set_currentHealth(int h) 				{currentHealth = h;}
 	void set_team(int t) 						{team = t;}
@@ -58,6 +62,7 @@ protected :
 	int currentHealth;
 	int fuel;
 	unsigned int experience;
+	Glob::UnitType unit_type;
 
 
 private:
@@ -77,8 +82,8 @@ class AirUnit : public Unit
 class ArmorUnit : public TerrainUnit 
 {
 public :
-	void set_evadeRatio(Terrain::TerrainType tt) {
-		evadeRatio = orig_evade_ratio * terrain_evade_bonus[tt];}
+	void set_evadeRatio(Glob::TerrainType tt) {
+		evadeRatio = orig_evade_ratio * terrain_evade_bonus[(int)tt];}
 
 //city=1, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
 private :
@@ -91,8 +96,8 @@ class InfantryUnit : public TerrainUnit
 public:
 	bool in_city();
 	void out_of_city() {in_city_time = 0;}
-	void set_evadeRatio(Terrain::TerrainType tt) {
-		evadeRatio = orig_evade_ratio * terrain_evade_bonus[tt];}
+	void set_evadeRatio(Glob::TerrainType tt) {
+		evadeRatio = orig_evade_ratio * terrain_evade_bonus[(int)tt];}
 	
 private:
 	int in_city_time;

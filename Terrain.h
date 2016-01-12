@@ -1,21 +1,17 @@
 #pragma once
-#include <memory>
-#include <unordered_map>
-#include "point.hpp"
+#include <cstddef>
 
+namespace Glob { 
+	enum class TerrainType;
+	enum class UnitType;
+}
 class Unit;
-enum UnitType {Air, Armor, Infantry, Ship};
 
 class Terrain {
 public :
-	enum TerrainType {
-		city, capital, airport, harbor, mountain, forest, desert, sea, field, road, swamp, hill, river, fort
-	};
-	static float get_move_penalty(TerrainType tt, UnitType ut) {
-		return move_penalty[ut][tt];}
-	static float get_evade_bonus(TerrainType tt, UnitType ut) {
-		return evade_bonus[ut][tt];}
-	static TerrainType get_terraintype_by_color(unsigned int code);
+	static float get_move_penalty(Glob::TerrainType tt, Glob::UnitType ut);
+	static float get_evade_bonus(Glob::TerrainType tt, Glob::UnitType ut); 
+	static Glob::TerrainType get_terraintype_by_color(unsigned int code);
 
 protected :
 	const static float move_penalty[4][14]; 

@@ -1,11 +1,14 @@
 #include <algorithm>
 #include <typeinfo>
+#include "Weapon.h"
 #include "Terrain.h"
 #include "map.h"
 #include "bitmap.h"
 #include "Unit.h"
+#include "Util.h"
 #define TERRAIN_COUNT 14
 typedef unsigned char UC;
+using namespace Glob;
 
 Map::Map(int w, int h, size_t **image, int ally)
 {
@@ -24,14 +27,10 @@ Map::Map(int w, int h, size_t **image, int ally)
 	for(size_t y = 0; y < h; y++) {
 		for(size_t x = 0; x < w; x++) {
 			p.x = x; p.y = y;
-			t->set_pixel(Terrain::get_terraintype_by_color(image[y][x]));
+			t->set_pixel(p, (int)Terrain::get_terraintype_by_color(image[y][x]));
 			if(image[y][x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
 				dot = (image[y][x] & 0xff00) >> 2;
 				c->set_pixel(p, dot);//도시의 고유번호를 부여함green
-				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
-					ct.identifier = dot;
-					cities.push_back(ct);
-				}	
 			}
 		}
 	}
@@ -43,6 +42,25 @@ int Map::occupy(Point p, int team)
 	if(it != cities.end()) it->owner = team;
 }
 
+int Map::count_cities(size_t **image)
+{
+	Point p;
+	size_t dot = 0;
+	City ct;
+	for (size_t y = 0; y < height; y++) {
+		for (size_t x = 0; x < width; x++) {
+			p.x = x; p.y = y;
+			if(image[y][x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
+				dot = (image[y][x] & 0xff00) >> 2;
+				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
+					ct.identifier = dot;
+					cities.push_back(ct);
+				}
+			}
+		}
+	}
+	return cities.size();
+}
 
 bool Map::in_city(Point p) 
 {
@@ -87,7 +105,7 @@ int Map::generate_recon_bitmap() const
 	for(auto& d : deployedUnits) {
 		a = d->get_ally();
 		for(int i=0; i < recon_bitmap->bit_per_pixel; i++) {
-			if(a != i) d->set_known_to(i, recon_bitmap->bitmap[i]->get_pixel());
+			if(a != i) d->set_known_to(i, recon_bitmap->bitmap[i]->get_pixel(*d));
 		//	else d->known_to[i] = true;
 		}
 	}
@@ -101,7 +119,7 @@ int Map::get_log2(int cc)
 	return i;
 }
 
-Terrain::TerrainType Map::get_terrain_type(Point p)
+TerrainType Map::get_terrain_type(Point p)
 {
 	return (TerrainType)terrain_bitmap->get_pixel(p);
 }
@@ -114,9 +132,9 @@ float Map::calculate_terrain_penalty(Unit& u, int t) const
 	
 	u.save();
 	for(i=0; i < t*10; i++) {
-		(WhereAbout)u.time_pass(0.1 * i);//important casting 
+		((WhereAbout)u).time_pass(0.1 * i);//important casting 
 		tt = (TerrainType)terrain_bitmap->get_pixel(u);
-		f = Terrain::get_move_penalty(tt, u.unit_type);
+		f = Terrain::get_move_penalty(tt, u.get_unit_type());
 		if(f == 0)  break;
 		else elapse += 0.1 * f;
 		if(elapse >= t*10) break;

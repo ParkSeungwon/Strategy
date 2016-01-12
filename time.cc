@@ -14,7 +14,7 @@ void Time::time_pass(int time)
 		n = u->nth_way(time, u->get_fuel());
 		f = calculate_terrain_penalty(*u, nth.sec);
 		u->time_pass(time, f); 
-		u->set_evadeRatio(get_terrain_type(*u));
+		u->set_evadeRatio(Terrain::get_evade_bonus(get_terrain_type(*u), u->unit_type);
 		if(in_city(*u)) {
 			if(u->in_city()) occupy(*u, u->get_team());
 		} else u->out_of_city();
