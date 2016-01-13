@@ -18,7 +18,7 @@ public:
 	int operator >> (Unit &enenmy);		//공격 함수
 
 	void set_preference(Preference p) {preference = p;}
-	void time_pass() {lapsedTimeAfterFire += 4;}
+	void time_pass();
 	bool can_fire() {return currentRounds > 0 && lapsedTimeAfterFire >= fireRate;}
 	void reload();
 

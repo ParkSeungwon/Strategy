@@ -5,6 +5,7 @@ class Point
 public:
 	int x,y;
 	Point();
+	virtual ~Point() {}
 	Point(int x, int y) {this->x = x; this->y = y;}
 
 	float operator ^ (Point p) const; //distance

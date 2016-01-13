@@ -14,7 +14,9 @@ using namespace Glob;
 
 Weapon::Weapon()
 {
-	fire_range_clip = new Clip(Point(shootingRangeMax + 1, shootingRangeMax + 1), shootingRangeMax);
+	fire_range_clip = new Clip( 
+			Point(shootingRangeMax + 1, shootingRangeMax + 1), shootingRangeMax
+			);
 }
 
 Weapon::~Weapon()
@@ -29,7 +31,11 @@ void Weapon::adjust_range_clip(const WhereAbout &wh) const
 	p.y = wh.y - shootingRangeMax;
 	fire_range_clip->set_lower_left(p);
 	fire_range_clip->clear();
-	fire_range_clip->bit_arc_circle(p, shootingRangeMin, shootingRangeMax, shootingAngleFrom + wh.heading_toward, shootingAngleTo + wh.heading_toward);
+	fire_range_clip->bit_arc_circle(
+			p, shootingRangeMin, shootingRangeMax, 
+			shootingAngleFrom + wh.heading_toward, 
+			shootingAngleTo + wh.heading_toward
+			);
 }
 
 int Weapon::operator + (const Unit &e) const
@@ -70,7 +76,6 @@ int Weapon::operator + (const Unit &e) const
 
 void Weapon::reload()
 {
-	lapsedTimeAfterFire += 4;
 	currentRounds += currentRounds < maxRounds ? maxRounds / 30 : 0;
 }
 
@@ -92,7 +97,7 @@ int Weapon::operator >> (Unit &e)
 	}
 	
 	if (hitRatio == 0) return 0;
-	if (lapsedTimeAfterFire >= fireRate && currentRounds >=1) {
+	if (can_fire()) {
 		lapsedTimeAfterFire = 0;
 		currentRounds -= 1;
 	}
@@ -106,4 +111,8 @@ int Weapon::operator >> (Unit &e)
 	return dice;
 }
 
+void Weapon::time_pass()
+{
+	lapsedTimeAfterFire += OneTick;
+}
 

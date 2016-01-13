@@ -30,6 +30,7 @@ public:
 	bool operator==(size_t id) const {return id == identifier;}
 
 	int owner;
+	int ally;
 	int identifier;//connected pixels have same identifier, because they are one city
 };
 

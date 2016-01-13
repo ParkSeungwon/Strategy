@@ -1,6 +1,4 @@
 #include <fstream>
-#include <typeinfo>
-#include <cmath>
 #include "Unit.h"
 #include "Util.h"
 #include "bitmap.h"
@@ -45,13 +43,24 @@ Unit::~Unit()
 int Unit::time_pass(float p)
 {
 	int fuel_use = OneTick * waypoints[cur_waypt].speed; 
-	if(fuel_use > fuel) return 0;
-	fuel -= fuel_use;
-	Waypoint::time_pass(p);
+	if(fuel_use <= fuel) {
+		Waypoint::time_pass(p);
+		fuel -= fuel_use;
+	}
+	if(can_supply) {
+		for(auto& w : weapon) w.reload();
+		fuel += 10 * OneTick;
+		can_supply = false;
+	}
 	for(auto& w : weapon) {
 		w.time_pass();//this is from last tick	
 		w.adjust_range_clip(*this);
 	}
+	if(can_recruit) {
+		currentHealth += OneTick;
+		can_recruit = false;
+	}
+	
 	adjust_recon();
 	return fuel;
 }
@@ -89,6 +98,15 @@ int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 	}
 	delete pref;
 	return sz;
+}
+
+int SupplyUnit::supply(vector<shared_ptr<Unit>>& dp)
+{
+	for(auto& u : dp) {
+		if((*this ^ *u) < supply_radius && u->get_ally() == get_ally()) 
+			u->set_supply(true);
+	}
+	return 0;
 }
 
 bool Unit::can_attack(const Unit& u) const

@@ -19,6 +19,8 @@ class Map : public MapInterface
 private:
 	int count_cities(size_t** image);
 	static int get_log2(int i);
+	bool in_city(Point p);
+	City& get_city(Point p); 
 	
 protected:
 	float calculate_terrain_penalty(Unit& u, int time) const;
@@ -32,7 +34,8 @@ public:
 	Map(int width, int height, size_t **pixel, int ally);
 	virtual ~Map();
 	virtual int occupy(Point p, int team);
-	bool in_city(Point p);
+	int geo_effect(Unit& u);
+
 	std::vector<std::shared_ptr<Unit>> deployedUnits;
 	std::vector<City> cities;
 	void deployUnit(Unit &unit, Point p, float heading_toward);

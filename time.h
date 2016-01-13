@@ -1,3 +1,4 @@
+#pragma once
 #include "map.h"
 
 class Time : public Map

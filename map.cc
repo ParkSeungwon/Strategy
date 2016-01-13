@@ -66,6 +66,37 @@ bool Map::in_city(Point p)
 {
 	 return city_bitmap->get_pixel(p);
 }
+
+City& Map::get_city(Point p) 
+{
+	int id = city_bitmap->get_pixel(p);
+	return *find(cities.begin(), cities.end(), id);
+}
+	
+
+int Map::geo_effect(Unit& u)
+{
+	TerrainType tt = get_terrain_type(u);
+	UnitType ut = u.get_unit_type();
+	u.set_evadeRatio(Terrain::get_evade_bonus(tt, ut));
+	//supply
+	bool ok = false;
+	if(in_city(u)) {
+		if(tt == TerrainType::city || tt == TerrainType::capital) {
+			if(ut == UnitType::Armor || ut == UnitType::Infantry) ok = true;
+		} else if(tt == TerrainType::airport && ut == UnitType::Air) ok = true;
+		else if(tt == TerrainType::harbor && ut == UnitType::Ship) ok = true;
+		
+		City& c = get_city(u);
+		if(ok && c.ally == u.get_ally()) {
+			u.set_supply();
+			u.set_recruit();
+		}
+		if(u.in_city()) occupy(u, u.get_team());
+	} else u.out_of_city();
+
+}
+		
 	
 Map::~Map()
 {
