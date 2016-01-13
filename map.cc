@@ -81,13 +81,13 @@ int Map::geo_effect(Unit& u)
 	u.set_evadeRatio(Terrain::get_evade_bonus(tt, ut));
 	//supply
 	bool ok = false;
+	City& c = get_city(u);
 	if(in_city(u)) {
 		if(tt == TerrainType::city || tt == TerrainType::capital) {
 			if(ut == UnitType::Armor || ut == UnitType::Infantry) ok = true;
 		} else if(tt == TerrainType::airport && ut == UnitType::Air) ok = true;
 		else if(tt == TerrainType::harbor && ut == UnitType::Ship) ok = true;
 		
-		City& c = get_city(u);
 		if(ok && c.ally == u.get_ally()) {
 			u.set_supply();
 			u.set_recruit();
@@ -95,6 +95,10 @@ int Map::geo_effect(Unit& u)
 		if(u.in_city()) occupy(u, u.get_team());
 	} else u.out_of_city();
 
+	if(ut == UnitType::Air && u.get_fuel() <= 0) {
+		if(tt != TerrainType::airport) u.set_currentHealth(-100);
+		else if(c.ally != u.get_ally()) u.set_currentHealth(-100);
+	}
 }
 		
 	
@@ -107,13 +111,9 @@ Map::~Map()
 
 void Map::deployUnit(Unit &u, Point p, float h) 
 {
-	int i = city_bitmap->get_pixel(p);
-	for(auto& au : cities) {//set the team according to the owner of city
-		if(au.identifier == i) {
-			u.set_team(au.owner);
-			break;
-		}
-	}
+	City& c = get_city(p);
+	u.set_team(c.owner);
+	
 	if(u.get_team() != 0) {//verify
 		u.heading_toward = h;
 		(Point)u = p;

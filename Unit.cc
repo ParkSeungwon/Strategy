@@ -47,14 +47,14 @@ int Unit::time_pass(float p)
 		Waypoint::time_pass(p);
 		fuel -= fuel_use;
 	}
+	for(auto& w : weapon) {
+		w.time_pass();//this is from last tick	
+		w.adjust_range_clip(*this);
+	}
 	if(can_supply) {
 		for(auto& w : weapon) w.reload();
 		fuel += 10 * OneTick;
 		can_supply = false;
-	}
-	for(auto& w : weapon) {
-		w.time_pass();//this is from last tick	
-		w.adjust_range_clip(*this);
 	}
 	if(can_recruit) {
 		currentHealth += OneTick;
@@ -116,16 +116,7 @@ bool Unit::can_attack(const Unit& u) const
 
 bool InfantryUnit::in_city()
 {
-	Unit::in_city();
 	in_city_time += 4;
 	if(in_city_time >= 200) return true;
 	else false;
-}
-	
-bool Unit::in_city()
-{
-	fuel += 10;
-	currentHealth += 1;
-	for(auto& w : weapon) w.reload();
-	return false;
 }

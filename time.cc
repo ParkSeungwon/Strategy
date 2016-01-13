@@ -9,8 +9,6 @@ using namespace Glob;
 
 void Time::time_pass()
 {
-	TerrainType tt;
-	UnitType ut;
 	//change position
 	for(auto& u : deployedUnits) {
 		u->time_pass(calculate_terrain_penalty(*u)); 

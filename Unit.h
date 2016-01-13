@@ -27,7 +27,7 @@ public :
 	virtual int supply(std::vector<std::shared_ptr<Unit>>& deployed) {}
 	
 	int time_pass(float penalty = 1);
-	virtual bool in_city();
+	virtual bool in_city() {return false;}
 	virtual void out_of_city() {}
 	bool can_attack(const Unit& u) const;
 	
@@ -36,6 +36,7 @@ public :
 	unsigned int get_intelligenceRadius() const {return intelligenceRadius;}
 	int get_ally() const 						{return ally;}
 	int get_team() const						{return team;}
+	int get_fuel() const 						{return fuel;}
 	int get_currentHealth() const 				{return currentHealth;}
 	Glob::UnitType get_unit_type() const		{return unit_type;}
 	unsigned int get_unitPrice() const 			{return unitPrice;}
