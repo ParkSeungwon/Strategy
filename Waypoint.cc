@@ -64,6 +64,7 @@ void WhereAbout::operator = (WhereAbout &wh)
 {
 	x = wh.x; 
 	y = wh.y;
+	turning = wh.turning;
 	turn_center = wh.turn_center;
 	speed = wh.speed;
 	heading_toward = wh.heading_toward;

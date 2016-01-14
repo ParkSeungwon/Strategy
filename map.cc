@@ -96,8 +96,8 @@ int Map::geo_effect(Unit& u)
 	} else u.out_of_city();
 
 	if(ut == UnitType::Air && u.get_fuel() <= 0) {
-		if(tt != TerrainType::airport) u.set_currentHealth(-100);
-		else if(c.ally != u.get_ally()) u.set_currentHealth(-100);
+		if(tt != TerrainType::airport || c.ally != u.get_ally()) 
+			u.set_currentHealth(-100);
 	}
 }
 		
@@ -116,7 +116,7 @@ void Map::deployUnit(Unit &u, Point p, float h)
 	
 	if(u.get_team() != 0) {//verify
 		u.heading_toward = h;
-		(Point)u = p;
+		u.x = p.x; u.y = p.y;
 		std::shared_ptr<Unit> up(new Unit(u));
 		deployedUnits.push_back(up);
 	}
@@ -150,22 +150,20 @@ int Map::get_log2(int cc)
 	return i;
 }
 
-TerrainType Map::get_terrain_type(Point p)
+TerrainType Map::get_terrain_type(Point p) const
 {
-	return (TerrainType)terrain_bitmap->get_pixel(p);
+	return static_cast<TerrainType>(terrain_bitmap->get_pixel(p));
 }
 
 float Map::calculate_terrain_penalty(Unit& u, int time) const
 { //지형의 영향력을 고려한다. 호를 100개 내지 일정한 개수의 점으로 나누어서 각 점의 지형을 샘플로 뽑아 속도를 계산한다.
 	float f, elapse = 0;
 	int i, t = time;
-	TerrainType tt;
-	
+	UnitType ut = u.get_unit_type();
 	u.save();
 	for(i=0; i < t*10; i++) {
-		((WhereAbout)u).time_pass(0.1 * i);//important casting 
-		tt = (TerrainType)terrain_bitmap->get_pixel(u);
-		f = Terrain::get_move_penalty(tt, u.get_unit_type());
+		u.WhereAbout::time_pass(0.1 * i);//important casting 
+		f = Terrain::get_move_penalty(get_terrain_type(u), ut);
 		if(f == 0)  break;
 		else elapse += 0.1 * f;
 		if(elapse >= t*10) break;
@@ -177,7 +175,7 @@ float Map::calculate_terrain_penalty(Unit& u, int time) const
 float Map::calculate_terrain_penalty(Unit& u) const 
 {
 	u.save();
-	(WhereAbout)u = u.waypoints[u.get_cur_waypt()];
+	u.WhereAbout::operator=(u.waypoints[u.get_cur_waypt()]);
 	float p = calculate_terrain_penalty(u, u.get_cur_time_in_waypt() + OneTick);
 	u.restore();	
 	return p;

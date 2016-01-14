@@ -1,3 +1,4 @@
+//dependent on libpng++-dev
 class PNG_interface
 {
 public:

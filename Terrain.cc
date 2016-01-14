@@ -53,7 +53,7 @@ Glob::TerrainType Terrain::get_terraintype_by_color(unsigned int code)
 		case 0x7f0000: i++;//짙은 붉은색
 		default : ; 
 	}
-	return (Glob::TerrainType)(14-i);
+	return static_cast<Glob::TerrainType>(14-i);
 }
 	
 float Terrain::get_move_penalty(Glob::TerrainType tt, Glob::UnitType ut) 
