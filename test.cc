@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 class A {
 	public:
@@ -15,11 +16,19 @@ class B: public A {
 	B(int i):A(i){}
 };
 
+void fu(int& i, vector<int>& v) {v.push_back(i);}
+int f() {return 4;}
 int main () {
-	A a(33);
+/*	A a(33);
 	B b(22);
 	b.A::change();
 	cout << "a.i " << a.i << endl;
 	cout << "b.i " << b.i << endl;
-	
+*/	
+		vector<int> v;
+		v.push_back(31);
+		int j = 54;
+		fu(j, v);
+		j = 43;
+//		for(auto& i : v) cout << i;
 }

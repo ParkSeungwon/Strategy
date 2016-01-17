@@ -1,6 +1,6 @@
 #pragma once
 #include <cstddef>
-#include "point.hpp"
+#include "point.h"
 enum bit_operation {SUBST, OR, AND, XOR, MINUS, NOT};
 
 class Clip 

@@ -72,7 +72,7 @@ void Unit::adjust_recon() const
 	recon_clip->bit_circle(*this, intelligenceRadius);
 }
 
-int Unit::operator + (Weapon w)
+int Unit::operator + (Weapon& w)
 {
 	w.adjust_range_clip(*this);
 	weapon.push_back(w);
@@ -90,8 +90,7 @@ int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 	int target;
 	for(auto& w : weapon) {
 		if(w.can_fire()) {
-			for(int i=0; i<sz; i++) 
-				pref[i] = can_attack(*dp[i]) ? w + *dp[i] : -1;
+			for(int i=0; i<sz; i++) pref[i] = can_attack(*dp[i]) ? w + *dp[i] : -1;
 			target = find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
 			if(pref[target] > 0) w >> *dp[target];
 		}
@@ -118,5 +117,5 @@ bool InfantryUnit::in_city()
 {
 	in_city_time += 4;
 	if(in_city_time >= 200) return true;
-	else false;
+	return false;
 }

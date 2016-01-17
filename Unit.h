@@ -19,7 +19,7 @@ public :
 	virtual ~Unit();
 
 	std::vector<Weapon> weapon;
-	int operator + (Weapon weapon);//equip weapon
+	int operator + (Weapon& weapon);//equip weapon
 	int operator - (std::vector<Weapon>::iterator it); //unload weapon
 	
 	//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격

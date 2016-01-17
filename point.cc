@@ -1,4 +1,4 @@
-#include "point.hpp"
+#include "point.h"
 #include <cmath>
 
 Point Point::polar_to_xy(int r, float th)

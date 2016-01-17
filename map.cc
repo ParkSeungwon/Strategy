@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <typeinfo>
 #include "Weapon.h"
 #include "Terrain.h"
 #include "map.h"

@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include <string>
 #include <stdlib.h>
 #include <time.h>
-#include <cmath>
 #include "Terrain.h"
 #include "map.h"
 #include "Unit.h"

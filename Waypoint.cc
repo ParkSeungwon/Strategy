@@ -1,7 +1,4 @@
-#include <typeinfo>
 #include <cmath>
-#include <stdio.h>
-#include <stdlib.h>
 #include "Waypoint.h"
 #include "Util.h"
 using namespace std;

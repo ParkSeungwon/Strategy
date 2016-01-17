@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "point.hpp"
+#include "point.h"
 
 class WhereAbout : public Point
 {
