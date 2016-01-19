@@ -14,6 +14,7 @@ public:
 protected:
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
 	Glib::RefPtr<Gdk::Pixbuf> image, car;
+	Cairo::RefPtr<Cairo::Context> context;
 };
 
 class Win : public Gtk::Window
@@ -39,20 +40,10 @@ Darea::Darea()
 
 bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
+	car->composite(image, 100, 100, car->get_width(), car->get_height(), 100, 100, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
 	Gdk::Cairo::set_source_pixbuf(cr, image, 0, 0);
-	//car = car->add_alpha(false, 0,0,0);
-	cout << "alpha ? : " << car->get_has_alpha() <<endl;
-	car->copy_area(0, 0, car->get_width(), car->get_height(), image, 300, 300);
-//	Gtk::Allocation allocation = get_allocation();
-//	  const int width = allocation.get_width();
-//	  const int height = allocation.get_height();
-//
-//	  // coordinates for the center of the window
-//	  int xc, yc;
-//	  xc = width / 2;
-//	  yc = height / 2;
 	cr->paint();
-	  cr->set_line_width(10.0);
+	cr->set_line_width(10.0);
 
 	  // draw red lines out from the center of the window
 	  cr->set_source_rgb(0.8, 0.0, 0.0);
