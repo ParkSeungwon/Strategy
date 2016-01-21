@@ -15,7 +15,6 @@ set background=dark
 set backspace=indent,eol,start
 set backup
 set fileencodings=ucs-bom,utf-8,default,latin1
-highlight ColorColumn ctermbg=235 guibg=#2c2d27
 set guifont=나눔고딕코딩\ 12
 set helplang=ko
 set history=50
@@ -25,8 +24,10 @@ set mouse=a
 set printoptions=paper:a4
 set ruler
 set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim74,/usr/share/vim/vimfiles/after,/var/lib/vim/addons/after,~/.vim/after
+set shiftwidth=4
 set showcmd
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
+set tabstop=4
 set termencoding=utf-8
 set window=57
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
@@ -37,7 +38,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +8 ~/Programming/Strategy/gtk/basic/Makefile
+badd +5 ~/Programming/Strategy/gtk/basic/Makefile
 badd +0 ~/Programming/Strategy/gtk/basic/basic.cc
 silent! argdel *
 edit ~/Programming/Strategy/gtk/basic/basic.cc
@@ -131,7 +132,7 @@ setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
-setlocal shiftwidth=8
+setlocal shiftwidth=4
 setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=0
@@ -146,7 +147,7 @@ setlocal synmaxcol=3000
 if &syntax != 'cpp'
 setlocal syntax=cpp
 endif
-setlocal tabstop=8
+setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -156,11 +157,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 47 - ((26 * winheight(0) + 28) / 56)
+let s:l = 52 - ((21 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-47
+52
 normal! 0
 wincmd w
 argglobal
@@ -243,7 +244,7 @@ setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
-setlocal shiftwidth=8
+setlocal shiftwidth=4
 setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=0
@@ -258,7 +259,7 @@ setlocal synmaxcol=3000
 if &syntax != 'make'
 setlocal syntax=make
 endif
-setlocal tabstop=8
+setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -268,12 +269,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 8 - ((7 * winheight(0) + 28) / 56)
+let s:l = 9 - ((8 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-8
-normal! 011|
+9
+normal! 0
 wincmd w
 exe 'vert 1resize ' . ((&columns * 114 + 113) / 226)
 exe 'vert 2resize ' . ((&columns * 111 + 113) / 226)
