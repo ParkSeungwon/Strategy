@@ -18,14 +18,18 @@ Darea::Darea(string mp, string tr, const vector<string>& l)
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
+	paste_pix(500, 1500, "bomber_hb.png", 1);
+	paste_pix(500, 1900, "bomber_hb.png", M_PI);
+	paste_pix(500, 1700, "car.png", M_PI/4);
 }
 
 void Darea::paste_pix(int x, int y, string fl, float heading)
 {
 	auto it = unit_png.find(fl);
 	if(it != unit_png.end()) {
-		auto pix = it->second;
+		Glib::RefPtr<Gdk::Pixbuf> pix;
 		if(heading != 0) pix = rotate_pix_buf(it->second, heading);
+		else pix = it->second;
 		int w = pix->get_width();
 		int h = pix->get_height();
 		x -= w/2;
@@ -39,12 +43,27 @@ void Darea::paste_pix(int x, int y, string fl, float heading)
 	}
 }
 
+void Darea::get_new_dimension(int& w, int& h, float rad)
+{
+	float fw1 = w /2;
+	float fh1 = h /2;
+	rotate(fw1, fh1, rad);
+	float fw2 = w/2;
+	float fh2 = -h/2;
+	rotate(fw2, fh2, rad);
+	fw1 = abs(fw1) * 2;
+	fh1 = abs(fh1) * 2;
+	fw2 = abs(fw2) * 2;
+	fh2 = abs(fh2) * 2;
+	w = fw1 > fw2 ? fw1 : fw2;
+	h = fh1 > fh2 ? fh1 : fh2;
+}
+
+
 Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> pb, float rad)
 {
 	int w = pb->get_width();
-   	int qw = w * 1.414;
 	int h = pb->get_height();
-   	int qh = h * 1.414;
 	auto a = pb->get_has_alpha();
 	auto b = pb->get_bits_per_sample();
 	auto c = pb->get_colorspace();
@@ -52,7 +71,11 @@ Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> 
 	auto n = pb->get_n_channels();
 	auto p = pb->get_pixels();
 
+	int qw = w;
+	int qh = h;
+	get_new_dimension(qw, qh, rad);
 	auto q = Gdk::Pixbuf::create(c, a, b, qw, qh);
+	q->fill(0);
 	auto rq = q->get_rowstride();
 	auto nq = q->get_n_channels();
 	auto pq = q->get_pixels();
@@ -62,22 +85,22 @@ Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> 
 
 	unsigned char *pp, *qq;
 	float xx, yy;
-   	for(int x = 0; x < w; x++) {
-		for(int y = 0; y < h; y++) {
-			pp = fp(x, y);
-			yy = y + 0.5;
+   	for(int x = 0; x < qw; x++) {
+		for(int y = 0; y < qh; y++) {
 			xx = x + 0.5;
-			yy = h - yy;
-			xx -= w/2;
-			yy -= h/2;
-			xy_to_polar(xx, yy);//x,y is ref
-			yy += rad;
-			polar_to_xy(xx, yy);
-			xx += qw/2 ;
-			yy += qh/2;
+			yy = y + 0.5;
 			yy = qh - yy;
-			qq = fq(xx, yy);
-			for(int i=0; i<4; i++) qq[i] = pp[i];
+			xx -= qw/2;
+			yy -= qh/2;
+			rotate(xx, yy, -rad);
+			xx += w/2 ;
+			yy += h/2;
+			yy = h - yy;
+			if(xx < w && xx >=0 && yy < h && yy >=0) {
+				qq = fq(x, y);
+				pp = fp(xx, yy);
+				for(int i=0; i<4; i++) qq[i] = pp[i];
+			}
 		}
 	}
 	return q;
@@ -86,9 +109,16 @@ Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> 
 void Darea::xy_to_polar(float& x, float& y)
 {
 	float r = sqrt(x*x + y*y);
-	float theta = atan(y/x);
-	x = r;
-	y = theta;
+	if(x == 0) {
+		x = r;
+		if(y > 0) y = M_PI / 2;
+		else y = -M_PI / 2;
+	} else {
+		float theta = atan(y/x);
+		if(x < 0) theta += M_PI;
+		x = r;
+		y = theta;
+	}
 }
 
 void Darea::polar_to_xy(float& r, float& theta)
@@ -99,12 +129,18 @@ void Darea::polar_to_xy(float& r, float& theta)
 	theta = y;
 }
 
+void Darea::rotate(float& x, float& y, float rad)
+{
+	xy_to_polar(x, y);
+	y += rad;
+	polar_to_xy(x, y);
+}
+
 bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
 //    car->composite(map, 0, 0, car->get_width() -100, car->get_height()-100, -100, -100, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
   //  airplane->composite(map, 300, 300, airplane->get_width(), airplane->get_height(), 300, 300, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
 	cr->save();
-	paste_pix(500, 1900, "car.png", 2);
 	cr->restore();
 	Gdk::Cairo::set_source_pixbuf(cr, map, 0, 0);
     cr->paint();
@@ -128,7 +164,10 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     return true;
 }
 
-Win::Win() : bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), area("europe.png", "europe.png", {"car.png"}) {
+Win::Win() :
+   	bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), 
+	area("europe.png", "europe.png", {"bomber_hb.png", "car.png"}) 
+{
     set_border_width(10);
     set_default_size(900, 900);
     add(box1);

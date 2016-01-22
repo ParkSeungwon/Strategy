@@ -9,24 +9,27 @@ public:
 	Darea(std::string map, std::string terrain, const std::vector<std::string>& l);
 	virtual ~Darea() {}
 	int width, height;
-	void paste_pix(int x, int y, std::string name, float heading);
+	void paste_pix(int x, int y, std::string name, float heading = 0);
 
 protected:
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
 	Glib::RefPtr<Gdk::Pixbuf> map, terrain;
 	std::unordered_map<std::string, Glib::RefPtr<Gdk::Pixbuf>> unit_png;
 	Cairo::RefPtr<Cairo::Context> context;
-	static Glib::RefPtr<Gdk::Pixbuf> rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> pb, float radian);
+	static Glib::RefPtr<Gdk::Pixbuf> rotate_pix_buf(
+			const Glib::RefPtr<Gdk::Pixbuf> pb, float radian);
 
 private:
 	static void xy_to_polar(float& x, float& y);
 	static void polar_to_xy(float& x, float& y);
+	static void rotate(float& x, float& y, float rad);
+	static void get_new_dimension(int& w, int& h, float rad);
 };
 
 class Win : public Gtk::Window
 {
 public:
-    Win();
+	Win();	
 
 protected:
     Gtk::Button bt1, bt2;
