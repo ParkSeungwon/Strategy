@@ -254,4 +254,24 @@ int Map::count_cities(size_t **image)
 	}
 	return cities.size();
 }
+int Darea::copy_pixbuf(const Glib::RefPtr<Gdk::Pixbuf>& s, Glib::RefPtr<Gdk::Pixbuf>& d)
+{
+	int r, n, w, h;
+	if(w = s->get_width() != d->get_width()) return -1;
+	if(h = s->get_height() != d->get_height()) return -1;
+	if(s->get_bits_per_sample() != d->get_bits_per_sample()) return -2;
+	if(n = s->get_n_channels() != d->get_n_channels()) return -3;
+	if(s->get_colorspace() != d->get_colorspace()) return -4;
+	if(s->get_has_alpha() != d->get_has_alpha()) return -5;
+	if(r = s->get_rowstride() != d->get_rowstride()) return -6;
+	auto sp = s->get_pixels();
+	auto dp = d->get_pixels();
+
+	for(int y=0; y<h; y++) {
+		for(int x=0; x<w; x++) {
+			for(int i=0; i<4; i++) (dp + y*r + x*n)[i] = (sp + y*r + x*n)[i];
+		}
+	}
+	return 0;
+}
 

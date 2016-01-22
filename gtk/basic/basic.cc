@@ -9,8 +9,9 @@ using namespace Gtk;
 
 Darea::Darea(string mp, string tr, const vector<string>& l) 
 {
+	add_events(Gdk::BUTTON_PRESS_MASK);
     map = Gdk::Pixbuf::create_from_file(mp);
-    map_backup_ = map->copy();
+	map_backup_ = map->copy();
     terrain = Gdk::Pixbuf::create_from_file(tr);
 
 	for(auto& a : l) {
@@ -24,32 +25,19 @@ Darea::Darea(string mp, string tr, const vector<string>& l)
 //	paste_pix(500, 1700, "car.png", M_PI/4);
 }
 
-int Darea::copy_pixbuf(const Glib::RefPtr<Gdk::Pixbuf>& s, Glib::RefPtr<Gdk::Pixbuf>& d)
+bool Darea::on_button_press_event(GdkEventButton* e)
 {
-	int r, n, w, h;
-	if(w = s->get_width() != d->get_width()) return -1;
-	if(h = s->get_height() != d->get_height()) return -1;
-	if(s->get_bits_per_sample() != d->get_bits_per_sample()) return -2;
-	if(n = s->get_n_channels() != d->get_n_channels()) return -3;
-	if(s->get_colorspace() != d->get_colorspace()) return -4;
-	if(s->get_has_alpha() != d->get_has_alpha()) return -5;
-	if(r = s->get_rowstride() != d->get_rowstride()) return -6;
-	auto sp = s->get_pixels();
-	auto dp = d->get_pixels();
-
-	for(int y=0; y<h; y++) {
-		for(int x=0; x<w; x++) {
-			for(int i=0; i<4; i++) (dp + y*r + x*n)[i] = (sp + y*r + x*n)[i];
-		}
-	}
-	return 0;
+	cout << "x " << e->x << endl;
+	cout << "y " << e->y << endl;
+	if(pfunc != nullptr) pfunc(e->x, e->y);
 }
 
 void Darea::clear_map()
 {
 	for(auto& a : backgrounds) {
-		a.pix->copy_area(0, 0, a.pix->get_width(), a.pix->get_height(), map, a.x, a.y);
+		map_backup_->copy_area(a.x, a.y, a.w, a.h, map, a.x, a.y);
 	}
+	backgrounds.clear();
 }
 
 void Darea::paste_pix(int x, int y, string fl, float heading)
@@ -68,13 +56,11 @@ void Darea::paste_pix(int x, int y, string fl, float heading)
 		if(x < 0) xof = x;
 		if(y < 0) yof = y;
 
-		auto back = Gdk::Pixbuf::create(map->get_colorspace(), map->get_has_alpha(),
-				map->get_bits_per_sample(), w + xof, h + yof);
-		map->copy_area(x - xof, y - yof, w + xof, h + yof, back, 0, 0);
 		bk_pixbuf bk;
 		bk.x = x - xof;
 		bk.y = y - yof;
-		bk.pix = back->copy();
+		bk.w = w + xof;
+		bk.h = h + yof;
 		backgrounds.push_back(bk);
 		pix->composite(map, x - xof, y - yof, w + xof, h + yof, x + xof, y + yof,
 			   	1, 1, Gdk::INTERP_NEAREST, 255);
@@ -178,27 +164,17 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
 //    car->composite(map, 0, 0, car->get_width() -100, car->get_height()-100, -100, -100, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
   //  airplane->composite(map, 300, 300, airplane->get_width(), airplane->get_height(), 300, 300, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
-	cr->save();
-	cr->restore();
 	Gdk::Cairo::set_source_pixbuf(cr, map, 0, 0);
     cr->paint();
     cr->set_line_width(10.0);
-
-    // draw red lines out from the center of the window
-    cr->set_source_rgb(0.8, 0.0, 0.0);
-	cr->move_to(0, 0);
-    cr->line_to(300, 300);
-    cr->line_to(0, 600);
-    cr->move_to(400, 400);
-    cr->line_to(100, 200);
-    cr->stroke();	
-    cr->save();
-    cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);
-    //cr->translate(x, y);
-    //cr->scale(900 / 2.0, 800 / 2.0);
-    cr->arc(300, 300, 100, 0.0, M_PI);
-    cr->stroke();
-    cr->restore();
+	for(auto& a : to_draws) {
+		cr->set_source_rgba(a.color[0], a.color[1], a.color[2], a.color[3]);
+		cr->arc(a.x, a.y, a.rmin, a.angle_from, a.angle_to);
+		cr->arc_negative(a.x, a.y, a.rmax, a.angle_to, a.angle_from);
+		cr->close_path();
+		cr->fill_preserve();
+		cr->stroke();
+	}
     return true;
 }
 
@@ -206,8 +182,7 @@ void Darea::refresh()
 {
 	auto win = get_window();
     if (win)  {
-        Gdk::Rectangle r(0, 0, get_allocation().get_width(),
-                get_allocation().get_height());
+        Gdk::Rectangle r(0, 0, get_allocation().get_width(), get_allocation().get_height());
         win->invalidate_rect(r, false);
     }
 }
@@ -225,22 +200,36 @@ Win::Win() :
 	box1.pack_start(swin);
     box2.pack_start(bt1, PACK_SHRINK);
     box2.pack_start(bt2, PACK_SHRINK);
-    cout << "높이 " << area.height << endl;
+ //   cout << "높이 " << area.height << endl;
  //   area.set_size_request(area.width, area.height);
     box1.pack_start(area);
-    bt1.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_clicked));
-    bt2.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_clicked));
+    bt1.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_click));
+    bt2.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_cancel_click));
     show_all_children();
 }
 
-void Win::on_button_clicked()
+void Win::on_button_click()
 {
 	area.clear_map();
-	area.paste_pix(500 + i_++, 1500, "bomber_hb.png", 1 + f_++);
+	area.paste_pix(100 + i_++, 1900, "bomber_hb.png", 1 + f_++);
 	area.paste_pix(500, 1900, "bomber_hb.png", M_PI);
 	area.paste_pix(500, 1700, "car.png", M_PI/4);
     // force our program to redraw the entire clock.
 	area.refresh();
+}
+void Win::on_cancel_click()
+{
+	auto cr = area.get_window()->create_cairo_context(); 
+ // draw red lines out from the center of the window
+    cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);
+    //cr->translate(x, y);
+    //cr->scale(900 / 2.0, 800 / 2.0);
+    cr->arc(300, 300, 0, 0.0, M_PI);
+	cr->arc_negative(300, 300, 200, M_PI, 0);
+	cr->close_path();
+	cr->fill_preserve();
+    cr->stroke();
+//    cr->restore();
 }
 
 int main(int argc, char** argv)
