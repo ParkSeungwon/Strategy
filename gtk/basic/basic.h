@@ -3,6 +3,11 @@
 #include <unordered_map>
 #include <gtkmm.h>
 
+struct bk_pixbuf {
+	int x, y;
+	Glib::RefPtr<Gdk::Pixbuf> pix;
+};
+
 class Darea : public Gtk::DrawingArea
 {
 public:
@@ -10,6 +15,9 @@ public:
 	virtual ~Darea() {}
 	int width, height;
 	void paste_pix(int x, int y, std::string name, float heading = 0);
+	int copy_pixbuf(const Glib::RefPtr<Gdk::Pixbuf>& source, Glib::RefPtr<Gdk::Pixbuf>& dest);
+	void clear_map();
+	void refresh();
 
 protected:
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
@@ -24,6 +32,8 @@ private:
 	static void polar_to_xy(float& x, float& y);
 	static void rotate(float& x, float& y, float rad);
 	static void get_new_dimension(int& w, int& h, float rad);
+	Glib::RefPtr<Gdk::Pixbuf> map_backup_;
+	std::vector<bk_pixbuf> backgrounds;
 };
 
 class Win : public Gtk::Window
@@ -38,5 +48,9 @@ protected:
 	Gtk::Box box2;
     Gtk::ScrolledWindow swin;
     Darea area;
+
+private:
+	int i_ = 0;
+	float f_ = 0;
 };
 

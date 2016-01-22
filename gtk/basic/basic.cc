@@ -10,6 +10,7 @@ using namespace Gtk;
 Darea::Darea(string mp, string tr, const vector<string>& l) 
 {
     map = Gdk::Pixbuf::create_from_file(mp);
+    map_backup_ = map->copy();
     terrain = Gdk::Pixbuf::create_from_file(tr);
 
 	for(auto& a : l) {
@@ -18,9 +19,37 @@ Darea::Darea(string mp, string tr, const vector<string>& l)
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
-	paste_pix(500, 1500, "bomber_hb.png", 1);
-	paste_pix(500, 1900, "bomber_hb.png", M_PI);
-	paste_pix(500, 1700, "car.png", M_PI/4);
+//	paste_pix(500, 1500, "bomber_hb.png", 1);
+//	paste_pix(500, 1900, "bomber_hb.png", M_PI);
+//	paste_pix(500, 1700, "car.png", M_PI/4);
+}
+
+int Darea::copy_pixbuf(const Glib::RefPtr<Gdk::Pixbuf>& s, Glib::RefPtr<Gdk::Pixbuf>& d)
+{
+	int r, n, w, h;
+	if(w = s->get_width() != d->get_width()) return -1;
+	if(h = s->get_height() != d->get_height()) return -1;
+	if(s->get_bits_per_sample() != d->get_bits_per_sample()) return -2;
+	if(n = s->get_n_channels() != d->get_n_channels()) return -3;
+	if(s->get_colorspace() != d->get_colorspace()) return -4;
+	if(s->get_has_alpha() != d->get_has_alpha()) return -5;
+	if(r = s->get_rowstride() != d->get_rowstride()) return -6;
+	auto sp = s->get_pixels();
+	auto dp = d->get_pixels();
+
+	for(int y=0; y<h; y++) {
+		for(int x=0; x<w; x++) {
+			for(int i=0; i<4; i++) (dp + y*r + x*n)[i] = (sp + y*r + x*n)[i];
+		}
+	}
+	return 0;
+}
+
+void Darea::clear_map()
+{
+	for(auto& a : backgrounds) {
+		a.pix->copy_area(0, 0, a.pix->get_width(), a.pix->get_height(), map, a.x, a.y);
+	}
 }
 
 void Darea::paste_pix(int x, int y, string fl, float heading)
@@ -38,6 +67,15 @@ void Darea::paste_pix(int x, int y, string fl, float heading)
 		int xof= 0, yof= 0;
 		if(x < 0) xof = x;
 		if(y < 0) yof = y;
+
+		auto back = Gdk::Pixbuf::create(map->get_colorspace(), map->get_has_alpha(),
+				map->get_bits_per_sample(), w + xof, h + yof);
+		map->copy_area(x - xof, y - yof, w + xof, h + yof, back, 0, 0);
+		bk_pixbuf bk;
+		bk.x = x - xof;
+		bk.y = y - yof;
+		bk.pix = back->copy();
+		backgrounds.push_back(bk);
 		pix->composite(map, x - xof, y - yof, w + xof, h + yof, x + xof, y + yof,
 			   	1, 1, Gdk::INTERP_NEAREST, 255);
 	}
@@ -164,6 +202,16 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     return true;
 }
 
+void Darea::refresh()
+{
+	auto win = get_window();
+    if (win)  {
+        Gdk::Rectangle r(0, 0, get_allocation().get_width(),
+                get_allocation().get_height());
+        win->invalidate_rect(r, false);
+    }
+}
+
 Win::Win() :
    	bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), 
 	area("europe.png", "europe.png", {"bomber_hb.png", "car.png"}) 
@@ -187,7 +235,12 @@ Win::Win() :
 
 void Win::on_button_clicked()
 {
-    cout << "Hello" << endl;
+	area.clear_map();
+	area.paste_pix(500 + i_++, 1500, "bomber_hb.png", 1 + f_++);
+	area.paste_pix(500, 1900, "bomber_hb.png", M_PI);
+	area.paste_pix(500, 1700, "car.png", M_PI/4);
+    // force our program to redraw the entire clock.
+	area.refresh();
 }
 
 int main(int argc, char** argv)
