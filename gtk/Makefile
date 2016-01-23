@@ -5,7 +5,7 @@ CC = g++
 SRC = $(wildcard *.cc)
 OBJ = $(patsubst %.cc, %.o, $(SRC))
 
-all : show hello
+all : show 
 
 show : $(OBJ)
 	g++ -o show $(OBJ) $(GTKLIB)
