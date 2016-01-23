@@ -1,31 +1,75 @@
-#include "myarea.h"
-#include <gtkmm.h>
-#include <gtkmm/application.h>
-#include <gtkmm/window.h>
+#include "main.h"
+using namespace Gtk;
+
+Win::Win() :
+   	bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), 
+	area("europe.png", "europe.png", {"bomber_hb.png", "car.png"}) 
+{
+    set_border_width(10);
+    set_default_size(900, 900);
+    add(box1);
+    swin.add(area);
+    swin.set_policy(Gtk::POLICY_ALWAYS, POLICY_ALWAYS);
+	box1.pack_start(box2, PACK_SHRINK);
+	box1.pack_start(swin);
+    box2.pack_start(bt1, PACK_SHRINK);
+    box2.pack_start(bt2, PACK_SHRINK);
+ //   cout << "높이 " << area.height << endl;
+ //   area.set_size_request(area.width, area.height);
+    box1.pack_start(area);
+    bt1.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_click));
+    bt2.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_cancel_click));
+    show_all_children();
+}
+
+void Win::on_button_click()
+{
+	area.clear_map();
+	area.paste_pix(100 + i_++, 1900, "bomber_hb.png", 1 + f_++);
+	area.paste_pix(500, 1900, "bomber_hb.png", M_PI);
+	area.paste_pix(500, 1700, "car.png", M_PI/4);
+    // force our program to redraw the entire clock.
+	area.refresh();
+}
+
+
+void Win::on_cancel_click()
+{
+	auto cr = area.get_window()->create_cairo_context(); 
+ // draw red lines out from the center of the window
+    cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);
+    //cr->translate(x, y);
+    //cr->scale(900 / 2.0, 800 / 2.0);
+    cr->arc(300, 300, 0, 0.0, M_PI);
+	cr->arc_negative(300, 300, 200, M_PI, 0);
+	cr->close_path();
+	cr->fill_preserve();
+    cr->stroke();
+	To_draw d(300, 300, 0, 100, 0, M_PI/2, 0.0, 0.4, 0.0, 0.2);
+	area.to_draws.push_back(d);
+	d.x = 300;
+	d.y = 300;
+	d.rmin = 0;
+	d.rmax = 100;
+	d.angle_from = 0;
+	d.angle_to = M_PI/2;
+	d.color[0] = 0; 
+	d.color[1] = 0.4;
+	d.color[2] = 0;
+	d.color[3] = 0.2;
+	area.to_draws.push_back(d);
+	area.to_draws.push_back(To_draw(300 + i_++*10, 300, 100, 100, 0, M_PI/2, 
+				(i_%10)/10.0, 0.4, 0.0, 0.2));
+	area.refresh();
+//    cr->restore();
+}
 
 int main(int argc, char** argv)
 {
-  auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
+    auto app = Application::create(argc, argv, "");
 
-  Gtk::Window win;
-  win.set_title("DrawingArea");
-  win.set_default_size(300, 200);
-
-  MyArea area;
-//  Gtk::ScrolledWindow swin;
-// Gtk::Viewport v;
-//  swin.add(area);
-  //v.add(area);
-  Gtk::Button bt("OK");
-  Gtk::Box b;
-  //b.pack_start(area);
-  //b.pack_start(bt);
-  win.add(bt);
-//  area.show();
-  
-  area.set_receives_default();
-  //win.show();
-//:show_all_children();
-//swin.show();
-  return app->run(win);
+    Win win;
+    return app->run(win);
 }
+
+

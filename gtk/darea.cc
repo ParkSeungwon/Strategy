@@ -1,7 +1,7 @@
 #include <gdkmm/pixbuf.h>
 #include <iostream>
 #include <cmath>
-#include "basic.h"
+#include "darea.h"
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;
@@ -38,6 +38,11 @@ void Darea::clear_map()
 		map_backup_->copy_area(a.x, a.y, a.w, a.h, map, a.x, a.y);
 	}
 	backgrounds.clear();
+}
+
+void Darea::set_click_handler(int(*pf)(int x,int y))
+{
+	pfunc = pf;
 }
 
 void Darea::paste_pix(int x, int y, string fl, float heading)
@@ -130,6 +135,59 @@ Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> 
 	return q;
 }
 
+Terrain_data Darea::return_terrain_data()
+{
+	Terrain_data td;
+	td.w = terrain->get_width();
+	td.h = terrain->get_height();
+	int r = terrain->get_rowstride();
+	int n = terrain->get_n_channels();
+	unsigned char* p = terrain->get_pixels();
+	unsigned char* q;
+	td.tmap = new size_t[td.h * td.w];
+	size_t tmp, dot;
+	for(int y=0; y<td.h; y++) {
+		for(int x=0; x<td.w; x++) {
+			q = p + y * r + x * n;
+			tmp = q[0];
+		   	tmp << 24;
+			dot = tmp;
+			tmp = q[1];
+			tmp << 16;
+			dot |= tmp;
+			tmp = q[2];
+			tmp << 8;
+			dot |= tmp;
+			tmp = q[3];
+			dot |= tmp;
+			td.tmap[y*td.w + x] = dot; 
+		}
+	}
+	return td;
+}
+
+Terrain_data::Terrain_data(Terrain_data&& tr)
+{
+	this->w = tr.w;
+	this->h = tr.h;
+	this->tmap = tr.tmap;
+	tr.tmap = nullptr;
+}
+
+Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
+{
+	this->w = tr.w;
+	this->h = tr.h;
+	this->tmap = tr.tmap;
+	tr.tmap = nullptr;
+	return *this;
+}
+
+Terrain_data::~Terrain_data()
+{
+	if(tmap != nullptr) delete [] tmap;
+}
+
 void Darea::xy_to_polar(float& x, float& y)
 {
 	float r = sqrt(x*x + y*y);
@@ -185,6 +243,20 @@ void Darea::refresh()
         Gdk::Rectangle r(0, 0, get_allocation().get_width(), get_allocation().get_height());
         win->invalidate_rect(r, false);
     }
+}
+
+To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
+{
+	this->x = x;
+	this->y = y;
+	this->rmin = rmin;
+	this->rmax = rmax;
+	angle_from = af;
+	angle_to = at;
+	color[0] = r;
+	color[1] = g;
+	color[2] = b;
+	color[3] = a;
 }
 
 

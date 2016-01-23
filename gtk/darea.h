@@ -1,15 +1,28 @@
 #pragma once
 #include <unordered_map>
 #include <gtkmm.h>
+#include <memory>
 
 struct bk_pixbuf {
 	int x, y, w, h;
 };
 
 struct To_draw {
+	To_draw(int, int, int, int, float, float, double, double, double, double);
 	int x, y, rmin, rmax;
 	float angle_from, angle_to;
 	char color[4];
+};
+
+class Terrain_data 
+{
+public:
+	virtual ~Terrain_data();
+	Terrain_data() {}
+	Terrain_data(Terrain_data&& tr);
+	Terrain_data& operator=(Terrain_data&& tr);
+	int w, h;
+	size_t *tmap;
 };
 
 class Darea : public Gtk::DrawingArea
@@ -21,7 +34,8 @@ public:
 	void clear_map();
 	void refresh();
 	std::vector<To_draw> to_draws;
-	int (*pfunc)(int x, int y) = nullptr;
+	void set_click_handler(int(*pf)(int x, int y));
+	Terrain_data return_terrain_data();
 
 protected:
 	int width, height;
@@ -34,6 +48,7 @@ protected:
 			const Glib::RefPtr<Gdk::Pixbuf> pb, float radian);
 
 private:
+	int (*pfunc)(int x, int y) = nullptr;
 	static void xy_to_polar(float& x, float& y);
 	static void polar_to_xy(float& x, float& y);
 	static void rotate(float& x, float& y, float rad);

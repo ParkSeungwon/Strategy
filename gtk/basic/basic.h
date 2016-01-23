@@ -7,9 +7,10 @@ struct bk_pixbuf {
 };
 
 struct To_draw {
+	To_draw(int, int , int, int, float, float, double, double, double, double);
 	int x, y, rmin, rmax;
 	float angle_from, angle_to;
-	char color[4];
+	double color[4];
 };
 
 class Darea : public Gtk::DrawingArea

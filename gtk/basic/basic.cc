@@ -217,6 +217,21 @@ void Win::on_button_click()
     // force our program to redraw the entire clock.
 	area.refresh();
 }
+
+To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
+{
+	this->x = x;
+	this->y = y;
+	this->rmin = rmin;
+	this->rmax = rmax;
+	angle_from = af;
+	angle_to = at;
+	color[0] = r;
+	color[1] = g;
+	color[2] = b;
+	color[3] = a;
+}
+
 void Win::on_cancel_click()
 {
 	auto cr = area.get_window()->create_cairo_context(); 
@@ -229,6 +244,22 @@ void Win::on_cancel_click()
 	cr->close_path();
 	cr->fill_preserve();
     cr->stroke();
+	To_draw d(300, 300, 0, 100, 0, M_PI/2, 0.0, 0.4, 0.0, 0.2);
+	area.to_draws.push_back(d);
+	d.x = 300;
+	d.y = 300;
+	d.rmin = 0;
+	d.rmax = 100;
+	d.angle_from = 0;
+	d.angle_to = M_PI/2;
+	d.color[0] = 0; 
+	d.color[1] = 0.4;
+	d.color[2] = 0;
+	d.color[3] = 0.2;
+	area.to_draws.push_back(d);
+	area.to_draws.push_back(To_draw(300 + i_++*10, 300, 100, 100, 0, M_PI/2, 
+				(i_%10)/10.0, 0.4, 0.0, 0.2));
+	area.refresh();
 //    cr->restore();
 }
 
