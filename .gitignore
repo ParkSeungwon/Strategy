@@ -1,6 +1,7 @@
 show
 *~
 *.swp
+*.swo
 test
 # Compiled Object files
 *.slo

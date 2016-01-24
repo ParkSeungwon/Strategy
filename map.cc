@@ -9,7 +9,7 @@
 typedef unsigned char UC;
 using namespace Glob;
 
-Map::Map(int w, int h, size_t *image, int ally)
+void Map::initialize(int w, int h, size_t *image, int ally)
 {
 	width = w;
 	height = h;

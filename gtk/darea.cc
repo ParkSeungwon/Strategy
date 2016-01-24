@@ -3,29 +3,39 @@
 #include <cmath>
 #include <complex>
 #include "darea.h"
+#include "../file.h"
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;
 
-
-Darea::Darea(string mp, string tr, const vector<string>& l) 
+Darea::Darea()
 {
-	set_can_focus(true);
 	add_events(Gdk::BUTTON_PRESS_MASK);
 	add_events(Gdk::KEY_PRESS_MASK);
-    map = Gdk::Pixbuf::create_from_file(mp);
+	
+	map = Gdk::Pixbuf::create_from_file("car.png");
+	map_backup_ = map->copy();
+    terrain = Gdk::Pixbuf::create_from_file("car.png");
+
+	File f;
+	f.find_all_ext("units", ".png");
+	for(auto& a : f.file_names) {
+		unit_png.insert({a, Gdk::Pixbuf::create_from_file(a)});
+		cout << "opening " << a << endl;
+	}
+}
+
+int Darea::open_map_file(string mp, string tr) 
+{
+//	set_can_focus(true);
+	map = Gdk::Pixbuf::create_from_file(mp);
 	map_backup_ = map->copy();
     terrain = Gdk::Pixbuf::create_from_file(tr);
 
-	for(auto& a : l) {
-		unit_png.insert({a, Gdk::Pixbuf::create_from_file(a)});
-	}
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
-//	paste_pix(500, 1500, "bomber_hb.png", 1);
-//	paste_pix(500, 1900, "bomber_hb.png", M_PI);
-//	paste_pix(500, 1700, "car.png", M_PI/4);
+	return 0;
 }
 
 //bool Darea::on_button_press_event(GdkEventButton* e)
@@ -231,7 +241,8 @@ void Darea::refresh()
     }
 }
 
-To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
+To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, 
+		double r, double g, double b, double a)
 {
 	this->x = x;
 	this->y = y;
