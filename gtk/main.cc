@@ -28,7 +28,7 @@ Win::Win() :
 
 bool Win::on_button_press_event(GdkEventButton* e)
 {
-	label_change(e->x, e->y);
+	label_change(e->x, e->y, e->button);
 }
 
 bool Win::on_key_press_event(GdkEventKey* e)
@@ -37,11 +37,12 @@ bool Win::on_key_press_event(GdkEventKey* e)
 	return false;
 }
 
-int Win::label_change(int x, int y)
+int Win::label_change(int x, int y, int b)
 {
 	string s;
-	s = "x is : " + to_string(x);
-	s += "\ny is : " + to_string(y);
+	s = to_string(x);
+	s += "\n" + to_string(y);
+	s += "\n" + to_string(b);
 	label1.set_text(s);
 	return s.size();
 }
@@ -59,29 +60,29 @@ void Win::on_button_click()
 
 void Win::on_cancel_click()
 {
-	auto cr = area.get_window()->create_cairo_context(); 
- // draw red lines out from the center of the window
-    cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);
-    //cr->translate(x, y);
-    //cr->scale(900 / 2.0, 800 / 2.0);
-    cr->arc(300, 300, 0, 0.0, M_PI);
-	cr->arc_negative(300, 300, 200, M_PI, 0);
-	cr->close_path();
-	cr->fill_preserve();
-    cr->stroke();
-	To_draw d(300, 300, 0, 100, 0, M_PI/2, 0.0, 0.4, 0.0, 0.2);
-	area.to_draws.push_back(d);
-	d.x = 300;
-	d.y = 300;
-	d.rmin = 0;
-	d.rmax = 100;
-	d.angle_from = 0;
-	d.angle_to = M_PI/2;
-	d.color[0] = 0; 
-	d.color[1] = 0.4;
-	d.color[2] = 0;
-	d.color[3] = 0.2;
-	area.to_draws.push_back(d);
+//	auto cr = area.get_window()->create_cairo_context(); 
+// // draw red lines out from the center of the window
+//    cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);
+//    //cr->translate(x, y);
+//    //cr->scale(900 / 2.0, 800 / 2.0);
+//    cr->arc(300, 300, 0, 0.0, M_PI);
+//	cr->arc_negative(300, 300, 200, M_PI, 0);
+//	cr->close_path();
+//	cr->fill_preserve();
+//    cr->stroke();
+//	To_draw d(300, 300, 0, 100, 0, M_PI/2, 0.0, 0.4, 0.0, 0.2);
+//	area.to_draws.push_back(d);
+//	d.x = 300;
+//	d.y = 300;
+//	d.rmin = 0;
+//	d.rmax = 100;
+//	d.angle_from = 0;
+//	d.angle_to = M_PI/2;
+//	d.color[0] = 0; 
+//	d.color[1] = 0.4;
+//	d.color[2] = 0;
+//	d.color[3] = 0.2;
+//	area.to_draws.push_back(d);
 	area.to_draws.push_back(To_draw(300 + i_++*10, 300, 100, 100, 0, M_PI/2, 
 				(i_%10)/10.0, 0.4, 0.0, 0.2));
 	area.refresh();

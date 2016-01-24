@@ -208,6 +208,7 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 	Gdk::Cairo::set_source_pixbuf(cr, map, 0, 0);
     cr->paint();
     cr->set_line_width(10.0);
+	int i;
 	for(auto& a : to_draws) {
 		cr->set_source_rgba(a.color[0], a.color[1], a.color[2], a.color[3]);
 		cr->arc(a.x, a.y, a.rmin, a.angle_from, a.angle_to);
@@ -215,8 +216,10 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 		cr->close_path();
 		cr->fill_preserve();
 		cr->stroke();
+		cin >> i;
+		cout << "to_draw" <<a.x << a.y << a.rmin << a.rmax << a.color << endl;
 	}
-    return true;
+    //return true;
 }
 
 void Darea::refresh()
