@@ -89,8 +89,7 @@ void Win::on_open_click()
 			std::string filename = dialog.get_filename();
 			std::cout << "File selected: " <<  filename << std::endl;
 			area.open_map_file(filename, filename);
-			auto a = area.return_terrain_data();
-			time.initialize(a.w, a.h, a.tmap, 4);
+			terrain_data = area.return_terrain_data();
 	    	break;
 		}
     case Gtk::RESPONSE_CANCEL:
