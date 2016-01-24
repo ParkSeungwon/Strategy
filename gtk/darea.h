@@ -23,7 +23,7 @@ public:
 	Terrain_data(Terrain_data&& tr);
 	Terrain_data& operator=(Terrain_data&& tr);
 	int w, h;
-	size_t *tmap;
+	size_t *tmap = nullptr;
 };
 
 class Darea : public Gtk::DrawingArea

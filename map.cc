@@ -35,6 +35,8 @@ void Map::initialize(int w, int h, size_t *image, int ally)
 	}
 }
 
+Map::Map() {}//이것을 헤더파일에 넣을 경우 city클래스의 포워드로는 부족하다.
+
 int Map::occupy(Point p, int team)
 {
 	auto it = find(cities.begin(), cities.end(), city_bitmap->get_pixel(p));

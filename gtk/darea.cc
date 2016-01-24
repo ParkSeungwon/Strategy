@@ -35,6 +35,7 @@ int Darea::open_map_file(string mp, string tr)
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
+	refresh();
 	return 0;
 }
 
@@ -229,7 +230,7 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 		cin >> i;
 		cout << "to_draw" <<a.x << a.y << a.rmin << a.rmax << a.color << endl;
 	}
-    //return true;
+    return true;
 }
 
 void Darea::refresh()
@@ -244,7 +245,7 @@ void Darea::refresh()
 To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, 
 		double r, double g, double b, double a)
 {
-	this->x = x;
+	this->x = x;//error
 	this->y = y;
 	this->rmin = rmin;
 	this->rmax = rmax;

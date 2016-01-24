@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+//#include "Terrain.h"
 
 class Unit;
 class Point;
@@ -32,7 +33,7 @@ protected:
 	
 public:
 	void initialize(int width, int height, size_t *pixel, int ally);
-	Map() {}
+	Map();
 	virtual ~Map();
 	virtual int occupy(Point p, int team);
 	int geo_effect(Unit& u);
