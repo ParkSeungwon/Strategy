@@ -303,5 +303,28 @@ void Darea::rotate(float& x, float& y, float rad)
 	y += rad;
 	polar_to_xy(x, y);
 }
+Gtk::FileChooserDialog dialog("Please choose a folder",
+          Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	dialog.set_transient_for(*this);
+
+	//Add response buttons the the dialog:
+	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("Select", Gtk::RESPONSE_OK);
+
+	int result = dialog.run();
+
+	//Handle the response:
+	switch(result) {
+    case(Gtk::RESPONSE_OK):
+    	std::cout << "Select clicked." << std::endl;
+	    std::cout << "Folder selected: " << dialog.get_filename() << std::endl;
+	    break;
+    case(Gtk::RESPONSE_CANCEL):
+	    std::cout << "Cancel clicked." << std::endl;
+    	break;
+    default:
+	    std::cout << "Unexpected button clicked." << std::endl;
+    	break; 
+	}
 
 

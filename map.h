@@ -31,7 +31,8 @@ protected:
 	int width, height;
 	
 public:
-	Map(int width, int height, size_t *pixel, int ally);
+	void initialize(int width, int height, size_t *pixel, int ally);
+	Map() {}
 	virtual ~Map();
 	virtual int occupy(Point p, int team);
 	int geo_effect(Unit& u);

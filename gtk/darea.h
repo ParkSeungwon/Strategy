@@ -8,10 +8,11 @@ struct bk_pixbuf {
 };
 
 struct To_draw {
-	To_draw(int, int, int, int, float, float, double, double, double, double);
+	To_draw(int x, int y, int rmin, int rmax, float angle_from, float angle_to, 
+			double r, double g, double b, double a);
 	int x, y, rmin, rmax;
 	float angle_from, angle_to;
-	char color[4];
+	double color[4];
 };
 
 class Terrain_data 
@@ -28,7 +29,8 @@ public:
 class Darea : public Gtk::DrawingArea
 {
 public:
-	Darea(std::string map, std::string terrain, const std::vector<std::string>& l);
+	Darea();
+	int open_map_file(std::string map, std::string terrain);
 	virtual ~Darea() {}
 	void paste_pix(int x, int y, std::string name, float heading = 0);
 	void clear_map();
