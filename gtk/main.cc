@@ -1,8 +1,11 @@
+#include <string>
+#include <iostream>
 #include "main.h"
 using namespace Gtk;
+using namespace std;
 
 Win::Win() :
-   	bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), 
+   	bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), label1("라벨"), 
 	area("europe.png", "europe.png", {"bomber_hb.png", "car.png"}) 
 {
     set_border_width(10);
@@ -14,12 +17,33 @@ Win::Win() :
 	box1.pack_start(swin);
     box2.pack_start(bt1, PACK_SHRINK);
     box2.pack_start(bt2, PACK_SHRINK);
+	box2.pack_start(label1, PACK_SHRINK);
  //   cout << "높이 " << area.height << endl;
  //   area.set_size_request(area.width, area.height);
     box1.pack_start(area);
     bt1.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_click));
     bt2.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_cancel_click));
     show_all_children();
+}
+
+bool Win::on_button_press_event(GdkEventButton* e)
+{
+	label_change(e->x, e->y);
+}
+
+bool Win::on_key_press_event(GdkEventKey* e)
+{
+	cout << "key : " << e->keyval << endl;
+	return false;
+}
+
+int Win::label_change(int x, int y)
+{
+	string s;
+	s = "x is : " + to_string(x);
+	s += "\ny is : " + to_string(y);
+	label1.set_text(s);
+	return s.size();
 }
 
 void Win::on_button_click()

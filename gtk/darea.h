@@ -34,13 +34,13 @@ public:
 	void clear_map();
 	void refresh();
 	std::vector<To_draw> to_draws;
-	void set_click_handler(int(*pf)(int x, int y));
 	Terrain_data return_terrain_data();
 
 protected:
 	int width, height;
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
-	bool on_button_press_event(GdkEventButton *event);
+	//bool on_button_press_event(GdkEventButton *event);
+	//bool on_key_press_event(GdkEventKey* kevent);
 	Glib::RefPtr<Gdk::Pixbuf> map, terrain;
 	std::unordered_map<std::string, Glib::RefPtr<Gdk::Pixbuf>> unit_png;
 	Cairo::RefPtr<Cairo::Context> context;
@@ -48,12 +48,10 @@ protected:
 			const Glib::RefPtr<Gdk::Pixbuf> pb, float radian);
 
 private:
-	int (*pfunc)(int x, int y) = nullptr;
-	static void xy_to_polar(float& x, float& y);
-	static void polar_to_xy(float& x, float& y);
 	static void rotate(float& x, float& y, float rad);
 	static void get_new_dimension(int& w, int& h, float rad);
 	Glib::RefPtr<Gdk::Pixbuf> map_backup_;
 	std::vector<bk_pixbuf> backgrounds;
 };
+
 

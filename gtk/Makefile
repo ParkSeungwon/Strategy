@@ -9,6 +9,7 @@ all : show
 
 show : $(OBJ)
 	g++ -o show $(OBJ) $(GTKLIB)
+	./show
 
 %.o : %.cc %.h
 	$(CC) $(GTKCFLAG) $(CFLAG) $<

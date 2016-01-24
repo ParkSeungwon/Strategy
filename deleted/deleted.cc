@@ -274,4 +274,34 @@ int Darea::copy_pixbuf(const Glib::RefPtr<Gdk::Pixbuf>& s, Glib::RefPtr<Gdk::Pix
 	}
 	return 0;
 }
+void Darea::xy_to_polar(float& x, float& y)
+{
+	float r = sqrt(x*x + y*y);
+	if(x == 0) {
+		x = r;
+		if(y > 0) y = M_PI / 2;
+		else y = -M_PI / 2;
+	} else {
+		float theta = atan(y/x);
+		if(x < 0) theta += M_PI;
+		x = r;
+		y = theta;
+	}
+}
+
+void Darea::polar_to_xy(float& r, float& theta)
+{
+	float x = r * cos(theta);
+	float y = r * sin(theta);
+	r = x;
+	theta = y;
+}
+
+void Darea::rotate(float& x, float& y, float rad)
+{
+	xy_to_polar(x, y);
+	y += rad;
+	polar_to_xy(x, y);
+}
+
 

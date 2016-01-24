@@ -1,6 +1,7 @@
 #include <gdkmm/pixbuf.h>
 #include <iostream>
 #include <cmath>
+#include <complex>
 #include "darea.h"
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
@@ -9,7 +10,9 @@ using namespace Gtk;
 
 Darea::Darea(string mp, string tr, const vector<string>& l) 
 {
+	set_can_focus(true);
 	add_events(Gdk::BUTTON_PRESS_MASK);
+	add_events(Gdk::KEY_PRESS_MASK);
     map = Gdk::Pixbuf::create_from_file(mp);
 	map_backup_ = map->copy();
     terrain = Gdk::Pixbuf::create_from_file(tr);
@@ -25,12 +28,19 @@ Darea::Darea(string mp, string tr, const vector<string>& l)
 //	paste_pix(500, 1700, "car.png", M_PI/4);
 }
 
-bool Darea::on_button_press_event(GdkEventButton* e)
-{
-	cout << "x " << e->x << endl;
-	cout << "y " << e->y << endl;
-	if(pfunc != nullptr) pfunc(e->x, e->y);
-}
+//bool Darea::on_button_press_event(GdkEventButton* e)
+//{
+//	cout << "in area x " << e->x << endl;
+//	cout << "in area y " << e->y << endl;
+//	cout << "button : " << e->button << endl;
+//	return false;//to send signal to parent widget
+//}
+//
+//bool Darea::on_key_press_event(GdkEventKey* e)
+//{
+//	cout << "key : " << e->keyval << endl;
+//	return false;
+//}
 
 void Darea::clear_map()
 {
@@ -38,11 +48,6 @@ void Darea::clear_map()
 		map_backup_->copy_area(a.x, a.y, a.w, a.h, map, a.x, a.y);
 	}
 	backgrounds.clear();
-}
-
-void Darea::set_click_handler(int(*pf)(int x,int y))
-{
-	pfunc = pf;
 }
 
 void Darea::paste_pix(int x, int y, string fl, float heading)
@@ -168,17 +173,17 @@ Terrain_data Darea::return_terrain_data()
 
 Terrain_data::Terrain_data(Terrain_data&& tr)
 {
-	this->w = tr.w;
-	this->h = tr.h;
-	this->tmap = tr.tmap;
+	w = tr.w;
+	h = tr.h;
+	tmap = tr.tmap;
 	tr.tmap = nullptr;
 }
 
 Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
 {
-	this->w = tr.w;
-	this->h = tr.h;
-	this->tmap = tr.tmap;
+	w = tr.w;
+	h = tr.h;
+	tmap = tr.tmap;
 	tr.tmap = nullptr;
 	return *this;
 }
@@ -188,34 +193,12 @@ Terrain_data::~Terrain_data()
 	if(tmap != nullptr) delete [] tmap;
 }
 
-void Darea::xy_to_polar(float& x, float& y)
-{
-	float r = sqrt(x*x + y*y);
-	if(x == 0) {
-		x = r;
-		if(y > 0) y = M_PI / 2;
-		else y = -M_PI / 2;
-	} else {
-		float theta = atan(y/x);
-		if(x < 0) theta += M_PI;
-		x = r;
-		y = theta;
-	}
-}
-
-void Darea::polar_to_xy(float& r, float& theta)
-{
-	float x = r * cos(theta);
-	float y = r * sin(theta);
-	r = x;
-	theta = y;
-}
-
 void Darea::rotate(float& x, float& y, float rad)
 {
-	xy_to_polar(x, y);
-	y += rad;
-	polar_to_xy(x, y);
+	complex<float> a {x, y};
+	a *= complex<float> {cos(rad), sin(rad)};
+	x = a.real();
+	y = a.imag();
 }
 
 bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
