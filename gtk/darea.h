@@ -7,14 +7,6 @@ struct bk_pixbuf {
 	int x, y, w, h;
 };
 
-struct To_draw {
-	To_draw(int x, int y, int rmin, int rmax, float angle_from, float angle_to, 
-			double r, double g, double b, double a);
-	int x, y, rmin, rmax;
-	float angle_from, angle_to;
-	double color[4];
-};
-
 class Terrain_data 
 {
 public:
@@ -35,10 +27,17 @@ public:
 	void paste_pix(int x, int y, std::string name, float heading = 0);
 	void clear_map();
 	void refresh();
-	std::vector<To_draw> to_draws;
+	void insert_to_draw(int x, int y, int rmin, int rmax, float angle_from, float angle_to, 
+				double r, double g, double b, double a);
 	Terrain_data return_terrain_data();
 
 protected:
+	struct To_draw {
+		int x, y, rmin, rmax;
+		float angle_from, angle_to;
+		double color[4];
+	};
+	std::vector<To_draw> to_draws;
 	int width, height;
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
 	//bool on_button_press_event(GdkEventButton *event);

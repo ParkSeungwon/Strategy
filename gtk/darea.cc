@@ -194,6 +194,7 @@ Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
 {
 	w = tr.w;
 	h = tr.h;
+	delete tmap;
 	tmap = tr.tmap;
 	tr.tmap = nullptr;
 	return *this;
@@ -242,19 +243,21 @@ void Darea::refresh()
     }
 }
 
-To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, 
+void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, 
 		double r, double g, double b, double a)
 {
-	this->x = x;//error
-	this->y = y;
-	this->rmin = rmin;
-	this->rmax = rmax;
-	angle_from = af;
-	angle_to = at;
-	color[0] = r;
-	color[1] = g;
-	color[2] = b;
-	color[3] = a;
+	To_draw t;
+	t.x = x;//error
+	t.y = y;
+	t.rmin = rmin;
+	t.rmax = rmax;
+	t.angle_from = af;
+	t.angle_to = at;
+	t.color[0] = r;
+	t.color[1] = g;
+	t.color[2] = b;
+	t.color[3] = a;
+	to_draws.push_back(t);
 }
 
 

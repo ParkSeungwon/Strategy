@@ -113,8 +113,8 @@ void Win::on_button_click()
 
 void Win::on_cancel_click()
 {
-	area.to_draws.push_back(To_draw(300 + i_++*10, 300, 100, 100, 0, M_PI/2, 
-				(i_%10)/10.0, 0.4, 0.0, 0.2));
+	area.insert_to_draw(300 + i_++*10, 300, 100, 100, 0, M_PI/2, 
+				(i_%10)/10.0, 0.4, 0.0, 0.2);
 	area.refresh();
 }
 
