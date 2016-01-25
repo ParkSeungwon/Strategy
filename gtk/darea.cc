@@ -3,44 +3,38 @@
 #include <cmath>
 #include <complex>
 #include "darea.h"
+#include "../file.h"
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;
 
 
-Darea::Darea(string mp, string tr, const vector<string>& l) 
+Darea::Darea() 
 {
-	set_can_focus(true);
 	add_events(Gdk::BUTTON_PRESS_MASK);
 	add_events(Gdk::KEY_PRESS_MASK);
-    map = Gdk::Pixbuf::create_from_file(mp);
-	map_backup_ = map->copy();
-    terrain = Gdk::Pixbuf::create_from_file(tr);
-
-	for(auto& a : l) {
+    map = Gdk::Pixbuf::create_from_file("car.png");
+	
+	File f;
+	f.find_all_ext("units", ".png");
+	for(auto& a : f.file_names) {
 		unit_png.insert({a, Gdk::Pixbuf::create_from_file(a)});
+		cout << "opening file " << a << endl;
 	}
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
-//	paste_pix(500, 1500, "bomber_hb.png", 1);
-//	paste_pix(500, 1900, "bomber_hb.png", M_PI);
-//	paste_pix(500, 1700, "car.png", M_PI/4);
 }
 
-//bool Darea::on_button_press_event(GdkEventButton* e)
-//{
-//	cout << "in area x " << e->x << endl;
-//	cout << "in area y " << e->y << endl;
-//	cout << "button : " << e->button << endl;
-//	return false;//to send signal to parent widget
-//}
-//
-//bool Darea::on_key_press_event(GdkEventKey* e)
-//{
-//	cout << "key : " << e->keyval << endl;
-//	return false;
-//}
+void Darea::open_map_file(string mp, string tr)
+{
+	map = Gdk::Pixbuf::create_from_file(mp);
+	map_backup_ = map->copy();
+    terrain = Gdk::Pixbuf::create_from_file(tr);
+    width = map->get_width();
+    height = map->get_height();
+	set_size_request(width, height);
+}
 
 void Darea::clear_map()
 {
@@ -203,8 +197,6 @@ void Darea::rotate(float& x, float& y, float rad)
 
 bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
-//    car->composite(map, 0, 0, car->get_width() -100, car->get_height()-100, -100, -100, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
-  //  airplane->composite(map, 300, 300, airplane->get_width(), airplane->get_height(), 300, 300, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
 	Gdk::Cairo::set_source_pixbuf(cr, map, 0, 0);
     cr->paint();
     cr->set_line_width(10.0);
@@ -228,18 +220,20 @@ void Darea::refresh()
     }
 }
 
-To_draw::To_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
+void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
 {
-	this->x = x;
-	this->y = y;
-	this->rmin = rmin;
-	this->rmax = rmax;
-	angle_from = af;
-	angle_to = at;
-	color[0] = r;
-	color[1] = g;
-	color[2] = b;
-	color[3] = a;
+	To_draw t;
+	t.x = x;
+	t.y = y;
+	t.rmin = rmin;
+	t.rmax = rmax;
+	t.angle_from = af;
+	t.angle_to = at;
+	t.color[0] = r;
+	t.color[1] = g;
+	t.color[2] = b;
+	t.color[3] = a;
+	to_draws.push_back(t);
 }
 
 

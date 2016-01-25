@@ -8,10 +8,10 @@ OBJ = $(patsubst %.cc, %.o, $(SRC))
 all : show 
 
 show : $(OBJ)
-	g++ -o show $(OBJ) $(GTKLIB)
+	g++ -o show $(OBJ) ../file.o $(GTKLIB) 
 	./show
 
-%.o : %.cc %.h
+%.o : %.cc 
 	$(CC) $(GTKCFLAG) $(CFLAG) $<
 
 clean :
