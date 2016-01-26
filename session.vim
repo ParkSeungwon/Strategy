@@ -24,8 +24,6 @@ set guifont=나눔고딕코딩\ 12
 set helplang=ko
 set history=50
 set hlsearch
-set iminsert=0
-set imsearch=0
 set incsearch
 set lispwords=
 set nomodeline
@@ -48,12 +46,12 @@ set window=54
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/Programming/Strategy/gtk
+cd ~/Programming/Strategy
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/Programming/Strategy/gtk/main.cc
+badd +70 ~/Programming/Strategy/gtk/main.cc
 badd +13 ~/Programming/Strategy/gtk/myarea.cc
 badd +20 ~/Programming/Strategy/gtk/myarea.h
 badd +1 ~/Programming/Strategy/gtk/Makefile
@@ -93,7 +91,7 @@ badd +7 ~/Programming/Strategy/gtkmain.hpp
 badd +11 ~/Programming/Strategy/gtkmain.cpp
 badd +11 ~/Programming/Strategy/main.cpp
 badd +1 ~/Programming/Strategy/main.hpp
-badd +14 ~/Programming/Strategy/Makefile
+badd +18 ~/Programming/Strategy/Makefile
 badd +1 ~/Programming/Strategy/blank.cc
 badd +1 ~/Programming/Strategy/blanck.cc
 badd +1 ~/Programming/Strategy/cout.cc
@@ -101,13 +99,15 @@ badd +10 ~/Programming/Strategy/cout.h
 badd +51 ~/Programming/Strategy/session.vim
 badd +30 ~/Programming/Strategy/png/png.cc
 badd +1 ~/Programming/Strategy/png/png.h
-badd +0 ~/Programming/Strategy/deleted/deleted.cc
-badd +49 ~/Programming/Strategy/file.cc
+badd +355 ~/Programming/Strategy/deleted/deleted.cc
+badd +61 ~/Programming/Strategy/file.cc
 badd +1 ~/Programming/file.cc
-badd +0 ~/Programming/file.h
-badd +0 ~/Programming/Strategy/file.h
-badd +0 ~/Programming/Strategy/point.cc
-badd +0 ~/Programming/Strategy/point.h
+badd +1 ~/Programming/file.h
+badd +1 ~/Programming/Strategy/file.h
+badd +1 ~/Programming/Strategy/point.cc
+badd +1 ~/Programming/Strategy/point.h
+badd +5 ~/Programming/Strategy/control.cc
+badd +13 ~/Programming/Strategy/control.h
 silent! argdel *
 edit ~/Programming/Strategy/bitmap.cc
 set splitbelow splitright
@@ -119,8 +119,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -226,12 +226,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 13 - ((12 * winheight(0) + 26) / 52)
+let s:l = 21 - ((20 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-13
-normal! 0
+21
+normal! 033|
 lcd ~/Programming
 wincmd w
 argglobal
@@ -348,8 +348,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/map.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -360,8 +360,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -467,12 +467,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 26) / 52)
+let s:l = 20 - ((10 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+20
+normal! 032|
 lcd ~/Programming
 wincmd w
 argglobal
@@ -581,16 +581,16 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 7 - ((0 * winheight(0) + 26) / 52)
+let s:l = 20 - ((13 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-7
-normal! 0
+20
+normal! 030|
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/Unit.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -601,8 +601,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -830,8 +830,8 @@ normal! zt
 normal! 04|
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/test.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -842,8 +842,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -1071,8 +1071,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/Makefile
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1083,8 +1083,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -1195,7 +1195,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 18
-normal! 015|
+normal! 01|
 lcd ~/Programming
 wincmd w
 argglobal
@@ -1312,8 +1312,8 @@ normal! zt
 normal! 017|
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/Waypoint.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1324,8 +1324,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -1553,8 +1553,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/Weapon.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1565,8 +1565,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -1794,8 +1794,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/time.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1806,8 +1806,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -2035,8 +2035,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/file.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -2047,8 +2047,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 114 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 111 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 114 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 111 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -2276,8 +2276,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 114 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 111 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 114 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 111 + 114) / 228)
 tabedit ~/Programming/Strategy/Terrain.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -2288,8 +2288,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -2517,8 +2517,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/Util.h
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -2529,8 +2529,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -2758,8 +2758,8 @@ normal! zt
 normal! 014|
 lcd ~/Programming
 wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/point.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -2770,8 +2770,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -2999,9 +2999,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/deleted/deleted.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -3012,8 +3011,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -3241,9 +3240,8 @@ normal! zt
 normal! 014|
 lcd ~/Programming
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/cout.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -3254,8 +3252,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -3483,9 +3481,8 @@ normal! zt
 normal! 02|
 lcd ~/Programming
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 112 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 113 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 112 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 113 + 114) / 228)
 tabedit ~/Programming/Strategy/png/png.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -3496,8 +3493,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 113 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 112 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 113 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 112 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -3608,7 +3605,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 30
-normal! 012|
+normal! 04|
 lcd ~/Programming
 wincmd w
 argglobal
@@ -3725,9 +3722,8 @@ normal! zt
 normal! 0
 lcd ~/Programming
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 113 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 112 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 113 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 112 + 114) / 228)
 tabedit ~/Programming/Strategy/gtk/main.cc
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -3741,9 +3737,9 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 75 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 75 + 113) / 226)
-exe 'vert 3resize ' . ((&columns * 74 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 75 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 75 + 114) / 228)
+exe 'vert 3resize ' . ((&columns * 74 + 114) / 228)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -3963,12 +3959,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 20 - ((19 * winheight(0) + 26) / 52)
+let s:l = 1 - ((0 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-20
-normal! 011|
+1
+normal! 0
 lcd ~/Programming
 wincmd w
 argglobal
@@ -4077,18 +4073,17 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 14 - ((13 * winheight(0) + 26) / 52)
+let s:l = 1 - ((0 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-14
-normal! 043|
+1
+normal! 0
 lcd ~/Programming
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 75 + 113) / 226)
-exe 'vert 2resize ' . ((&columns * 75 + 113) / 226)
-exe 'vert 3resize ' . ((&columns * 74 + 113) / 226)
+exe 'vert 1resize ' . ((&columns * 75 + 114) / 228)
+exe 'vert 2resize ' . ((&columns * 75 + 114) / 228)
+exe 'vert 3resize ' . ((&columns * 74 + 114) / 228)
 tabedit ~/Programming/Strategy/gtk/Makefile
 set splitbelow splitright
 set nosplitbelow
@@ -4200,14 +4195,14 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 27) / 54)
+let s:l = 1 - ((0 * winheight(0) + 26) / 53)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
-2wincmd w
-tabnext 12
+lcd ~/Programming
+tabnext 17
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "main.h"
 #include "../terrain_data.h"
+#include "control.h"
 using namespace Gtk;
 using namespace std;
 
@@ -101,7 +102,10 @@ int main(int argc, char** argv)
     auto app = Application::create(argc, argv, "");
 //	Time time;
 	Win win;
-//	Control control(win.area, time);
+	User user;
+	user.ally = 3;
+	user.team = 5;
+	Control control(win, user);
     return app->run(win);
 }
 

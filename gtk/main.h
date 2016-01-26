@@ -9,6 +9,7 @@ class Win : public Gtk::Window
 public:
 	Win();	
 	Terrain_data terrain_data;
+    Darea area;
 
 protected:
     Gtk::Button bt1, bt2, bt3;
@@ -22,7 +23,6 @@ protected:
     Gtk::Box box1;
 	Gtk::Box box2;
     Gtk::ScrolledWindow swin;
-    Darea area;
 	Gtk::Label label1;
 
 private:

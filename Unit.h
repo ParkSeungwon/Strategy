@@ -32,14 +32,17 @@ public :
 	bool can_attack(const Unit& u) const;
 	
 	//setter, getter
+	std::string unit_name()						{return unit_name_;}
 	int get_evadeRatio() const 					{return evadeRatio;}
 	unsigned int get_intelligenceRadius() const {return intelligenceRadius;}
 	int get_ally() const 						{return ally;}
 	int get_team() const						{return team;}
 	int get_fuel() const 						{return fuel;}
 	int get_currentHealth() const 				{return currentHealth;}
+	bool get_known_to(int i)					{return known_to[i];}
 	Glob::UnitType get_unit_type() const		{return unit_type;}
 	unsigned int get_unitPrice() const 			{return unitPrice;}
+	void unit_name(std::string s)				{unit_name_ = s;}
 	bool get_supply()							{return can_supply;}
 	void set_supply(bool b = true)				{can_supply = b;}
 	void set_recruit(bool b = true)				{can_recruit = b;}
@@ -50,7 +53,7 @@ public :
 
 protected :
 	void adjust_recon() const;
-	
+	std::string unit_name_;
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
 	Clip* recon_clip;
 	std::string unitName;
