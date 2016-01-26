@@ -1,6 +1,17 @@
 #pragma once
 #include <gtkmm.h>
 #include "darea.h"
+class Terrain_data 
+{
+public:
+	virtual ~Terrain_data();
+	Terrain_data() {}
+	Terrain_data(Terrain_data&& tr);
+	Terrain_data& operator=(Terrain_data&& tr);
+	int w, h;
+	size_t *tmap;
+};
+
 
 class Win : public Gtk::Window
 {
