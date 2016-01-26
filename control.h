@@ -1,6 +1,7 @@
 //#include "../time.h"
 //#include "darea.h"
-class Time, Darea;
+class Time;
+class Darea;
 
 class Control 
 {

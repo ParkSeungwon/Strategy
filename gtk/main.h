@@ -1,25 +1,18 @@
 #pragma once
+#include <string>
 #include <gtkmm.h>
 #include "darea.h"
-class Terrain_data 
-{
-public:
-	virtual ~Terrain_data();
-	Terrain_data() {}
-	Terrain_data(Terrain_data&& tr);
-	Terrain_data& operator=(Terrain_data&& tr);
-	int w, h;
-	size_t *tmap;
-};
-
+#include "../terrain_data.h"
 
 class Win : public Gtk::Window
 {
 public:
 	Win();	
+	Terrain_data terrain_data;
 
 protected:
     Gtk::Button bt1, bt2, bt3;
+	void open_terrain_file(std::string filename);
     void on_button_click();
     void on_cancel_click();
 	void on_open_click();

@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include "main.h"
+#include "../terrain_data.h"
 using namespace Gtk;
 using namespace std;
 
@@ -61,36 +62,23 @@ void Win::on_open_click()
 	//Add filters, so that only certain file types can be selected:
 
 	auto filter_any = Gtk::FileFilter::create();
-	filter_any->set_name("Any files");
-	filter_any->add_pattern("*");
+	filter_any->set_name("Map files");
+	filter_any->add_pattern("*.map");
 	dialog.add_filter(filter_any);
 	//Show the dialog and wait for a user response:
 	int result = dialog.run();
 
 	//Handle the response:
-	switch(result) {
-    case(Gtk::RESPONSE_OK):
-    {
+	if(result == Gtk::RESPONSE_OK) {
 		std::cout << "Open clicked." << std::endl;
 
 		//Notice that this is a std::string, not a Glib::ustring.
 		std::string filename = dialog.get_filename();
 		std::cout << "File selected: " <<  filename << std::endl;
-		area.open_map_file(filename);
-		break;
+		terrain_data = area.open_map_file(filename);
     }
-    case(Gtk::RESPONSE_CANCEL):
-    {
-      std::cout << "Cancel clicked." << std::endl;
-      break;
-    }
-    default:
-    {
-      std::cout << "Unexpected button clicked." << std::endl;
-      break;
-    }
-  }
 }
+
 void Win::on_button_click()
 {
 	area.clear_map();
@@ -111,8 +99,9 @@ void Win::on_cancel_click()
 int main(int argc, char** argv)
 {
     auto app = Application::create(argc, argv, "");
-
-    Win win;
+//	Time time;
+	Win win;
+//	Control control(win.area, time);
     return app->run(win);
 }
 

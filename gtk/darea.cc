@@ -4,6 +4,7 @@
 #include <complex>
 #include "darea.h"
 #include "../file.h"
+#include "../terrain_data.h"
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;
@@ -26,13 +27,35 @@ Darea::Darea()
 	set_size_request(width, height);
 }
 
-void Darea::open_map_file(string mp)
+Terrain_data Darea::open_map_file(string mp)
 {
 	map = Gdk::Pixbuf::create_from_file(mp);
 	map_backup_ = map->copy();
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
+
+	//prepare terrain data for model
+	mp.replace(mp.size()-3, 3, "ter");
+	Glib::RefPtr<Gdk::Pixbuf> ter = Gdk::Pixbuf::create_from_file(mp);
+	if(ter->get_width() != width || ter->get_height() != height) throw 3;
+	auto r = ter->get_rowstride();
+	auto n = ter->get_n_channels();
+	auto p = ter->get_pixels();
+
+	auto fp = [r, n, p] (int x, int y) {return p + y * r + x * n;};
+	size_t** ter_data;
+	size_t* dot;
+
+	Terrain_data ret(width, height);
+	for(int y=0; y<height; y++) {
+		for(int x=0; x<width; x++) {
+			dot = (size_t*)fp(x, y);
+			ret.tmap[x][y] = *dot;
+		}
+	}
+	
+	return ret;
 }
 
 void Darea::clear_map()

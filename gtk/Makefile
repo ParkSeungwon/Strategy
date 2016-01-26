@@ -8,8 +8,8 @@ OBJ = $(patsubst %.cc, %.o, $(SRC))
 all : show 
 
 show : $(OBJ)
-	g++ -o show $(OBJ) ../file.o $(GTKLIB) 
-	./show
+	g++ -o show $(OBJ) ../file.o ../terrain_data.o $(GTKLIB) 
+#./show
 
 %.o : %.cc 
 	$(CC) $(GTKCFLAG) $(CFLAG) $<

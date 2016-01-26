@@ -2,12 +2,13 @@
 #include <unordered_map>
 #include <gtkmm.h>
 #include <memory>
+class Terrain_data;
 
 class Darea : public Gtk::DrawingArea
 {
 public:
 	Darea();
-	void open_map_file(std::string map);
+	Terrain_data open_map_file(std::string map);
 	virtual ~Darea() {}
 	void paste_pix(int x, int y, std::string name, float heading = 0);
 	void clear_map();
