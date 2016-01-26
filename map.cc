@@ -9,7 +9,7 @@
 typedef unsigned char UC;
 using namespace Glob;
 
-Map::Map(int w, int h, size_t *image, int ally)
+Map::Map(int w, int h, size_t **image, int ally)
 {
 	width = w;
 	height = h;
@@ -26,9 +26,9 @@ Map::Map(int w, int h, size_t *image, int ally)
 	for(size_t y = 0; y < h; y++) {
 		for(size_t x = 0; x < w; x++) {
 			p.x = x; p.y = y;
-			t->set_pixel(p, (int)Terrain::get_terraintype_by_color(image[y * w + x]));
-			if(image[y * width + x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
-				dot = (image[y * width + x] & 0xff00) >> 2;
+			t->set_pixel(p, (int)Terrain::get_terraintype_by_color(image[x][y]));
+			if(image[x][y] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
+				dot = (image[x][y] & 0xff00) >> 2;
 				c->set_pixel(p, dot);//도시의 고유번호를 부여함green
 			}
 		}
@@ -41,7 +41,7 @@ int Map::occupy(Point p, int team)
 	if(it != cities.end()) it->owner = team;
 }
 
-int Map::count_cities(size_t *image)
+int Map::count_cities(size_t **image)
 {
 	Point p;
 	size_t dot = 0;
@@ -49,8 +49,8 @@ int Map::count_cities(size_t *image)
 	for (size_t y = 0; y < height; y++) {
 		for (size_t x = 0; x < width; x++) {
 			p.x = x; p.y = y;
-			if(image[y * width + x] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
-				dot = (image[y * width + x] & 0xff00) >> 2;
+			if(image[x][y] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
+				dot = (image[x][y] & 0xff00) >> 2;
 				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
 					ct.identifier = dot;
 					cities.push_back(ct);

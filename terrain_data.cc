@@ -24,10 +24,7 @@ Terrain_data::Terrain_data()
 
 Terrain_data::~Terrain_data()
 {
-	if(tmap != nullptr) {
-		for(int i=0; i<width; i++) delete [] tmap[i];
-		delete [] tmap;
-	}
+	del_tmap();
 }
 
 Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
@@ -35,13 +32,17 @@ Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
 	width = tr.width;
 	height = tr.height;
 
-	if(tmap != nullptr) {
-		for(int i=0; i<width; i++) delete [] tmap[i];
-		delete [] tmap;
-	}
+	del_tmap();
 	tmap = tr.tmap;
 	tr.tmap = nullptr;
 	return *this;
 }
 
-
+bool Terrain_data::del_tmap()
+{
+	if(tmap != nullptr) {
+		for(int i=0; i<width; i++) delete [] tmap[i];
+		delete [] tmap;
+		return true;
+	} else return false;
+}

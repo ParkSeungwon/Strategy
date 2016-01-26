@@ -17,7 +17,7 @@ public:
 class Map : public MapInterface
 {
 private:
-	int count_cities(size_t* image);
+	int count_cities(size_t** image);
 	static int get_log2(int i);
 	bool in_city(Point p);
 	City& get_city(Point p); 
@@ -31,7 +31,7 @@ protected:
 	int width, height;
 	
 public:
-	Map(int width, int height, size_t *pixel, int ally);
+	Map(int width, int height, size_t **pixel, int ally);
 	virtual ~Map();
 	virtual int occupy(Point p, int team);
 	int geo_effect(Unit& u);
