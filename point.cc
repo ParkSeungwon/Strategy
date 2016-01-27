@@ -1,5 +1,6 @@
 #include "point.h"
 #include <cmath>
+#include <complex>
 
 Point Point::polar_to_xy(int r, float th)
 {
@@ -16,7 +17,8 @@ float Point::operator^(Point p) const//distance
 
 float Point::operator%(Point p) const//angle to p
 {
-	return atanf((p.y - y) / (p.x - x));
+	std::complex<float> c(p.x-x, p.y-y);
+	return std::arg(c);
 }
 
 

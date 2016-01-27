@@ -2,15 +2,16 @@
 #include <string>
 #include <gtkmm.h>
 #include "darea.h"
-#include "../terrain_data.h"
-
+#include "../time.h"
 class Win : public Gtk::Window
 {
 public:
 	Win();	
-	Terrain_data terrain_data;
 
 protected:
+    Darea area;
+	Time time;
+//	Control control;
     Gtk::Button bt1, bt2, bt3;
 	void open_terrain_file(std::string filename);
     void on_button_click();
@@ -22,7 +23,6 @@ protected:
     Gtk::Box box1;
 	Gtk::Box box2;
     Gtk::ScrolledWindow swin;
-    Darea area;
 	Gtk::Label label1;
 
 private:

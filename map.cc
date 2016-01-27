@@ -5,17 +5,19 @@
 #include "bitmap.h"
 #include "Unit.h"
 #include "Util.h"
+#include "terrain_data.h"
 #define TERRAIN_COUNT 14
 typedef unsigned char UC;
 using namespace Glob;
 
-Map::Map(int w, int h, size_t **image, int ally)
+void Map::init_map(Terrain_data&& tr, int ally)
 {
-	width = w;
-	height = h;
-	recon_bitmap = new Bitmap(w, h, ally);
-	terrain_bitmap = new Bitmap(w, h, get_log2(TERRAIN_COUNT));
-	city_bitmap = new Bitmap(w, h, get_log2(count_cities(image)));
+	width = tr.width;
+	height = tr.height;
+	size_t** image = tr.tmap;
+	recon_bitmap = new Bitmap(width, height, ally);
+	terrain_bitmap = new Bitmap(width, height, get_log2(TERRAIN_COUNT));
+	city_bitmap = new Bitmap(width, height, get_log2(count_cities(image)));
 	
 	Bitmap *t = terrain_bitmap;
 	Bitmap *c = city_bitmap;
@@ -23,8 +25,8 @@ Map::Map(int w, int h, size_t **image, int ally)
 	City ct;
 	size_t dot = 0;
 
-	for(size_t y = 0; y < h; y++) {
-		for(size_t x = 0; x < w; x++) {
+	for(size_t y = 0; y < height; y++) {
+		for(size_t x = 0; x < width; x++) {
 			p.x = x; p.y = y;
 			t->set_pixel(p, (int)Terrain::get_terraintype_by_color(image[x][y]));
 			if(image[x][y] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.

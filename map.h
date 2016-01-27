@@ -6,6 +6,7 @@ class Unit;
 class Point;
 class Bitmap;
 class City;
+class Terrain_data;
 namespace Glob {enum class TerrainType;}
 
 class MapInterface 
@@ -31,7 +32,7 @@ protected:
 	int width, height;
 	
 public:
-	Map(int width, int height, size_t **pixel, int ally);
+	void init_map(Terrain_data&& tr, int ally);
 	virtual ~Map();
 	virtual int occupy(Point p, int team);
 	int geo_effect(Unit& u);

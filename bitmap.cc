@@ -5,23 +5,23 @@ using namespace Glob;
 
 Clip::Clip(Point p, int w, int h)
 {
-	int rest = p.x % 32;
+	int rest = p.x % size_of_size_t;
 	p.x = p.x - rest;
 	this->lower_left = p;
-	width =((w + rest) / 32 + 1) * 32;
+	width =((w + rest) / size_of_size_t + 1) * size_of_size_t;
 	height = h;
 	
 	//memory allocation
 	clip = new size_t*[height];
 	for(int y = 0; y < height; y++) {
-		clip[y] = new size_t[width/32];
+		clip[y] = new size_t[width/size_of_size_t];
 	}
 }
 
 int Clip::set_lower_left(Point p)
 {
 	lower_left.y = p.y;
-	int rest = p.x % 32;
+	int rest = p.x % size_of_size_t;
 	lower_left.x = p.x - rest;
 	return rest;
 }
@@ -30,7 +30,7 @@ Clip::Clip(Point c, int r)
 {
 	c.x -= r;
 	c.y -= r;
-	Clip* tmp = new Clip(c, (2*r+1)/32 + 1, 2*r+1);
+	Clip* tmp = new Clip(c, (2*r+1)/size_of_size_t + 1, 2*r+1);
 	*this = *tmp;
 	delete tmp;
 }
@@ -87,9 +87,9 @@ void Clip::clear()
 
 bool Clip::get_pixel(Point p)
 {
-	int shift = 32 - 1 - (p.x % 32);
+	int shift = size_of_size_t - 1 - (p.x % size_of_size_t);
 	size_t mask = 1 << shift;
-	return clip[p.y][p.x/32] & mask;
+	return clip[p.y][p.x/size_of_size_t] & mask;
 }
 
 bool Clip::boundary_check(Point p)
@@ -102,14 +102,14 @@ bool Clip::boundary_check(Point p)
 bool Clip::set_pixel(Point p, bool o)
 {
 	if(boundary_check(p)) {
-		int shift = 32 - 1 - (p.x % 32);
+		int shift = size_of_size_t - 1 - (p.x % size_of_size_t);
 		size_t mask = 1 << shift;
 		mask = ~mask;
-		size_t t = clip[p.y][p.x/32];
+		size_t t = clip[p.y][p.x/size_of_size_t];
 		t = t & mask;
 		o = o << shift;
 		t = t | o;
-		clip[p.y][p.x/32] = t;
+		clip[p.y][p.x/size_of_size_t] = t;
 		return true;
 	} else return false;
 }
@@ -123,27 +123,27 @@ int Clip::flat_line(Point s, int l)
 	
 	//use coordinate of clip
 	unsigned int mask;
-	int rest = s.x % 32;
-	if(l < 32 - rest) {
-		mask = 0xffffffff << (32 - l);
+	int rest = s.x % size_of_size_t;
+	if(l < size_of_size_t - rest) {
+		mask = 0xffffffff << (size_of_size_t - l);
 		mask = mask >> rest;
-		clip[s.y][s.x / 32] = mask;
+		clip[s.y][s.x / size_of_size_t] = mask;
 	} else {
 		mask = 0xffffffff >> rest;
-		clip[s.y][s.x / 32] = mask;
-		l -= 32 - rest;//앞에서 쓴 부분의 비트맵을 뺀다.
-		rest = l % 32;
+		clip[s.y][s.x / size_of_size_t] = mask;
+		l -= size_of_size_t - rest;//앞에서 쓴 부분의 비트맵을 뺀다.
+		rest = l % size_of_size_t;
 		int i;
-		for(i=1; i <= l/32; i++) clip[s.y][s.x / 32 + i] = 0xffffffff;
-		mask = 0xffffffff << (32 - rest);
-		clip[s.y][s.x / 32 + i] = mask;
+		for(i=1; i <= l/size_of_size_t; i++) clip[s.y][s.x / size_of_size_t + i] = 0xffffffff;
+		mask = 0xffffffff << (size_of_size_t - rest);
+		clip[s.y][s.x / size_of_size_t + i] = mask;
 	}
-	return l / 32;
+	return l / size_of_size_t;
 }
 
 Point Clip::bit_circle(Point c, int r)
 {
-	c.x -= 32 * lower_left.x;
+	c.x -= size_of_size_t * lower_left.x;
 	c.y -= lower_left.y;
 	Point s;
 	for(s.y = c.y - r; s.y <= c.y + r; s.y++) {

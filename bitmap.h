@@ -31,6 +31,7 @@ protected:
 	int flat_line(Point starting_point, int length);
 	float bit_line(Point center, float theta);//중심점을 지나는 직선을 기준으로 좌우를 비트마스크 처리
 	float correct_angle(float angle);
+	const int size_of_size_t = 64;
 
 private:
 	bool boundary_check(Point p);

@@ -41,21 +41,23 @@ set window=54
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/Programming/Strategy/gtk
+cd ~/Programming/Strategy
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/Programming/Strategy/gtk/main.cc
+badd +94 ~/Programming/Strategy/gtk/main.cc
 badd +1 ~/Programming/Strategy/gtk/myarea.cc
 badd +1 ~/Programming/Strategy/gtk/myarea.h
 badd +1 ~/Programming/Strategy/gtk/Makefile
 badd +1 ~/Programming/Strategy/gtk/main.h
-badd +186 ~/Programming/Strategy/gtk/darea.cc
+badd +55 ~/Programming/Strategy/gtk/darea.cc
 badd +1 ~/Programming/Strategy/gtk/darea.h
 badd +277 ~/Programming/Strategy/deleted/deleted.cc
-badd +30 ~/Programming/Strategy/gtk/control.cc
-badd +0 ~/Programming/Strategy/gtk/control.h
+badd +1 ~/Programming/Strategy/gtk/control.cc
+badd +1 ~/Programming/Strategy/gtk/control.h
+badd +0 ~/Programming/Strategy/control.cc
+badd +0 ~/Programming/Strategy/control.h
 silent! argdel *
 edit ~/Programming/Strategy/gtk/main.cc
 set splitbelow splitright
@@ -535,7 +537,7 @@ normal! 012|
 wincmd w
 exe 'vert 1resize ' . ((&columns * 114 + 113) / 226)
 exe 'vert 2resize ' . ((&columns * 111 + 113) / 226)
-tabedit ~/Programming/Strategy/gtk/control.cc
+tabedit ~/Programming/Strategy/control.cc
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -652,15 +654,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 30 - ((26 * winheight(0) + 26) / 53)
+let s:l = 9 - ((8 * winheight(0) + 26) / 53)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
-normal! 038|
+9
+normal! 06|
 wincmd w
 argglobal
-edit ~/Programming/Strategy/gtk/control.h
+edit ~/Programming/Strategy/control.h
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -765,12 +767,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 2 - ((1 * winheight(0) + 26) / 53)
+let s:l = 10 - ((9 * winheight(0) + 26) / 53)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
-normal! 03|
+10
+normal! 010|
 wincmd w
 exe 'vert 1resize ' . ((&columns * 114 + 113) / 226)
 exe 'vert 2resize ' . ((&columns * 111 + 113) / 226)

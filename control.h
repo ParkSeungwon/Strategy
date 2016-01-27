@@ -7,7 +7,7 @@ class Control
 {
 public:
 	Control(Darea& ar, Time& t);
-	sync();
+	void sync();
 	Darea* darea;
 	Time* time;
 };

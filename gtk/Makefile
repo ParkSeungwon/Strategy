@@ -4,11 +4,12 @@ GTKLIB = $(shell pkg-config gtkmm-3.0 --libs)
 CC = g++
 SRC = $(wildcard *.cc)
 OBJ = $(patsubst %.cc, %.o, $(SRC))
+POBJ = $(wildcard ../*.o)
 
 all : show 
 
 show : $(OBJ)
-	g++ -o show $(OBJ) ../file.o ../terrain_data.o $(GTKLIB) 
+	g++ -o show $(OBJ) $(POBJ) $(GTKLIB) 
 #./show
 
 %.o : %.cc 
