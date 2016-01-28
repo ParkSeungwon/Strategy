@@ -90,7 +90,7 @@ int Unit::operator >> (vector<shared_ptr<Unit>>& dp)
 	int target;
 	for(auto& w : weapon) {
 		if(w.can_fire()) {
-			for(int i=0; i<sz; i++) pref[i] = can_attack(*dp[i]) ? w + *dp[i] : -1;
+			for(int i=0; i<sz; i++) pref[i] = can_attack(*dp[i], w) ? w + *dp[i] : -1;
 			target = find_big(pref, sz);//배열 중 가장 값이 큰 것의 인덱스를 리턴하는 함수
 			if(pref[target] > 0) w >> *dp[target];
 		}
@@ -108,9 +108,19 @@ int SupplyUnit::supply(vector<shared_ptr<Unit>>& dp)
 	return 0;
 }
 
-bool Unit::can_attack(const Unit& u) const
+bool Unit::can_attack(const Unit& u, const Weapon& w) const
 {
-	return ally != u.ally && u.known_to[ally];
+	if(ally != u.ally && u.known_to[ally]) {
+		float distance = *this ^ u;
+		if(distance >= w.get_shootingRangeMin() && distance <= w.get_shootingRangeMax()) {
+			float angle = *this % u;
+			if(angle >= heading_toward + w.get_shootingAngleFrom() 
+					&& angle <= heading_toward + w.get_shootingAngleTo()) {
+			   return true;
+		   }
+		}
+	} 
+	return false;
 }
 
 bool InfantryUnit::in_city()

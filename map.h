@@ -26,8 +26,9 @@ private:
 protected:
 	float calculate_terrain_penalty(Unit& u, int time) const;
 	float calculate_terrain_penalty(Unit& u) const;
-	int generate_recon_bitmap() const;//return showing unit count
-	Bitmap *terrain_bitmap, *recon_bitmap, *city_bitmap;
+	int generate_recon() const;//return showing unit count
+	Glob::TerrainType **terrain_map = nullptr;
+	char **city_map = nullptr;
 	const static int maxTeam = 8;
 	int width, height;
 	

@@ -29,6 +29,7 @@ Terrain_data::~Terrain_data()
 
 Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
 {
+	if(this == &tr) return *this;
 	width = tr.width;
 	height = tr.height;
 

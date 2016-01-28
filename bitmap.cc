@@ -5,23 +5,34 @@ using namespace Glob;
 
 Clip::Clip(Point p, int w, int h)
 {
-	int rest = p.x % size_of_size_t;
+	size_of_char = sizeof(char);
+	if(p.x < 0) {
+		w += p.x;
+		if(w < 0) w = 0;
+		p.x = 0;
+	}
+	if(p.y < 0) {
+		h += p.y;
+		if(h < 0) h = 0;
+		p.y = 0;
+	}
+	int rest = p.x % size_of_char;
 	p.x = p.x - rest;
 	this->lower_left = p;
-	width =((w + rest) / size_of_size_t + 1) * size_of_size_t;
+	width =((w + rest) / size_of_char + 1) * size_of_char;
 	height = h;
 	
 	//memory allocation
-	clip = new size_t*[height];
+	clip = new char*[height];
 	for(int y = 0; y < height; y++) {
-		clip[y] = new size_t[width/size_of_size_t];
+		clip[y] = new char[width/size_of_char];
 	}
 }
 
 int Clip::set_lower_left(Point p)
 {
 	lower_left.y = p.y;
-	int rest = p.x % size_of_size_t;
+	int rest = p.x % size_of_char;
 	lower_left.x = p.x - rest;
 	return rest;
 }
@@ -30,56 +41,77 @@ Clip::Clip(Point c, int r)
 {
 	c.x -= r;
 	c.y -= r;
-	Clip* tmp = new Clip(c, (2*r+1)/size_of_size_t + 1, 2*r+1);
-	*this = *tmp;
-	delete tmp;
+	*this = Clip(c, 2*r+1, 2*r+1);
+}
+
+Clip& Clip::operator=(Clip&& cl)
+{
+	if(this == &cl) return *this;
+	lower_left = cl.lower_left;
+	width = cl.width;
+	height = cl.height;
+	del_clip();
+	clip = cl.clip;
+	cl.clip = nullptr;
+	return *this;
 }
 
 
 Clip::Clip(Clip &cl, Point c, int r)
 {
-	Clip* tmp = new Clip(c, r);
-	*this = *tmp;
-	delete tmp;
+	*this = Clip(c, r);
+	int lx = this->lower_left.x;
+	int ly = this->lower_left.y;
+	int cx = cl.lower_left.x;
+	int cy = cl.lower_left.y;
+	int wi = cl.width / size_of_char;
 	//copy to clip
 	for(int y = 0; y <= height; y++) {
-		for(int x = 0; x <= width; x++) {
-			if(cl.lower_left.y + y >= 0 && cl.lower_left.x + x >= 0 
-					&& cl.lower_left.x + x < width && cl.lower_left.y + y < height) 
-				clip[y][x] = cl.clip[y + cl.lower_left.y][x + cl.lower_left.x]; 
+		for(int x = 0; x <= width/size_of_char; x++) {
+			if(ly + y >= cy && lx + x >= cx && 
+					lx + x <= cx + wi && ly + y <= cy + cl.height) 
+				clip[y][x] = cl.clip[y + ly - cy][x + lx - cx]; 
 		}
 	}
 }
 
-int Clip::operator = (Clip& cl)
+Clip& Clip::operator = (Clip& cl)
 {
-	for(int y=0; y<height; y++) delete clip[y];
-	delete clip;
+	if(this == &cl) return *this;
+	del_clip();
 	lower_left = cl.lower_left;
 	width = cl.width;
 	height = cl.height;
-
-	clip = new size_t*[height];
+	size_of_char = cl.size_of_char;
+	clip = new char*[height];
 	for(int y=0; y<height; y++) {
-		clip[y] = new size_t[width];
+		clip[y] = new char[width];
 		for(int x=0; x<width; x++) {
 			clip[y][x] = cl.clip[y][x];
 		}
 	}
+	return *this;
 }
 
 Clip::~Clip() 
 {
-	for(int y = 0; y < height; y++) {
-		delete [] clip[y];
+	del_clip();
+}
+
+void  Clip::del_clip()
+{
+	if(clip != nullptr) {
+		for(int y = 0; y < height; y++) {
+			delete [] clip[y];
+		}
+		delete [] clip;
 	}
-	delete [] clip;
 }
 
 void Clip::clear()
 {
 	for(int y=0; y<height; y++) {
-		for(int x=0; x<width; x++) {
+		for(int x=0; x<width/size_of_char; x++) {
 			clip[y][x] = 0;
 		}
 	}
@@ -87,9 +119,9 @@ void Clip::clear()
 
 bool Clip::get_pixel(Point p)
 {
-	int shift = size_of_size_t - 1 - (p.x % size_of_size_t);
+	int shift = size_of_char - 1 - (p.x % size_of_char);
 	size_t mask = 1 << shift;
-	return clip[p.y][p.x/size_of_size_t] & mask;
+	return clip[p.y][p.x/size_of_char] & mask;
 }
 
 bool Clip::boundary_check(Point p)
@@ -102,14 +134,14 @@ bool Clip::boundary_check(Point p)
 bool Clip::set_pixel(Point p, bool o)
 {
 	if(boundary_check(p)) {
-		int shift = size_of_size_t - 1 - (p.x % size_of_size_t);
+		int shift = size_of_char - 1 - (p.x % size_of_char);
 		size_t mask = 1 << shift;
 		mask = ~mask;
-		size_t t = clip[p.y][p.x/size_of_size_t];
+		size_t t = clip[p.y][p.x/size_of_char];
 		t = t & mask;
 		o = o << shift;
 		t = t | o;
-		clip[p.y][p.x/size_of_size_t] = t;
+		clip[p.y][p.x/size_of_char] = t;
 		return true;
 	} else return false;
 }
@@ -123,27 +155,27 @@ int Clip::flat_line(Point s, int l)
 	
 	//use coordinate of clip
 	unsigned int mask;
-	int rest = s.x % size_of_size_t;
-	if(l < size_of_size_t - rest) {
-		mask = 0xffffffff << (size_of_size_t - l);
+	int rest = s.x % size_of_char;
+	if(l < size_of_char - rest) {
+		mask = 0xffffffff << (size_of_char - l);
 		mask = mask >> rest;
-		clip[s.y][s.x / size_of_size_t] = mask;
+		clip[s.y][s.x / size_of_char] = mask;
 	} else {
 		mask = 0xffffffff >> rest;
-		clip[s.y][s.x / size_of_size_t] = mask;
-		l -= size_of_size_t - rest;//앞에서 쓴 부분의 비트맵을 뺀다.
-		rest = l % size_of_size_t;
+		clip[s.y][s.x / size_of_char] = mask;
+		l -= size_of_char - rest;//앞에서 쓴 부분의 비트맵을 뺀다.
+		rest = l % size_of_char;
 		int i;
-		for(i=1; i <= l/size_of_size_t; i++) clip[s.y][s.x / size_of_size_t + i] = 0xffffffff;
-		mask = 0xffffffff << (size_of_size_t - rest);
-		clip[s.y][s.x / size_of_size_t + i] = mask;
+		for(i=1; i <= l/size_of_char; i++) clip[s.y][s.x / size_of_char + i] = 0xffffffff;//error
+		mask = 0xffffffff << (size_of_char - rest);
+		clip[s.y][s.x / size_of_char + i] = mask;
 	}
-	return l / size_of_size_t;
+	return l / size_of_char;
 }
 
 Point Clip::bit_circle(Point c, int r)
 {
-	c.x -= size_of_size_t * lower_left.x;
+	c.x -= size_of_char * lower_left.x;
 	c.y -= lower_left.y;
 	Point s;
 	for(s.y = c.y - r; s.y <= c.y + r; s.y++) {

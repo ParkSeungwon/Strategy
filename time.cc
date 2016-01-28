@@ -14,7 +14,7 @@ void Time::time_pass()
 		u->time_pass(calculate_terrain_penalty(*u)); 
 		geo_effect(*u);
 	}
-	generate_recon_bitmap();
+	generate_recon();
 
 	//attck, supply_unit
 	for(auto& u : deployedUnits) {

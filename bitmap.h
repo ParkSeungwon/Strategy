@@ -6,7 +6,7 @@ enum bit_operation {SUBST, OR, AND, XOR, MINUS, NOT};
 class Clip 
 {
 public:
-	size_t **clip;
+	char **clip = nullptr;
 	Point lower_left;//lower left array의 비트맵에서의 uint 좌표
 	int width, height;//width is * intSize
 
@@ -19,7 +19,8 @@ public:
 	int set_lower_left(Point p);
 	bool get_pixel(Point p);
 	bool set_pixel(Point p, bool on_off);
-	int operator = (Clip &clip);
+	Clip& operator = (Clip &clip);
+	Clip& operator=(Clip&& clip);
 	int paste_from(Clip* source, bit_operation op);
 
 	Point bit_circle(Point center, int radius);//클립된 후의 중심좌표
@@ -31,11 +32,11 @@ protected:
 	int flat_line(Point starting_point, int length);
 	float bit_line(Point center, float theta);//중심점을 지나는 직선을 기준으로 좌우를 비트마스크 처리
 	float correct_angle(float angle);
-	const int size_of_size_t = 64;
 
 private:
 	bool boundary_check(Point p);
-
+	static int size_of_char;
+	void del_clip();
 };
 
 class Bitmap : public Clip

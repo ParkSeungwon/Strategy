@@ -29,7 +29,7 @@ public :
 	int time_pass(float penalty = 1);
 	virtual bool in_city() {return false;}
 	virtual void out_of_city() {}
-	bool can_attack(const Unit& u) const;
+	bool can_attack(const Unit& u, const Weapon& w) const;
 	
 	//setter, getter
 	int get_evadeRatio() const 					{return evadeRatio;}

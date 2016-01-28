@@ -36,6 +36,8 @@ const float Terrain::evade_bonus[4][14] = {
 Glob::TerrainType Terrain::get_terraintype_by_color(unsigned int code)
 {
 	int i = 0;
+	code = code & 0x000000ff;
+	code = code >> 4;
 	switch(code) {
 		case 0xff00ff : i++;//분홍색
 		case 0xaa00ff : i++; //보라색
