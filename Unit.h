@@ -1,3 +1,6 @@
+/**
+*the main class of this game---
+*/
 #pragma once
 #include <string>
 #include <vector>
@@ -6,7 +9,6 @@
 
 class Weapon;
 class Airport;
-class Clip;
 namespace Glob { 
 	enum class UnitType;
 	enum class TerrainType;
@@ -19,10 +21,10 @@ public :
 	virtual ~Unit();
 
 	std::vector<Weapon> weapon;
-	int operator + (Weapon& weapon);//equip weapon
-	int operator - (std::vector<Weapon>::iterator it); //unload weapon
-	
-	//현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
+	int operator + (Weapon& weapon);///<equip weapon
+	int operator - (std::vector<Weapon>::iterator it);///<unload weapon
+
+	///현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
 	int operator >> (std::vector<std::shared_ptr<Unit>>& deployed);
 	virtual int supply(std::vector<std::shared_ptr<Unit>>& deployed) {}
 	
@@ -49,10 +51,7 @@ public :
 	void set_known_to(int i, bool b) 			{known_to[i] = b;}
 
 protected :
-	void adjust_recon() const;
-	
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
-	Clip* recon_clip;
 	std::string unitName;
 	unsigned int unitPrice;
 	unsigned int maxHealth;

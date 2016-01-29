@@ -27,7 +27,7 @@ protected:
 	float calculate_terrain_penalty(Unit& u) const;
 	int generate_recon() const;//return showing unit count
 	Glob::TerrainType **terrain_map = nullptr;
-	char **city_map = nullptr;
+	char **city_map = nullptr;///<contains city identifier
 	const static int maxTeam = 8;
 	int width, height;
 	

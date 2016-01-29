@@ -2,7 +2,6 @@
 #include "Weapon.h"
 #include "Terrain.h"
 #include "map.h"
-#include "bitmap.h"
 #include "Unit.h"
 #include "Util.h"
 #include "terrain_data.h"
@@ -23,16 +22,24 @@ void Map::init_map(Terrain_data&& tr, int ally)
 	}
 
 	char* pc;
+	unsigned color;
 	for(int x=0; x<width; x++) {
 		for(int y=0; y<height; y++) {
-			pc = (char*)tr.tmap[x][y];
+			pc = tr.pixel(x, y);
 			if(pc[2] == 0xff) {
 				city_map[x][y] = pc[1];
 				pc[1] = 0x0;
 			}
-			terrain_map[x][y] = Terrain::get_terraintype_by_color(tr.tmap[x][y]);
+			color = pc[0];
+			color = color << 8;
+			color |= pc[1];
+			color = color << 8;
+			color |= pc[2];
+			color = color << 8;
+			terrain_map[x][y] = Terrain::get_terraintype_by_color(color);
 		}
 	}
+	
 }	
 
 Map::~Map()

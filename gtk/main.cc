@@ -1,10 +1,13 @@
 #include <string>
 #include <iostream>
+#include "../point.h"
 #include "../Terrain.h"
 #include "main.h"
 #include "../terrain_data.h"
+#include "../Util.h"
 using namespace Gtk;
 using namespace std;
+using namespace Glob;
 
 Win::Win() :
    	bt1("OK"), bt2("cancel"), box2(ORIENTATION_VERTICAL), bt3("open"), label1("라벨") 
@@ -44,7 +47,21 @@ bool Win::on_key_press_event(GdkEventKey* e)
 int Win::label_change(int x, int y, int bt)
 {
 	string s;
-	s = to_string(x);
+	switch (time.get_terrain_type(Point(x, y))) {
+		case TerrainType::city : 
+			s = "city";
+			break;
+		case TerrainType::capital :
+			s = "capital";
+			break;
+		case TerrainType::sea :
+			s = "sea";
+			break;
+		default:
+			s = "river";
+	}
+
+	s += to_string(x);
 	s += "\n" + to_string(y);
 	s += "\n" + to_string(bt);
 	label1.set_text(s);

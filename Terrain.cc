@@ -10,10 +10,10 @@ const float Terrain::move_penalty[4][14] = {
 };
 
 const unsigned int Terrain::color_code[14] = { 
-	0xff00ff,//분홍색 
-	0xaa00ff,//보라색
-	0x5500ff,//연보라
-	0xff,//파랑
+	0xff00ff,///<분홍색 
+	0xaa00ff,///<보라색
+	0x5500ff,///<연보라
+	0xff,///<파랑
 	0xff7000, //갈색
 	0x7f00,//진녹색
 	0xffff00,//노란색

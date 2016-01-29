@@ -1,7 +1,6 @@
 #include <fstream>
 #include "Unit.h"
 #include "Util.h"
-#include "bitmap.h"
 #include "Weapon.h"
 using namespace std;
 using namespace Glob;
@@ -25,13 +24,10 @@ Unit::Unit(Point pos, float heading)
 	
 	fin >> maxHealth >> fuelCapacity >> unitPrice >> minimumSpeed >> maximumSpeed >> intelligenceRadius >>evadeRatio;
 	fin.close();
-	recon_clip = new Clip(pos, intelligenceRadius);
-	recon_clip->bit_circle(pos, intelligenceRadius);
 }
 
 Unit::~Unit()
 {
-	delete recon_clip;
 }
 
 /*Unit Unit::operator=(Unit u)
@@ -49,7 +45,6 @@ int Unit::time_pass(float p)
 	}
 	for(auto& w : weapon) {
 		w.time_pass();//this is from last tick	
-		w.adjust_range_clip(*this);
 	}
 	if(can_supply) {
 		for(auto& w : weapon) w.reload();
@@ -61,20 +56,11 @@ int Unit::time_pass(float p)
 		can_recruit = false;
 	}
 	
-	adjust_recon();
 	return fuel;
-}
-
-void Unit::adjust_recon() const
-{
-	recon_clip->set_lower_left(Point(x-intelligenceRadius, y-intelligenceRadius));
-	recon_clip->clear();
-	recon_clip->bit_circle(*this, intelligenceRadius);
 }
 
 int Unit::operator + (Weapon& w)
 {
-	w.adjust_range_clip(*this);
 	weapon.push_back(w);
 }
 

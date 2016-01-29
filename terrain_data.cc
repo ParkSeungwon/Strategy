@@ -5,8 +5,7 @@ Terrain_data::Terrain_data(int w, int h)
 {
 	width = w;
 	height = h;
-	tmap = new size_t*[w];
-	for(int i=0; i<w; i++) tmap[i] = new size_t[h];
+	tmap = new char[w * h * 4];
 }
 
 Terrain_data::Terrain_data(Terrain_data&& tr)
@@ -15,6 +14,11 @@ Terrain_data::Terrain_data(Terrain_data&& tr)
 	height = tr.height;
 	tmap = tr.tmap;
 	tr.tmap = nullptr;
+}
+
+char* Terrain_data::pixel(unsigned x, unsigned y)
+{ 
+	return tmap + 4 * (y * width + x);
 }
 
 Terrain_data::Terrain_data()
@@ -42,7 +46,6 @@ Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
 bool Terrain_data::del_tmap()
 {
 	if(tmap != nullptr) {
-		for(int i=0; i<width; i++) delete [] tmap[i];
 		delete [] tmap;
 		return true;
 	} else return false;

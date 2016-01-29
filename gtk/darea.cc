@@ -44,14 +44,11 @@ Terrain_data Darea::open_map_file(string mp)
 	auto p = ter->get_pixels();
 
 	auto fp = [r, n, p] (int x, int y) {return p + y * r + x * n;};
-	size_t** ter_data;
-	size_t* dot;
 
 	Terrain_data ret(width, height);
 	for(int y=0; y<height; y++) {
 		for(int x=0; x<width; x++) {
-			dot = (size_t*)fp(x, y);
-			ret.tmap[x][y] = *dot;
+			for(int i=0; i<4; i++) ret.pixel(x, y)[i] = fp(x, y)[i];
 		}
 	}
 	
