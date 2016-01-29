@@ -33,6 +33,18 @@ void Map::init_map(Terrain_data&& tr, int ally)
 			terrain_map[x][y] = Terrain::get_terraintype_by_color(tr.tmap[x][y]);
 		}
 	}
+}	
+
+Map::~Map()
+{
+	if(city_map != nullptr && terrain_map != nullptr) {
+		for(int i=0; i<width; i++) {
+			delete [] city_map[i];
+			delete [] terrain_map[i];
+		}
+		delete [] city_map;
+		delete [] terrain_map;
+	}
 }
 
 int Map::occupy(Point p, int team)
@@ -41,20 +53,14 @@ int Map::occupy(Point p, int team)
 	if(it != cities.end()) it->owner = team;
 }
 
-int Map::count_cities(size_t **image)
+int Map::count_cities(char** cm)
 {
-	Point p;
-	size_t dot = 0;
 	City ct;
-	for (size_t y = 0; y < height; y++) {
-		for (size_t x = 0; x < width; x++) {
-			p.x = x; p.y = y;
-			if(image[x][y] & 0xff == 0xff) {//생산가능한 지형은 모두 블루값이 0xff임.
-				dot = (image[x][y] & 0xff00) >> 2;
-				if (find(cities.begin(), cities.end(), dot) == cities.end()) {//operator==구현 
-					ct.identifier = dot;
-					cities.push_back(ct);
-				}
+	for (size_t x = 0; x < width; x++) {
+		for (size_t y = 0; y < height; y++) {
+			if (find(cities.begin(), cities.end(), cm[x][y]) == cities.end()) {//operator==구현 
+				ct.identifier = cm[x][y];//include 0
+				cities.push_back(ct);
 			}
 		}
 	}
@@ -68,8 +74,7 @@ bool Map::in_city(Point p)
 
 City& Map::get_city(Point p) 
 {
-	int id = city_map[p.x][p.y];
-	return *find(cities.begin(), cities.end(), id);
+	return *find(cities.begin(), cities.end(), city_map[p.x][p.y]);
 }
 	
 
@@ -100,19 +105,6 @@ int Map::geo_effect(Unit& u)
 	}
 }
 		
-	
-Map::~Map()
-{
-	if(city_map != nullptr && terrain_map != nullptr) {
-		for(int i=0; i<width; i++) {
-			delete [] city_map[i];
-			delete [] terrain_map[i];
-		}
-		delete city_map;
-		delete terrain_map;
-	}
-}
-
 void Map::deployUnit(Unit &u, Point p, float h) 
 {
 	City& c = get_city(p);
@@ -135,13 +127,6 @@ int Map::generate_recon() const
 		}
 	}
 	return 0;
-}
-
-int Map::get_log2(int cc)
-{
-	int i=1;//to get log 2 cc
-	for (int j=2; j<cc; j *= 2) i++;
-	return i;
 }
 
 TerrainType Map::get_terrain_type(Point p) const

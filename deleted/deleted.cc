@@ -357,4 +357,10 @@ Terrain_data::~Terrain_data()
 {
 	if(tmap != nullptr) delete [] tmap;
 }
+int Map::get_log2(int cc)
+{
+	int i=1;//to get log 2 cc
+	for (int j=2; j<cc; j *= 2) i++;
+	return i;
+}
 

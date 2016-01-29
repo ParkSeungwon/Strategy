@@ -29,7 +29,7 @@ set showcmd
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 set tabstop=4
 set termencoding=utf-8
-set window=55
+set window=54
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -40,16 +40,17 @@ endif
 set shortmess=aoO
 badd +27 ~/Programming/Strategy/terrain_data.cc
 badd +15 ~/Programming/Strategy/terrain_data.h
-badd +0 ~/Programming/Strategy/bitmap.cc
-badd +0 ~/Programming/Strategy/bitmap.h
-badd +0 ~/Programming/Strategy/Unit.cc
+badd +1 ~/Programming/Strategy/bitmap.cc
+badd +1 ~/Programming/Strategy/bitmap.h
+badd +1 ~/Programming/Strategy/Unit.cc
 badd +10 ~/Programming/Strategy/Unit.h
-badd +0 ~/Programming/Strategy/map.cc
-badd +0 ~/Programming/Strategy/map.h
-badd +0 ~/Programming/Strategy/Weapon.cc
-badd +0 ~/Programming/Strategy/Weapon.h
-badd +0 ~/Programming/Strategy/point.cc
-badd +0 ~/Programming/Strategy/time.cc
+badd +1 ~/Programming/Strategy/map.cc
+badd +1 ~/Programming/Strategy/map.h
+badd +1 ~/Programming/Strategy/Weapon.cc
+badd +10 ~/Programming/Strategy/Weapon.h
+badd +1 ~/Programming/Strategy/point.cc
+badd +1 ~/Programming/Strategy/time.cc
+badd +658 ~/Programming/Strategy/1win.vim
 args Weapon.h
 edit ~/Programming/Strategy/terrain_data.cc
 set splitbelow splitright
@@ -162,12 +163,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 32 - ((31 * winheight(0) + 27) / 54)
+5,5fold
+5,10fold
+13,18fold
+let s:l = 26 - ((25 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-32
-normal! 033|
+26
+normal! 0
 tabedit ~/Programming/Strategy/terrain_data.h
 set splitbelow splitright
 set nosplitbelow
@@ -396,7 +400,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 183 - ((54 * winheight(0) + 27) / 55)
+let s:l = 183 - ((53 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -630,7 +634,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 97 - ((12 * winheight(0) + 27) / 55)
+let s:l = 97 - ((12 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -747,7 +751,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 32 - ((7 * winheight(0) + 27) / 55)
+let s:l = 32 - ((7 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -864,7 +868,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 121 - ((0 * winheight(0) + 27) / 55)
+let s:l = 121 - ((0 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -981,7 +985,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 30 - ((29 * winheight(0) + 27) / 55)
+let s:l = 30 - ((28 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1098,7 +1102,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 52 - ((33 * winheight(0) + 27) / 55)
+let s:l = 52 - ((32 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1215,12 +1219,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 11 - ((10 * winheight(0) + 27) / 55)
+let s:l = 11 - ((10 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 11
-normal! 05|
+normal! 0
 tabedit ~/Programming/Strategy/point.cc
 set splitbelow splitright
 set nosplitbelow
@@ -1332,7 +1336,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 17 - ((16 * winheight(0) + 27) / 55)
+let s:l = 17 - ((16 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1449,13 +1453,13 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 17 - ((16 * winheight(0) + 27) / 55)
+let s:l = 17 - ((16 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 17
 normal! 019|
-tabnext 7
+tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

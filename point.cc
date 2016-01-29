@@ -17,8 +17,7 @@ float Point::operator^(Point p) const//distance
 
 float Point::operator%(Point p) const//angle to p
 {
-	std::complex<float> c(p.x-x, p.y-y);
-	return std::arg(c);
+	return std::arg(std::complex<float>(p.x - x, p.y - y));
 }
 
 

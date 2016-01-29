@@ -18,8 +18,7 @@ public:
 class Map : public MapInterface
 {
 private:
-	int count_cities(size_t** image);
-	static int get_log2(int i);
+	int count_cities(char** city_map);
 	bool in_city(Point p);
 	City& get_city(Point p); 
 	
