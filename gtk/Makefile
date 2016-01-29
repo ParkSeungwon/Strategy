@@ -8,7 +8,7 @@ POBJ = $(wildcard ../*.o)
 
 all : show 
 
-show : $(OBJ)
+show : $(OBJ) $(POBJ)
 	g++ -o show $(OBJ) $(POBJ) $(GTKLIB) 
 #./show
 

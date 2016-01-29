@@ -34,10 +34,11 @@ Terrain_data Darea::open_map_file(string mp)
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
+	auto ppp = map->get_pixels();
 
 	//prepare terrain data for model
 	mp.replace(mp.size()-3, 3, "ter");
-	Glib::RefPtr<Gdk::Pixbuf> ter = Gdk::Pixbuf::create_from_file(mp);
+	Glib::RefPtr<Gdk::Pixbuf> ter = map->copy();//Gdk::Pixbuf::create_from_file(mp);
 	if(ter->get_width() != width || ter->get_height() != height) throw 3;
 	auto r = ter->get_rowstride();
 	auto n = ter->get_n_channels();
@@ -48,7 +49,7 @@ Terrain_data Darea::open_map_file(string mp)
 	Terrain_data ret(width, height);
 	for(int y=0; y<height; y++) {
 		for(int x=0; x<width; x++) {
-			for(int i=0; i<4; i++) ret.pixel(x, y)[i] = fp(x, y)[i];
+			for(int i=0; i<4; i++) ret.pixel(x, height - y - 1)[i] = fp(x, y)[i];
 		}
 	}
 	

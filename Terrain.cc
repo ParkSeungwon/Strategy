@@ -1,5 +1,8 @@
 #include "Terrain.h"
+#include <iostream>
+#include "Util.h"
 using namespace std;
+using namespace Glob;
 
 //#include <ifstream>
 const float Terrain::move_penalty[4][14] = {
@@ -9,22 +12,29 @@ const float Terrain::move_penalty[4][14] = {
 	{0, 0, 0, 1.3, 0, 0, 0, 1, 0, 0, 0, 0, 1.3, 0}//sea
 };
 
-const unsigned int Terrain::color_code[14] = { 
-	0xff00ff,///<분홍색 
-	0xaa00ff,///<보라색
-	0x5500ff,///<연보라
-	0xff,///<파랑
-	0xff7000, //갈색
-	0x7f00,//진녹색
-	0xffff00,//노란색
-	0x827f00,//어두운 노란색
-	0x7f, //짙은 파란색
-	0x7f7f,
-	0xff00,//녹색
-	0x0, //검은색
-	0xff0000,//빨강
-	0x7f0000//짙은 붉은색
+const char Terrain::color_code[14][3] = { 
+	{0xff, 0x00, 0xff},///<분홍색city 
+	{0xaa, 0x00, 0xff},///<보라색capital
+	{0x55, 0x00, 0xff},///<연보라airport
+	{0x00, 0x00, 0xff},///<파랑harbor
+	{0xff, 0x70, 0x00}, //갈색mountain
+	{0x00, 0x7f, 0x00},//진녹색forest
+	{0xff, 0xff, 0x00},//노란색desert
+	{0x00, 0x00, 0x7f}, //짙은 파란색sea
+	{0x00, 0xff, 0x00},//녹색field
+	{0x00, 0x7f, 0x7f},//teal road
+	{0x82, 0x7f, 0x00},//어두운 노란색swamp
+	{0xff, 0x00, 0x00},//빨강fort
+	{0x00, 0x00, 0x00},//검은색 river
+	{0x7f, 0x00, 0x00}//짙은 붉은색fort
 };
+
+const string Terrain::name[14] = {
+	"city", "capital", "airport", "harbor", "mountain", "forest", "desert", 
+	"sea", "field", "road", "swamp", "hill", "river", "fort"
+};
+
+
 
 const float Terrain::evade_bonus[4][14] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},//air
@@ -33,30 +43,15 @@ const float Terrain::evade_bonus[4][14] = {
 	{1, 1, 1, 1.1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-Glob::TerrainType Terrain::get_terraintype_by_color(unsigned int code)
+TerrainType Terrain::get_terraintype_by_color(char r, char g, char b)
 {
-	int i = 0;
-	code = code & 0x000000ff;
-	code = code >> 4;
-	switch(code) {
-		case 0xff00ff : i++;//분홍색
-		case 0xaa00ff : i++; //보라색
-		case 0x5500ff : i++;//연보라
-		case 0xff : i++; //파랑
-		case 0xff7000 : i++; //갈색
-		case 0x7f00 : i++; //진녹색
-		case 0xffff00 : i++; //노란색
-		case 0x827f00 : i++;//어두운 노란색
-		case 0x7f : i++;//짙은 파란색
-		case 0x7f7f : i++; 
-		case 0xff00 : i++;//녹색
-		case 0x0 : i++; //검은색
-		case 0xff0000: i++; //빨강
-		case 0x7f0000: i++;//짙은 붉은색
-		default : ; 
+	for(int i=0; i<14; i++) {
+		if(color_code[i][0] == r && color_code[i][1] == g && color_code[i][2] == b) 
+			return static_cast<TerrainType>(i);
 	}
-	return static_cast<Glob::TerrainType>(14-i);
+	return TerrainType::river;
 }
+
 	
 float Terrain::get_move_penalty(Glob::TerrainType tt, Glob::UnitType ut) 
 {

@@ -34,7 +34,7 @@ Win::Win() :
 
 bool Win::on_button_press_event(GdkEventButton* e)
 {
-	label_change(e->x, e->y, e->button);
+	label_change(e->x, area.get_height() - e->y - 1, e->button);
 }
 
 bool Win::on_key_press_event(GdkEventKey* e)
@@ -46,22 +46,8 @@ bool Win::on_key_press_event(GdkEventKey* e)
 
 int Win::label_change(int x, int y, int bt)
 {
-	string s;
-	switch (time.get_terrain_type(Point(x, y))) {
-		case TerrainType::city : 
-			s = "city";
-			break;
-		case TerrainType::capital :
-			s = "capital";
-			break;
-		case TerrainType::sea :
-			s = "sea";
-			break;
-		default:
-			s = "river";
-	}
-
-	s += to_string(x);
+	string s = Terrain::name[static_cast<int>(time.get_terrain_type(Point(x, y)))];
+	s += "\n" + to_string(x);
 	s += "\n" + to_string(y);
 	s += "\n" + to_string(bt);
 	label1.set_text(s);

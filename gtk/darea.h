@@ -15,6 +15,7 @@ public:
 	void refresh();
 	void insert_to_draw(int x, int y, int rmin, int rmax, float angle_from, 
 			float angle_to, double r, double g, double b, double a);
+	int get_height() {return height;}
 
 protected:
 	struct To_draw {

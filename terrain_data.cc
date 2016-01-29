@@ -5,7 +5,7 @@ Terrain_data::Terrain_data(int w, int h)
 {
 	width = w;
 	height = h;
-	tmap = new char[w * h * 4];
+	tmap = new char[w * h * 3];
 }
 
 Terrain_data::Terrain_data(Terrain_data&& tr)
@@ -18,7 +18,7 @@ Terrain_data::Terrain_data(Terrain_data&& tr)
 
 char* Terrain_data::pixel(unsigned x, unsigned y)
 { 
-	return tmap + 4 * (y * width + x);
+	return tmap + 3 * (y * width + x);
 }
 
 Terrain_data::Terrain_data()
