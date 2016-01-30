@@ -12,7 +12,7 @@ all : $(OBJ)
 test : test.cc
 	g++ -g -std=c++11 -fmax-errors=5 -o test test.cc
 	
-%.o : %.cc %.h
+%.o : %.cc 
 	$(CC) $(C_OPTION) $<
 
 clean :

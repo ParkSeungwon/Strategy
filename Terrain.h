@@ -3,7 +3,7 @@
 #include <string>
 
 namespace Glob { 
-	enum class TerrainType;
+	enum class TerrainType : char;
 	enum class UnitType;
 }
 class Unit;

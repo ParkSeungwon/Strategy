@@ -6,7 +6,6 @@
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
-#include "bitmap.h"
 using namespace std;
 using namespace Glob;
 

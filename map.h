@@ -7,7 +7,7 @@ class Point;
 class Bitmap;
 class City;
 class Terrain_data;
-namespace Glob {enum class TerrainType;}
+namespace Glob {enum class TerrainType : char;}
 
 class MapInterface 
 {

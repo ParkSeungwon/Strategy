@@ -11,7 +11,7 @@ class Weapon;
 class Airport;
 namespace Glob { 
 	enum class UnitType;
-	enum class TerrainType;
+	enum class TerrainType : char;
 }
 
 class Unit : public Waypoint
