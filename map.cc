@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <iostream>
 #include "Weapon.h"
-#include "Terrain.h"
 #include "map.h"
 #include "Unit.h"
 #include "Util.h"
@@ -51,8 +50,7 @@ Map::~Map()
 
 int Map::occupy(Point p, int team)
 {
-	auto it = find(cities.begin(), cities.end(), city_map[p.x][p.y]);
-	if(it != cities.end()) it->owner(team);
+	get_city(p).owner(team);
 }
 
 int Map::count_cities()
@@ -60,12 +58,8 @@ int Map::count_cities()
 	City ct;
 	for (size_t x = 0; x < width; x++) {
 		for (size_t y = 0; y < height; y++) {
-			if (count(cities.begin(), cities.end(), city_map[x][y]) == 0) {//operator==구현 
-				ct.identifier(city_map[x][y]);//include 0
-				std::cout << "inserting " << city_map[x][y] << std::endl;
-				ct.ttype(terrain_map[x][y]); 
-				cities.push_back(ct);
-			}
+			ct.ttype(terrain_map[x][y]); 
+			cities.emplace(city_map[x][y], ct);
 		}
 	}
 //	for(auto& a : cities) std::cout << std::dec << a.identifier() << " ";
@@ -80,7 +74,7 @@ bool Map::in_city(Point p)
 
 City& Map::get_city(Point p) 
 {
-	return *find(cities.begin(), cities.end(), city_map[p.x][p.y]);
+	return cities.find(city_map[p.x][p.y])->second;
 }
 	
 

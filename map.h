@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
+#include <unordered_map>
 #include <memory>
+#include "Terrain.h"
 
 class Unit;
 class Point;
 class Bitmap;
-class City;
 class Terrain_data;
 namespace Glob {enum class TerrainType : char;}
 
@@ -38,7 +39,8 @@ public:
 	int geo_effect(Unit& u);
 
 	std::vector<std::shared_ptr<Unit>> deployedUnits;
-	std::vector<City> cities;
+//	std::vector<City> ci;
+	std::unordered_map<char, City> cities;
 	void deployUnit(Unit &unit, Point p, float heading_toward);
 	Glob::TerrainType get_terrain_type(Point p) const;
 };
