@@ -79,7 +79,7 @@ void Win::on_open_click()
 		//Notice that this is a std::string, not a Glib::ustring.
 		std::string filename = dialog.get_filename();
 		std::cout << "File selected: " <<  filename << std::endl;
-		time.init_map(area.open_map_file(filename), 2);
+		cout << time.init_map(area.open_map_file(filename));
     }
 }
 

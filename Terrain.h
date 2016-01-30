@@ -28,11 +28,21 @@ public:
 
 class City : public Terrain {
 public:
-	bool operator==(char id) const {return id == identifier;}
+	bool operator==(char id) const {return id == identifier_;}
+	void ttype(Glob::TerrainType tt) {ttype_ = tt;}
+	Glob::TerrainType ttype() {return ttype_;}
+	void identifier(char id) {identifier_ = id;}
+	char identifier() {return identifier_;}
+	int owner() {return owner_;}
+	void owner(int o) {owner_ = o;}
+	int ally() {return ally_;}
+	void ally(int a) {ally_ = a;}
 
-	int owner;
-	int ally;
-	char identifier;//connected pixels have same identifier, because they are one city
+protected:
+	int owner_;
+	int ally_;
+	char identifier_;//connected pixels have same identifier, because they are one city
+	Glob::TerrainType ttype_;
 };
 
 class Capital : public City {

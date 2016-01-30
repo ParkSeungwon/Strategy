@@ -13,31 +13,31 @@ int Weapon::operator + (const Unit &e) const
 {
 	if(e.get_currentHealth() <= 0) return -10004;
 	switch(preference) {
-		case HIGH_DAMAGE:
-			switch(e.get_unit_type()) {
-				case UnitType::Air:
-					return firePower * hitRatioVSAir * e.get_evadeRatio() / 100;
-				case UnitType::Infantry:
-					return firePower * hitRatioVsInfantry * e.get_evadeRatio() /100;
-				case UnitType::Armor:
-					return firePower * hitRatioVsArmor * e.get_evadeRatio() /100;
-				default:
-					return firePower * hitRatioVsShip * e.get_evadeRatio() / 100;
-			}
-		case LOW_HEALTH: return  10000 - e.get_currentHealth();
-		case EXPENSIVE: return e.get_unitPrice();
-		case HIGH_RATIO:
-			switch(e.get_unit_type()) {
-				case UnitType::Air:
-					return hitRatioVSAir * e.get_evadeRatio() / 100;
-				case UnitType::Infantry:
-					return hitRatioVsInfantry * e.get_evadeRatio() /100;
-				case UnitType::Armor:
-					return hitRatioVsArmor * e.get_evadeRatio() /100;
-				default:
-					return hitRatioVsShip * e.get_evadeRatio() / 100;
-			}
-		case CHEAP: return 10000 - e.get_unitPrice();
+	case HIGH_DAMAGE:
+		switch(e.get_unit_type()) {
+		case UnitType::Air:
+			return firePower * hitRatioVSAir * e.get_evadeRatio() / 100;
+		case UnitType::Infantry:
+			return firePower * hitRatioVsInfantry * e.get_evadeRatio() /100;
+		case UnitType::Armor:
+			return firePower * hitRatioVsArmor * e.get_evadeRatio() /100;
+		default:
+			return firePower * hitRatioVsShip * e.get_evadeRatio() / 100;
+		}
+	case LOW_HEALTH: return  30000 - e.get_currentHealth();
+	case EXPENSIVE: return e.get_unitPrice();
+	case HIGH_RATIO:
+		switch(e.get_unit_type()) {
+		case UnitType::Air:
+			return hitRatioVSAir * e.get_evadeRatio() / 100;
+		case UnitType::Infantry:
+			return hitRatioVsInfantry * e.get_evadeRatio() /100;
+		case UnitType::Armor:
+			return hitRatioVsArmor * e.get_evadeRatio() /100;
+		default:
+			return hitRatioVsShip * e.get_evadeRatio() / 100;
+		}
+	case CHEAP: return 30000 - e.get_unitPrice();
 	}
 }
 
