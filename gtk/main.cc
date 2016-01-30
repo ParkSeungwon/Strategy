@@ -1,8 +1,13 @@
 #include <string>
 #include <iostream>
+#include "../point.h"
+#include "../Terrain.h"
 #include "main.h"
+#include "../terrain_data.h"
+#include "../Util.h"
 using namespace Gtk;
 using namespace std;
+using namespace Glob;
 
 Win::Win() :
    	bt1("OK"), bt2("cancel"), bt3("open"), box2(ORIENTATION_VERTICAL), label1("라벨") 
@@ -16,7 +21,7 @@ Win::Win() :
 	box1.pack_start(swin);
     box2.pack_start(bt1, PACK_SHRINK);
     box2.pack_start(bt2, PACK_SHRINK);
-	box2.pack_start(bt3, PACK_SHRINK);
+    box2.pack_start(bt3, PACK_SHRINK);
 	box2.pack_start(label1, PACK_SHRINK);
  //   cout << "높이 " << area.height << endl;
  //   area.set_size_request(area.width, area.height);
@@ -29,28 +34,29 @@ Win::Win() :
 
 bool Win::on_button_press_event(GdkEventButton* e)
 {
-	label_change(e->x, e->y, e->button);
+	label_change(e->x, area.get_height() - e->y - 1, e->button);
 }
 
 bool Win::on_key_press_event(GdkEventKey* e)
 {
 	cout << "key : " << e->keyval << endl;
+	label1.set_text(to_string(e->keyval));
 	return false;
 }
 
-int Win::label_change(int x, int y, int b)
+int Win::label_change(int x, int y, int bt)
 {
-	string s;
-	s = to_string(x);
+	string s = Terrain::name[static_cast<int>(time.get_terrain_type(Point(x, y)))];
+	s += "\n" + to_string(x);
 	s += "\n" + to_string(y);
-	s += "\n" + to_string(b);
+	s += "\n" + to_string(bt);
 	label1.set_text(s);
 	return s.size();
 }
 
 void Win::on_open_click()
 {
-	FileChooserDialog dialog("Please choose a map file", FILE_CHOOSER_ACTION_OPEN);
+	Gtk::FileChooserDialog dialog("Please choose a file", Gtk::FILE_CHOOSER_ACTION_OPEN);
 	dialog.set_transient_for(*this);
 
 	//Add response buttons the the dialog:
@@ -60,53 +66,28 @@ void Win::on_open_click()
 	//Add filters, so that only certain file types can be selected:
 
 	auto filter_any = Gtk::FileFilter::create();
-	filter_any->set_name("map files");
-	filter_any->add_pattern("*.png");
+	filter_any->set_name("Map files");
+	filter_any->add_pattern("*.map");
 	dialog.add_filter(filter_any);
-
-	auto filter_text = Gtk::FileFilter::create();
-	filter_text->set_name("Text files");
-	filter_text->add_mime_type("text/plain");
-	dialog.add_filter(filter_text);
-
-	auto filter_cpp = Gtk::FileFilter::create();
-	filter_cpp->set_name("C/C++ files");
-	filter_cpp->add_mime_type("text/x-c");
-	filter_cpp->add_mime_type("text/x-c++");
-	filter_cpp->add_mime_type("text/x-c-header");
-	dialog.add_filter(filter_cpp);
-
 	//Show the dialog and wait for a user response:
 	int result = dialog.run();
 
 	//Handle the response:
-	switch(result) {
-    case Gtk::RESPONSE_OK: 
-		{//to evade variable crossing. filename var will be confined to this {}
-			std::cout << "Open clicked." << std::endl;
+	if(result == Gtk::RESPONSE_OK) {
+		std::cout << "Open clicked." << std::endl;
 
-			//Notice that this is a std::string, not a Glib::ustring.
-			std::string filename = dialog.get_filename();
-			std::cout << "File selected: " <<  filename << std::endl;
-			area.open_map_file(filename, filename);
-			terrain_data = area.return_terrain_data();
-	    	break;
-		}
-    case Gtk::RESPONSE_CANCEL:
-	    std::cout << "Cancel clicked." << std::endl;
-    	break;
-    default:
-	    std::cout << "Unexpected button clicked." << std::endl;
-    	break;
-	}
+		//Notice that this is a std::string, not a Glib::ustring.
+		std::string filename = dialog.get_filename();
+		std::cout << "File selected: " <<  filename << std::endl;
+		time.init_map(area.open_map_file(filename), 2);
+    }
 }
 
 void Win::on_button_click()
 {
 	area.clear_map();
 	area.paste_pix(100 + i_++, 1900, "units/Americans/bomber_hb.png", 1 + f_++);
-	area.paste_pix(500, 1900, "units/Canadians/battleship_hit.png", M_PI);
-	area.paste_pix(500, 1700, "units/Chinese/chineseInfantry.png", M_PI/4);
+	area.paste_pix(500, 1900, "units/Chinese/battlecruiser.png", M_PI);
     // force our program to redraw the entire clock.
 	area.refresh();
 }
@@ -121,8 +102,9 @@ void Win::on_cancel_click()
 int main(int argc, char** argv)
 {
     auto app = Application::create(argc, argv, "");
-
-    Win win;
+//	Time time;
+	Win win;
+//	Control control(win.area, time);
     return app->run(win);
 }
 

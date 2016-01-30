@@ -7,12 +7,7 @@ class WhereAbout;
 class Weapon 
 {
 public:
-	enum Preference {LOW_HEALTH, HIGH_DAMAGE, HIGH_RATIO, EXPENSIVE, CHEAP, NEAR}; 
-	Weapon();
-	virtual ~Weapon();
-	
-	Clip* fire_range_clip;
-	void adjust_range_clip(const WhereAbout &wh) const;
+	enum Preference {LOW_HEALTH, HIGH_DAMAGE, HIGH_RATIO, EXPENSIVE, CHEAP}; 
 	
 	int operator + (const Unit& enemy) const;//target return expected value regards to preference 
 	int operator >> (Unit &enenmy);		//공격 함수
@@ -23,10 +18,10 @@ public:
 	void reload();
 
 	//getter
-	int get_shootingRangeMax() {return shootingRangeMax;}
-	int get_shootingRangeMin() {return shootingRangeMin;}
-	int get_shootingAngleTo() {return shootingAngleTo;}
-	int get_shootingAngleFrom() {return shootingAngleFrom;}
+	int get_shootingRangeMax() const {return shootingRangeMax;}
+	int get_shootingRangeMin() const {return shootingRangeMin;}
+	int get_shootingAngleTo() const {return shootingAngleTo;}
+	int get_shootingAngleFrom() const {return shootingAngleFrom;}
 
 protected:
 	Preference preference;

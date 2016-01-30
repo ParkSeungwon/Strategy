@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <string>
 
 namespace Glob { 
 	enum class TerrainType;
@@ -11,13 +12,13 @@ class Terrain {
 public :
 	static float get_move_penalty(Glob::TerrainType tt, Glob::UnitType ut);
 	static float get_evade_bonus(Glob::TerrainType tt, Glob::UnitType ut); 
-	static Glob::TerrainType get_terraintype_by_color(unsigned int code);
+	static Glob::TerrainType get_terraintype_by_color(char r, char g, char b);
+	const static std::string name[14];
 
 protected :
 	const static float move_penalty[4][14]; 
 	const static float evade_bonus[4][14]; 
-	const static unsigned int color_code[14]; 
-
+	const static char color_code[14][3]; 
 };
 
 class Land : public Terrain {
@@ -27,11 +28,11 @@ public:
 
 class City : public Terrain {
 public:
-	bool operator==(size_t id) const {return id == identifier;}
+	bool operator==(char id) const {return id == identifier;}
 
 	int owner;
 	int ally;
-	int identifier;//connected pixels have same identifier, because they are one city
+	char identifier;//connected pixels have same identifier, because they are one city
 };
 
 class Capital : public City {

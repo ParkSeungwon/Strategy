@@ -327,4 +327,63 @@ Gtk::FileChooserDialog dialog("Please choose a folder",
     	break; 
 	}
 
+Terrain_data Darea::return_terrain_data()
+{
+	Terrain_data td;
+	td.w = terrain->get_width();
+	td.h = terrain->get_height();
+	int r = terrain->get_rowstride();
+	int n = terrain->get_n_channels();
+	unsigned char* p = terrain->get_pixels();
+	unsigned char* q;
+	td.tmap = new size_t[td.h * td.w];
+	size_t tmp, dot;
+	for(int y=0; y<td.h; y++) {
+		for(int x=0; x<td.w; x++) {
+			q = p + y * r + x * n;
+			tmp = q[0];
+		   	tmp << 24;
+			dot = tmp;
+			tmp = q[1];
+			tmp << 16;
+			dot |= tmp;
+			tmp = q[2];
+			tmp << 8;
+			dot |= tmp;
+			tmp = q[3];
+			dot |= tmp;
+			td.tmap[y*td.w + x] = dot; 
+		}
+	}
+	return td;
+}
+
+Terrain_data::Terrain_data(Terrain_data&& tr)
+{
+	w = tr.w;
+	h = tr.h;
+	tmap = tr.tmap;
+	tr.tmap = nullptr;
+}
+
+Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
+{
+	w = tr.w;
+	h = tr.h;
+	delete tmap;
+	tmap = tr.tmap;
+	tr.tmap = nullptr;
+	return *this;
+}
+
+Terrain_data::~Terrain_data()
+{
+	if(tmap != nullptr) delete [] tmap;
+}
+int Map::get_log2(int cc)
+{
+	int i=1;//to get log 2 cc
+	for (int j=2; j<cc; j *= 2) i++;
+	return i;
+}
 

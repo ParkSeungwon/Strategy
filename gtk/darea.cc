@@ -4,10 +4,15 @@
 #include <complex>
 #include "darea.h"
 #include "../file.h"
+<<<<<<< HEAD
+=======
+#include "../terrain_data.h"
+>>>>>>> rerere
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;
 
+<<<<<<< HEAD
 Darea::Darea()
 {
 	add_events(Gdk::BUTTON_PRESS_MASK);
@@ -17,11 +22,24 @@ Darea::Darea()
 	map_backup_ = map->copy();
     terrain = Gdk::Pixbuf::create_from_file("car.png");
 
+=======
+
+Darea::Darea() 
+{
+	add_events(Gdk::BUTTON_PRESS_MASK);
+	add_events(Gdk::KEY_PRESS_MASK);
+    map = Gdk::Pixbuf::create_from_file("car.png");
+	
+>>>>>>> rerere
 	File f;
 	f.find_all_ext("units", ".png");
 	for(auto& a : f.file_names) {
 		unit_png.insert({a, Gdk::Pixbuf::create_from_file(a)});
+<<<<<<< HEAD
 		cout << "opening " << a << endl;
+=======
+		cout << "opening file " << a << endl;
+>>>>>>> rerere
 	}
 }
 
@@ -35,23 +53,41 @@ int Darea::open_map_file(string mp, string tr)
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
+<<<<<<< HEAD
 	refresh();
 	return 0;
+=======
+>>>>>>> rerere
 }
 
-//bool Darea::on_button_press_event(GdkEventButton* e)
-//{
-//	cout << "in area x " << e->x << endl;
-//	cout << "in area y " << e->y << endl;
-//	cout << "button : " << e->button << endl;
-//	return false;//to send signal to parent widget
-//}
-//
-//bool Darea::on_key_press_event(GdkEventKey* e)
-//{
-//	cout << "key : " << e->keyval << endl;
-//	return false;
-//}
+Terrain_data Darea::open_map_file(string mp)
+{
+	map = Gdk::Pixbuf::create_from_file(mp);
+	map_backup_ = map->copy();
+    width = map->get_width();
+    height = map->get_height();
+	set_size_request(width, height);
+	auto ppp = map->get_pixels();
+
+	//prepare terrain data for model
+	mp.replace(mp.size()-3, 3, "ter");
+	Glib::RefPtr<Gdk::Pixbuf> ter = map->copy();//Gdk::Pixbuf::create_from_file(mp);
+	if(ter->get_width() != width || ter->get_height() != height) throw 3;
+	auto r = ter->get_rowstride();
+	auto n = ter->get_n_channels();
+	auto p = ter->get_pixels();
+
+	auto fp = [r, n, p] (int x, int y) {return p + y * r + x * n;};
+
+	Terrain_data ret(width, height);
+	for(int y=0; y<height; y++) {
+		for(int x=0; x<width; x++) {
+			for(int i=0; i<4; i++) ret.pixel(x, height - y - 1)[i] = fp(x, y)[i];
+		}
+	}
+	
+	return ret;
+}
 
 void Darea::clear_map()
 {
@@ -151,6 +187,7 @@ Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> 
 	return q;
 }
 
+<<<<<<< HEAD
 Terrain_data Darea::return_terrain_data()
 {
 	Terrain_data td;
@@ -204,6 +241,8 @@ Terrain_data::~Terrain_data()
 {
 	if(tmap != nullptr) delete [] tmap;
 }
+=======
+>>>>>>> rerere
 
 void Darea::rotate(float& x, float& y, float rad)
 {
@@ -215,8 +254,6 @@ void Darea::rotate(float& x, float& y, float rad)
 
 bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
-//    car->composite(map, 0, 0, car->get_width() -100, car->get_height()-100, -100, -100, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
-  //  airplane->composite(map, 300, 300, airplane->get_width(), airplane->get_height(), 300, 300, 1, 1, Gdk::INTERP_NEAREST, 255);//255는 전경이 완전한 불투명. 0은 완전 투명. 알파는 투과. 오프셋과 데스트의 좌표를 같이 해야함.
 	Gdk::Cairo::set_source_pixbuf(cr, map, 0, 0);
     cr->paint();
     cr->set_line_width(10.0);
@@ -243,11 +280,18 @@ void Darea::refresh()
     }
 }
 
+<<<<<<< HEAD
 void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, 
 		double r, double g, double b, double a)
 {
 	To_draw t;
 	t.x = x;//error
+=======
+void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
+{
+	To_draw t;
+	t.x = x;
+>>>>>>> rerere
 	t.y = y;
 	t.rmin = rmin;
 	t.rmax = rmax;
