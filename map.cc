@@ -15,26 +15,43 @@ int Map::init_map(Terrain_data&& tr)
 	height = tr.height;
 
 	terrain_map = new TerrainType*[width];
-	city_map = new char*[width];
+	city_map = new unsigned char*[width];
 	for(int i=0; i<width; i++) {
 		terrain_map[i] = new TerrainType[height];
-		city_map[i] = new char[height];
+		city_map[i] = new unsigned char[height];
 	}
 
-	char* pc;
+	unsigned char* pc;
 	for(int x=0; x<width; x++) {
 		for(int y=0; y<height; y++) {
 			pc = tr.pixel(x, y);
-			if(pc[2] == (char)0xff) {//notice!! cast
+			if(pc[2] == 0xff) {//notice!! cast
 				city_map[x][y] = pc[1];
 				pc[1] = 0x0;
-			}
+			} else city_map[x][y] = 0x0;
 			terrain_map[x][y] = Terrain::get_terraintype_by_color(pc[0], pc[1], pc[2]);
 		//	std::cout << (int)terrain_map[x][y] << " " ;
 		}
 	}
 	return count_cities();	
 }	
+
+int Map::count_cities()
+{
+	City ct;
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			ct.ttype(terrain_map[x][y]); 
+			cities.emplace(city_map[x][y], ct);
+		}
+	}
+	int c = 0;
+	for(auto& a : cities) {
+		std::cout << a.first << " ";
+		if(a.second.ttype() == TerrainType::capital) c++;
+	}
+	return c;
+}
 
 Map::~Map()
 {
@@ -51,20 +68,6 @@ Map::~Map()
 int Map::occupy(Point p, int team)
 {
 	get_city(p).owner(team);
-}
-
-int Map::count_cities()
-{
-	City ct;
-	for (size_t x = 0; x < width; x++) {
-		for (size_t y = 0; y < height; y++) {
-			ct.ttype(terrain_map[x][y]); 
-			cities.emplace(city_map[x][y], ct);
-		}
-	}
-//	for(auto& a : cities) std::cout << std::dec << a.identifier() << " ";
-	return cities.size(); //count_if(cities.begin(), cities.end(), 
-		//	[](City& c){return c.ttype() == TerrainType::capital;});
 }
 
 bool Map::in_city(Point p) 

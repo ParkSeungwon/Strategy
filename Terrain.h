@@ -1,9 +1,8 @@
 #pragma once
-#include <cstddef>
 #include <string>
 
 namespace Glob { 
-	enum class TerrainType : char;
+	enum class TerrainType : unsigned char;
 	enum class UnitType;
 }
 class Unit;
@@ -12,13 +11,13 @@ class Terrain {
 public :
 	static float get_move_penalty(Glob::TerrainType tt, Glob::UnitType ut);
 	static float get_evade_bonus(Glob::TerrainType tt, Glob::UnitType ut); 
-	static Glob::TerrainType get_terraintype_by_color(char r, char g, char b);
+	static Glob::TerrainType get_terraintype_by_color(unsigned char r, unsigned char g, unsigned char b);
 	const static std::string name[14];
 
 protected :
 	const static float move_penalty[4][14]; 
 	const static float evade_bonus[4][14]; 
-	const static char color_code[14][3]; 
+	const static unsigned char color_code[14][3]; 
 };
 
 class Land : public Terrain {

@@ -7,7 +7,7 @@ namespace Glob {
 	int max(int x, int y);
 	const int OneTick = 4;
 	enum class UnitType : int {Air, Armor, Infantry, Ship};
-	enum class TerrainType : char {
+	enum class TerrainType : unsigned char {
 		city, capital, airport, harbor, mountain, forest, 
 		desert, sea, field, road, swamp, hill, river, fort
 	};
