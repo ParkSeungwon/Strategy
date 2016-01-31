@@ -77,7 +77,7 @@ bool Map::in_city(Point p)
 
 City& Map::get_city(Point p) 
 {
-	return cities.find(city_map[p.x][p.y])->second;
+	return cities[city_map[p.x][p.y]];
 }
 	
 

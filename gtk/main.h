@@ -3,6 +3,8 @@
 #include <gtkmm.h>
 #include "darea.h"
 #include "../time.h"
+class TeamSetup;
+
 class Win : public Gtk::Window
 {
 public:
@@ -24,6 +26,9 @@ protected:
 	Gtk::Box box2;
     Gtk::ScrolledWindow swin;
 	Gtk::Label label1;
+
+	std::shared_ptr<TeamSetup> teamsetup;
+	TeamSetup* ts;
 
 private:
 	int i_ = 0;

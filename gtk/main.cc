@@ -5,6 +5,7 @@
 #include "main.h"
 #include "../terrain_data.h"
 #include "../Util.h"
+#include "teamsetup.h"
 using namespace Gtk;
 using namespace std;
 using namespace Glob;
@@ -79,7 +80,7 @@ void Win::on_open_click()
 		//Notice that this is a std::string, not a Glib::ustring.
 		std::string filename = dialog.get_filename();
 		std::cout << "File selected: " <<  filename << std::endl;
-		cout << time.init_map(area.open_map_file(filename)) <<endl;
+		teamsetup = make_shared<TeamSetup>(time.init_map(area.open_map_file(filename)));
     }
 }
 
@@ -88,6 +89,7 @@ void Win::on_button_click()
 	area.clear_map();
 	area.paste_pix(100 + i_++, 1900, "units/Americans/bomber_hb.png", 1 + f_++);
 	area.paste_pix(500, 1900, "units/Chinese/battlecruiser.png", M_PI);
+	ts = new TeamSetup(8);
     // force our program to redraw the entire clock.
 	area.refresh();
 }
