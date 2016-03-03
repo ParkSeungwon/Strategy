@@ -12,7 +12,7 @@ const float Terrain::move_penalty[4][14] = {
 	{0, 0, 0, 1.3, 0, 0, 0, 1, 0, 0, 0, 0, 1.3, 0}//sea
 };
 
-const char Terrain::color_code[14][3] = { 
+const unsigned char Terrain::color_code[14][3] = { 
 	{0xff, 0x00, 0xff},///<분홍색city 
 	{0xaa, 0x00, 0xff},///<보라색capital
 	{0x55, 0x00, 0xff},///<연보라airport
@@ -43,7 +43,7 @@ const float Terrain::evade_bonus[4][14] = {
 	{1, 1, 1, 1.1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-TerrainType Terrain::get_terraintype_by_color(char r, char g, char b)
+TerrainType Terrain::get_terraintype_by_color(unsigned char r, unsigned char g, unsigned char b)
 {
 	for(int i=0; i<14; i++) {
 		if(color_code[i][0] == r && color_code[i][1] == g && color_code[i][2] == b) 

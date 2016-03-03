@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <iostream>
 #include "Weapon.h"
-#include "Terrain.h"
 #include "map.h"
 #include "Unit.h"
 #include "Util.h"
@@ -9,32 +9,49 @@
 typedef unsigned char UC;
 using namespace Glob;
 
-void Map::init_map(Terrain_data&& tr, int ally)
+int Map::init_map(Terrain_data&& tr)
 {
 	width = tr.width;
 	height = tr.height;
 
 	terrain_map = new TerrainType*[width];
-	city_map = new char*[width];
+	city_map = new unsigned char*[width];
 	for(int i=0; i<width; i++) {
 		terrain_map[i] = new TerrainType[height];
-		city_map[i] = new char[height];
+		city_map[i] = new unsigned char[height];
 	}
 
-	char* pc;
+	unsigned char* pc;
 	for(int x=0; x<width; x++) {
 		for(int y=0; y<height; y++) {
 			pc = tr.pixel(x, y);
-			if(pc[2] == (char)0xff) {//notice!! cast
+			if(pc[2] == 0xff) {//notice!! cast
 				city_map[x][y] = pc[1];
 				pc[1] = 0x0;
-			}
+			} else city_map[x][y] = 0x0;
 			terrain_map[x][y] = Terrain::get_terraintype_by_color(pc[0], pc[1], pc[2]);
 		//	std::cout << (int)terrain_map[x][y] << " " ;
 		}
 	}
-	
+	return count_cities();	
 }	
+
+int Map::count_cities()
+{
+	City ct;
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			ct.ttype(terrain_map[x][y]); 
+			cities.emplace(city_map[x][y], ct);
+		}
+	}
+	int c = 0;
+	for(auto& a : cities) {
+		std::cout << a.first << " ";
+		if(a.second.ttype() == TerrainType::capital) c++;
+	}
+	return c;
+}
 
 Map::~Map()
 {
@@ -52,22 +69,7 @@ Map::Map() {}//이것을 헤더파일에 넣을 경우 city클래스의 포워�
 
 int Map::occupy(Point p, int team)
 {
-	auto it = find(cities.begin(), cities.end(), city_map[p.x][p.y]);
-	if(it != cities.end()) it->owner = team;
-}
-
-int Map::count_cities(char** cm)
-{
-	City ct;
-	for (size_t x = 0; x < width; x++) {
-		for (size_t y = 0; y < height; y++) {
-			if (find(cities.begin(), cities.end(), cm[x][y]) == cities.end()) {//operator==구현 
-				ct.identifier = cm[x][y];//include 0
-				cities.push_back(ct);
-			}
-		}
-	}
-	return cities.size();
+	get_city(p).owner(team);
 }
 
 bool Map::in_city(Point p) 
@@ -77,7 +79,7 @@ bool Map::in_city(Point p)
 
 City& Map::get_city(Point p) 
 {
-	return *find(cities.begin(), cities.end(), city_map[p.x][p.y]);
+	return cities[city_map[p.x][p.y]];
 }
 	
 
@@ -95,7 +97,7 @@ int Map::geo_effect(Unit& u)
 		} else if(tt == TerrainType::airport && ut == UnitType::Air) ok = true;
 		else if(tt == TerrainType::harbor && ut == UnitType::Ship) ok = true;
 		
-		if(ok && c.ally == u.get_ally()) {
+		if(ok && c.ally() == u.get_ally()) {
 			u.set_supply();
 			u.set_recruit();
 		}
@@ -103,7 +105,7 @@ int Map::geo_effect(Unit& u)
 	} else u.out_of_city();
 
 	if(ut == UnitType::Air && u.get_fuel() <= 0) {
-		if(tt != TerrainType::airport || c.ally != u.get_ally()) 
+		if(tt != TerrainType::airport || c.ally() != u.get_ally()) 
 			u.set_currentHealth(-100);
 	}
 }
@@ -111,7 +113,7 @@ int Map::geo_effect(Unit& u)
 void Map::deployUnit(Unit &u, Point p, float h) 
 {
 	City& c = get_city(p);
-	u.set_team(c.owner);
+	u.set_team(c.owner());
 	
 	if(u.get_team() != 0) {//verify
 		u.heading_toward = h;

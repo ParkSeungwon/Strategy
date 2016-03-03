@@ -71,7 +71,7 @@ Terrain_data Darea::open_map_file(string mp)
 
 	//prepare terrain data for model
 	mp.replace(mp.size()-3, 3, "ter");
-	Glib::RefPtr<Gdk::Pixbuf> ter = map->copy();//Gdk::Pixbuf::create_from_file(mp);
+	Glib::RefPtr<Gdk::Pixbuf> ter = Gdk::Pixbuf::create_from_file(mp);
 	if(ter->get_width() != width || ter->get_height() != height) throw 3;
 	auto r = ter->get_rowstride();
 	auto n = ter->get_n_channels();

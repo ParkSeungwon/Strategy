@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
+#include <unordered_map>
 #include <memory>
-//#include "Terrain.h"
+#include "Terrain.h"
 
 class Unit;
 class Point;
 class Bitmap;
-class City;
 class Terrain_data;
-namespace Glob {enum class TerrainType;}
+namespace Glob {enum class TerrainType : unsigned char;}
 
 class MapInterface 
 {
@@ -19,7 +19,7 @@ public:
 class Map : public MapInterface
 {
 private:
-	int count_cities(char** city_map);
+	int count_cities();
 	bool in_city(Point p);
 	City& get_city(Point p); 
 	
@@ -28,18 +28,19 @@ protected:
 	float calculate_terrain_penalty(Unit& u) const;
 	int generate_recon() const;//return showing unit count
 	Glob::TerrainType **terrain_map = nullptr;
-	char **city_map = nullptr;///<contains city identifier
+	unsigned char **city_map = nullptr;///<contains city identifier
 	const static int maxTeam = 8;
 	int width, height;
 	
 public:
-	void init_map(Terrain_data&& tr, int ally);
+	int init_map(Terrain_data&& tr);///<return capital count
 	virtual ~Map();
 	virtual int occupy(Point p, int team);
 	int geo_effect(Unit& u);
 
 	std::vector<std::shared_ptr<Unit>> deployedUnits;
-	std::vector<City> cities;
+//	std::vector<City> ci;
+	std::unordered_map<char, City> cities;
 	void deployUnit(Unit &unit, Point p, float heading_toward);
 	Glob::TerrainType get_terrain_type(Point p) const;
 };
