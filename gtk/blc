@@ -1,2 +1,0 @@
-echo "#include \"$1\"" > tmp.cc
-g++ -c -std=c++11 tmp.cc

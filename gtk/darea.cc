@@ -4,25 +4,10 @@
 #include <complex>
 #include "darea.h"
 #include "../file.h"
-<<<<<<< HEAD
-=======
 #include "../terrain_data.h"
->>>>>>> rerere
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;
-
-<<<<<<< HEAD
-Darea::Darea()
-{
-	add_events(Gdk::BUTTON_PRESS_MASK);
-	add_events(Gdk::KEY_PRESS_MASK);
-	
-	map = Gdk::Pixbuf::create_from_file("car.png");
-	map_backup_ = map->copy();
-    terrain = Gdk::Pixbuf::create_from_file("car.png");
-
-=======
 
 Darea::Darea() 
 {
@@ -30,20 +15,15 @@ Darea::Darea()
 	add_events(Gdk::KEY_PRESS_MASK);
     map = Gdk::Pixbuf::create_from_file("car.png");
 	
->>>>>>> rerere
 	File f;
 	f.find_all_ext("units", ".png");
 	for(auto& a : f.file_names) {
 		unit_png.insert({a, Gdk::Pixbuf::create_from_file(a)});
-<<<<<<< HEAD
-		cout << "opening " << a << endl;
-=======
 		cout << "opening file " << a << endl;
->>>>>>> rerere
 	}
 }
 
-int Darea::open_map_file(string mp, string tr) 
+Terrain_data Darea::open_map_file(string mp)
 {
 //	set_can_focus(true);
 	map = Gdk::Pixbuf::create_from_file(mp);
@@ -53,11 +33,6 @@ int Darea::open_map_file(string mp, string tr)
     width = map->get_width();
     height = map->get_height();
 	set_size_request(width, height);
-<<<<<<< HEAD
-	refresh();
-	return 0;
-=======
->>>>>>> rerere
 }
 
 Terrain_data Darea::open_map_file(string mp)
@@ -187,63 +162,6 @@ Glib::RefPtr<Gdk::Pixbuf> Darea::rotate_pix_buf(const Glib::RefPtr<Gdk::Pixbuf> 
 	return q;
 }
 
-<<<<<<< HEAD
-Terrain_data Darea::return_terrain_data()
-{
-	Terrain_data td;
-	td.w = terrain->get_width();
-	td.h = terrain->get_height();
-	int r = terrain->get_rowstride();
-	int n = terrain->get_n_channels();
-	unsigned char* p = terrain->get_pixels();
-	unsigned char* q;
-	td.tmap = new size_t[td.h * td.w];
-	size_t tmp, dot;
-	for(int y=0; y<td.h; y++) {
-		for(int x=0; x<td.w; x++) {
-			q = p + y * r + x * n;
-			tmp = q[0];
-		   	tmp << 24;
-			dot = tmp;
-			tmp = q[1];
-			tmp << 16;
-			dot |= tmp;
-			tmp = q[2];
-			tmp << 8;
-			dot |= tmp;
-			tmp = q[3];
-			dot |= tmp;
-			td.tmap[y*td.w + x] = dot; 
-		}
-	}
-	return td;
-}
-
-Terrain_data::Terrain_data(Terrain_data&& tr)
-{
-	w = tr.w;
-	h = tr.h;
-	tmap = tr.tmap;
-	tr.tmap = nullptr;
-}
-
-Terrain_data& Terrain_data::operator=(Terrain_data&& tr)
-{
-	w = tr.w;
-	h = tr.h;
-	delete tmap;
-	tmap = tr.tmap;
-	tr.tmap = nullptr;
-	return *this;
-}
-
-Terrain_data::~Terrain_data()
-{
-	if(tmap != nullptr) delete [] tmap;
-}
-=======
->>>>>>> rerere
-
 void Darea::rotate(float& x, float& y, float rad)
 {
 	complex<float> a {x, y};
@@ -280,18 +198,10 @@ void Darea::refresh()
     }
 }
 
-<<<<<<< HEAD
-void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, 
-		double r, double g, double b, double a)
-{
-	To_draw t;
-	t.x = x;//error
-=======
 void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
 {
 	To_draw t;
 	t.x = x;
->>>>>>> rerere
 	t.y = y;
 	t.rmin = rmin;
 	t.rmax = rmax;
