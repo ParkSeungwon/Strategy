@@ -3,6 +3,7 @@
 #include <gtkmm.h>
 #include "darea.h"
 #include "../time.h"
+#include "../terrain_data.h"
 class TeamSetup;
 
 class Win : public Gtk::Window

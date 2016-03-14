@@ -1,4 +1,6 @@
 show
+gtk/show
+mysql/sql
 *~
 *.swp
 *.swo

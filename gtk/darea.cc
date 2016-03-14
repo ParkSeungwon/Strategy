@@ -25,18 +25,6 @@ Darea::Darea()
 
 Terrain_data Darea::open_map_file(string mp)
 {
-//	set_can_focus(true);
-	map = Gdk::Pixbuf::create_from_file(mp);
-	map_backup_ = map->copy();
-    terrain = Gdk::Pixbuf::create_from_file(tr);
-
-    width = map->get_width();
-    height = map->get_height();
-	set_size_request(width, height);
-}
-
-Terrain_data Darea::open_map_file(string mp)
-{
 	map = Gdk::Pixbuf::create_from_file(mp);
 	map_backup_ = map->copy();
     width = map->get_width();

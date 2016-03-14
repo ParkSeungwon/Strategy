@@ -8,6 +8,7 @@ gtkmmLIB = $(shell pkg-config gtkmm-3.0 --libs)
 	
 all : $(OBJ)
 	make -C gtk/
+	make -C mysql/
 
 test : test.cc
 	g++ -g -std=c++11 -fmax-errors=5 -o test test.cc
