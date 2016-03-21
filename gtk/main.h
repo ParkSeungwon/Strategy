@@ -30,7 +30,6 @@ protected:
 	Gtk::Label label1;
 
 	std::shared_ptr<TeamSetup> teamsetup;
-	TeamSetup* ts;
 
 private:
 	int i_ = 0;

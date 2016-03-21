@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <gtkmm.h>
 #include <memory>
+#include "../Util.h"//Glob::To_draw
 class Terrain_data;
 
 class Darea : public Gtk::DrawingArea
@@ -13,21 +14,15 @@ public:
 	void paste_pix(int x, int y, std::string name, float heading = 0);
 	void clear_map();
 	void refresh();
-	void insert_to_draw(int x, int y, int rmin, int rmax, float angle_from, 
-			float angle_to, double r, double g, double b, double a);
+	void insert_to_draw(const Glob::To_draw& td);
 	int get_height() {return height;}
 
 protected:
-	struct To_draw {
-		int x, y, rmin, rmax;
-		float angle_from, angle_to;
-		double color[4];
-	};
 	struct bk_pixbuf {
 		int x, y, w, h;
 	};
 	int width, height;
-	std::vector<To_draw> to_draws;
+	std::vector<Glob::To_draw> to_draws;
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
 	Glib::RefPtr<Gdk::Pixbuf> map;
 	std::unordered_map<std::string, Glib::RefPtr<Gdk::Pixbuf>> unit_png;

@@ -81,6 +81,7 @@ void Win::on_open_click()
 		std::string filename = dialog.get_filename();
 		std::cout << "File selected: " <<  filename << std::endl;
 		teamsetup = make_shared<TeamSetup>(time.init_map(area.open_map_file(filename)));
+		teamsetup->show();
     }
 }
 
@@ -89,15 +90,26 @@ void Win::on_button_click()
 	area.clear_map();
 	area.paste_pix(100 + i_++, 1900, "units/Americans/bomber_hb.png", 1 + f_++);
 	area.paste_pix(500, 1900, "units/Chinese/battlecruiser.png", M_PI);
-	ts = new TeamSetup(8);
+	//ts = new TeamSetup(8);
     // force our program to redraw the entire clock.
 	area.refresh();
 }
 
 void Win::on_cancel_click()
 {
-	area.insert_to_draw(300 + i_++*10, 300, 100, 100, 0, M_PI/2, 
-				(i_%10)/10.0, 0.4, 0.0, 0.2);
+	Glob::To_draw td;
+	td.x = 300 + i_++*10;
+	td.y = 300;
+	td.rmin = 100;
+	td.rmax = 100;
+	td.angle_from = 0;
+	td.angle_to = M_PI/2;
+	td.color[0] = (i_%10)/10.0;
+	td.color[1] = 0.4;
+	td.color[2] = 0.0;
+	td.color[3] = 0.2;
+
+	area.insert_to_draw(td);
 	area.refresh();
 }
 

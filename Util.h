@@ -11,5 +11,10 @@ namespace Glob {
 		city, capital, airport, harbor, mountain, forest, 
 		desert, sea, field, road, swamp, hill, river, fort
 	};
+	struct To_draw {
+		int x, y, rmin, rmax;
+		float angle_from, angle_to;
+		double color[4];
+	};
 };
 

@@ -171,8 +171,6 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 		cr->close_path();
 		cr->fill_preserve();
 		cr->stroke();
-		cin >> i;
-		cout << "to_draw" <<a.x << a.y << a.rmin << a.rmax << a.color << endl;
 	}
     return true;
 }
@@ -186,20 +184,9 @@ void Darea::refresh()
     }
 }
 
-void Darea::insert_to_draw(int x, int y, int rmin, int rmax, float af, float at, double r, double g, double b, double a)
+void Darea::insert_to_draw(const Glob::To_draw& td)
 {
-	To_draw t;
-	t.x = x;
-	t.y = y;
-	t.rmin = rmin;
-	t.rmax = rmax;
-	t.angle_from = af;
-	t.angle_to = at;
-	t.color[0] = r;
-	t.color[1] = g;
-	t.color[2] = b;
-	t.color[3] = a;
-	to_draws.push_back(t);
+	to_draws.push_back(td);
 }
 
 
