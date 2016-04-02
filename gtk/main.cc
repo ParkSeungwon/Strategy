@@ -6,12 +6,14 @@
 #include "../terrain_data.h"
 #include "../Util.h"
 #include "teamsetup.h"
+#include "join.h"
 using namespace Gtk;
 using namespace std;
 using namespace Glob;
 
 Win::Win() :
-   	bt1("OK"), bt2("cancel"), bt3("open"), box2(ORIENTATION_VERTICAL), label1("라벨") 
+   	bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
+	box2(ORIENTATION_VERTICAL), label1("라벨") 
 {
     set_border_width(10);
     set_default_size(900, 900);
@@ -23,6 +25,7 @@ Win::Win() :
     box2.pack_start(bt1, PACK_SHRINK);
     box2.pack_start(bt2, PACK_SHRINK);
     box2.pack_start(bt3, PACK_SHRINK);
+    box2.pack_start(bt4, PACK_SHRINK);
 	box2.pack_start(label1, PACK_SHRINK);
  //   cout << "높이 " << area.height << endl;
  //   area.set_size_request(area.width, area.height);
@@ -30,6 +33,7 @@ Win::Win() :
     bt1.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_click));
     bt2.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_cancel_click));
     bt3.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_open_click));
+	bt4.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_connect_click));
     show_all_children();
 }
 
@@ -111,6 +115,12 @@ void Win::on_cancel_click()
 
 	area.insert_to_draw(td);
 	area.refresh();
+}
+
+void Win::on_connect_click()
+{
+	joinpopup = make_shared<JoinPopup>();
+	joinpopup->show();
 }
 
 int main(int argc, char** argv)
