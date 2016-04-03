@@ -6,7 +6,7 @@ using namespace std;
 
 JoinPopup::JoinPopup()
     :label1("email :"), label2("Nickname :"), label3("tel  :"), label4("password :"),
-     label5("retype"), button1("Join"), button2("Exit"), label_message("---")
+     label5("retype :"), button1("Join"), button2("Exit"), label_message("---")
 {
     set_title("Join");
     add(vbox1);

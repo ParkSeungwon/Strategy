@@ -5,7 +5,7 @@
 #include "../time.h"
 #include "../terrain_data.h"
 class TeamSetup;
-class JoinPopup;
+class ConnectPopup;
 
 class Win : public Gtk::Window
 {
@@ -32,7 +32,7 @@ protected:
 	Gtk::Label label1;
 
 	std::shared_ptr<TeamSetup> teamsetup;
-	std::shared_ptr<JoinPopup> joinpopup;
+	std::shared_ptr<ConnectPopup> connectpopup;
 
 private:
 	int i_ = 0;

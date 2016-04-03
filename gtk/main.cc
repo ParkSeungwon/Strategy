@@ -6,7 +6,7 @@
 #include "../terrain_data.h"
 #include "../Util.h"
 #include "teamsetup.h"
-#include "join.h"
+#include "conndata.h"
 using namespace Gtk;
 using namespace std;
 using namespace Glob;
@@ -119,8 +119,8 @@ void Win::on_cancel_click()
 
 void Win::on_connect_click()
 {
-	joinpopup = make_shared<JoinPopup>();
-	joinpopup->show();
+	connectpopup = make_shared<ConnectPopup>();
+	connectpopup->show();
 }
 
 int main(int argc, char** argv)
