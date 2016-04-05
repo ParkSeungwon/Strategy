@@ -86,7 +86,7 @@ void JoinPopup::on_join_click()
 		member.engine = "ENGINE=MyISAM DEFAULT CHARSET=utf8";
 		
 		QueryData qd;
-		qd.connect("localhost", "strategy", "strategy", "strategy");//host, id, pass, database
+		qd.connect(host, "strategy", "strategy", "strategy");//host, id, pass, database
 		qd.create_table(member);
 		SqlData s = qd.select("Users", "email = '" + e + "'");
 		if(s.contents.empty()) {
