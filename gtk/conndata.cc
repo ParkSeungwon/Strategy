@@ -4,10 +4,12 @@
 #include <fstream>
 #include <gtkmm.h>
 #include "../mysql/mysqldata.h"
-using namespace std;
-
+#include "../Util.h"
 #include "join.h"
 #include "conndata.h"
+#include "interface.h"
+using namespace std;
+extern Interface* pInterface;
 
 ConnectPopup::ConnectPopup() : 
 		label1("Host name :"), label2("email addr :"), label3("Password  :"),
@@ -184,7 +186,10 @@ void ConnectPopup::on_connect_click()
 		SqlData m;
 		m = qd.select("Users", "email = '" + user + "' and password = '" + pass + "'");
 		if(m.contents.empty()) label5.set_label("Invalid!");
-		else hide();
+		else {
+			pInterface->set_user(user);
+			hide();
+		}
     }
 }
 

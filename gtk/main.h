@@ -4,14 +4,16 @@
 #include "darea.h"
 #include "../time.h"
 #include "../terrain_data.h"
+#include "interface.h"
 class TeamSetup;
 class ConnectPopup;
 
-class Win : public Gtk::Window
+class Win : public Gtk::Window, public Interface
 {
 public:
 	Win();	
 	Terrain_data terrain_data;
+	void set_user(std::string user);
 
 protected:
     Darea area;
@@ -37,5 +39,6 @@ protected:
 private:
 	int i_ = 0;
 	float f_ = 0;
+	std::string user;
 };
 

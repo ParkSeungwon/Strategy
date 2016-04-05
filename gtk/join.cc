@@ -86,14 +86,15 @@ void JoinPopup::on_join_click()
 		member.engine = "ENGINE=MyISAM DEFAULT CHARSET=utf8";
 		
 		QueryData qd;
-		qd.connect(host, "strategy", "strategy", "strategy");//host, id, pass, database
-		qd.create_table(member);
-		SqlData s = qd.select("Users", "email = '" + e + "'");
-		if(s.contents.empty()) {
-			member.contents = {e, p, "1", n, t, qd.now()};
-			qd.insert(member);
-			label_message.set_label("Done! click Exit to login.");
-		} else label_message.set_label("email exists!");
+		if(qd.connect(host, "strategy", "strategy", "strategy")) {//host, id, pass, database
+			qd.create_table(member);
+			SqlData s = qd.select("Users", "email = '" + e + "'");
+			if(s.contents.empty()) {
+				member.contents = {e, p, "1", n, t, qd.now()};
+				qd.insert(member);
+				label_message.set_label("Done! click Exit to login.");
+			} else label_message.set_label("email exists!");
+		}
 	}
 }
 

@@ -11,6 +11,8 @@ using namespace Gtk;
 using namespace std;
 using namespace Glob;
 
+Interface* pInterface;
+
 Win::Win() :
    	bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
 	box2(ORIENTATION_VERTICAL), label1("라벨") 
@@ -45,7 +47,7 @@ bool Win::on_button_press_event(GdkEventButton* e)
 bool Win::on_key_press_event(GdkEventKey* e)
 {
 	cout << "key : " << e->keyval << endl;
-	label1.set_text(to_string(e->keyval));
+	label1.set_text(to_string(e->keyval) + user);
 	return false;
 }
 
@@ -123,11 +125,17 @@ void Win::on_connect_click()
 	connectpopup->show();
 }
 
+void Win::set_user(string user)
+{
+	this->user = user;
+}
+
 int main(int argc, char** argv)
 {
     auto app = Application::create(argc, argv, "");
 //	Time time;
 	Win win;
+	pInterface = &win;
 //	Control control(win.area, time);
     return app->run(win);
 }
