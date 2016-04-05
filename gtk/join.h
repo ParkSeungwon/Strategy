@@ -4,6 +4,7 @@
 class JoinPopup : public Gtk::Window
 {
 protected:
+	std::string host, user, pass, db;
     Gtk::Entry entry1, entry2, entry3, entry4, entry5;
     Gtk::Label label1, label2, label3, label4, label5, label_message;
     Gtk::Button button1, button2;
@@ -16,7 +17,7 @@ protected:
     // MysqlMember *member;
     
 public:
-    JoinPopup();
+    JoinPopup(std::string host, std::string user, std::string pass, std::string db);
 };
 
 class ChangeAccount : public JoinPopup

@@ -190,7 +190,11 @@ void ConnectPopup::on_connect_click()
 
 void ConnectPopup::on_join_click()
 {
-	joinpopup = make_shared<JoinPopup>();
+	string host = entry1.get_text();
+	string user = entry2.get_text();
+	string pass = entry3.get_text();
+	string db = entry4.get_text();
+	joinpopup = make_shared<JoinPopup>(host, user, pass, db);
     joinpopup->set_transient_for(*this);
 	joinpopup->show();
 }

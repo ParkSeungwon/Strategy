@@ -4,11 +4,15 @@ using namespace std;
 #include "join.h"
 #include "../mysql/mysqldata.h"
 
-JoinPopup::JoinPopup()
+JoinPopup::JoinPopup(string host, string user, string pass, string db)
     :label1("email :"), label2("Nickname :"), label3("tel  :"), label4("password :"),
      label5("retype :"), button1("Join"), button2("Exit"), label_message("---")
 {
     set_title("Join");
+	this->host = host;
+	this->db = db;
+	this->user = user;
+	this->pass = pass;
     add(vbox1);
     vbox1.pack_start(hbox1);
     vbox1.pack_start(hbox2);
@@ -21,6 +25,7 @@ JoinPopup::JoinPopup()
 		 
     hbox1.pack_start(label1);
     hbox1.pack_start(entry1);
+	entry1.set_text(user);
     hbox2.pack_start(label2);
     hbox2.pack_start(entry2);
     hbox3.pack_start(label3);
@@ -28,6 +33,8 @@ JoinPopup::JoinPopup()
     
     hbox4.pack_start(label4);
     hbox4.pack_start(entry4);
+	entry4.set_text(pass);
+	entry5.set_text(pass);
     hbox5.pack_start(label5);
     hbox5.pack_start(entry5);
 	hbox_button.pack_start(button1);
@@ -104,7 +111,7 @@ string ChangeAccount::vGetNewPass() {
 }
 
 ChangeAccount::ChangeAccount(string email, string name, string tel)
-    : label6("current password:")
+    : JoinPopup("", email, "", ""), label6("current password:")
 {
     set_title("change account information");
     button1.set_label("change");
