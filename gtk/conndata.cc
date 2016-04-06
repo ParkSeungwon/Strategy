@@ -8,6 +8,7 @@
 #include "join.h"
 #include "conndata.h"
 #include "interface.h"
+#include "../tcpip.h"
 using namespace std;
 extern Interface* pInterface;
 
@@ -187,7 +188,9 @@ void ConnectPopup::on_connect_click()
 		m = qd.select("Users", "email = '" + user + "' and password = '" + pass + "'");
 		if(m.contents.empty()) label5.set_label("Invalid!");
 		else {
-			pInterface->set_user(user);
+			Client cl(host);
+			cl.send(user);
+			pInterface->set_user(cl.recv());
 			hide();
 		}
     }

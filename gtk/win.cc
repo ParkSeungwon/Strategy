@@ -126,7 +126,7 @@ void Win::on_connect_click()
 
 void Win::set_user(string user)
 {
-	this->user = user;
+	this->user += user;
 }
 
 
