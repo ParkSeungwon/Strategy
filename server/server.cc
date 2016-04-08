@@ -3,18 +3,23 @@
 #include "server.h"
 using namespace std;
 
-string GameServer::operator()(string s) {
-	
+vector<string> GameServer::logged_ids = {};//need to initialize static vector this way
+
+string GameServer::operator()(string s) 
+{
 	logged_ids.push_back(s);
 	string t;
 	for(auto& a : logged_ids) t += a;
-	cout << t << endl;
-	return t;
+	//cout << t << endl;
+	int i = 1;
+	for(auto& a : logged_ids) cout << i++ << a << endl;
+	return s;
 }
 
 int main()
 {
 	Server sv;
-	sv.start(GameServer());
+	GameServer gs;
+	sv.start(gs);
 }
 
