@@ -1,6 +1,7 @@
 show
 gtk/show
 mysql/sql
+*.x
 *~
 *.swp
 *.swo

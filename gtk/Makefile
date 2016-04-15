@@ -8,14 +8,14 @@ OBJ = $(patsubst %.cc, %.o, $(SRC))
 POBJ = $(wildcard ../*.o)
 MOBJ = $(wildcard ../mysql/*.o)
 
-all : show 
+all : show.x 
 
-show : $(OBJ) $(POBJ) $(MOBJ)
-	g++ -o show $(OBJ) $(POBJ) $(MOBJ) $(GTKLIB) -lmysqlcppconn
+show.x : $(OBJ) $(POBJ) $(MOBJ)
+	g++ -o show.x $(OBJ) $(POBJ) $(MOBJ) $(GTKLIB) -lmysqlcppconn
 #./show
 
 %.o : %.cc 
 	$(CC) $(GTKCFLAG) $(CFLAG) $<
 
 clean :
-	rm *.o
+	rm *.o show.x

@@ -10,6 +10,8 @@
 #include "tcpip.h"
 using namespace std;
 
+unordered_multimap<string, string> Server::store = {};
+
 Tcpip::Tcpip(int port) 
 {
 	memset(&server_addr, 0, sizeof(server_addr));
@@ -71,7 +73,16 @@ void Server::start(function<string(string)> functor)
 				signal(SIGALRM, timed_out);
 				while(s != end_string) {
 					s = recv();
-					send(functor(s));
+					if(s.find("store:") == 0) {//store:key,value
+						s.erase(0, 6);//key,value
+						string key = s.substr(0, s.find(","));
+						s.erase(0, key.size() + 1);
+						store.insert({key, s});//error
+						send("inserted " + key + ", " + s);//should send answer
+					} else if(s.find("list:") == 0) {
+						for(auto& a : store) s += a.first + a.second;
+						send(s);
+					} else send(functor(s));
 					alarm(time_out);
 				}
 			cout << "ending child" << endl;

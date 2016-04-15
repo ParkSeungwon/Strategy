@@ -7,7 +7,8 @@ vector<string> GameServer::logged_ids = {};//need to initialize static vector th
 
 string GameServer::operator()(string s) 
 {
-	logged_ids.push_back(s);
+	if(s == "pop") logged_ids.pop_back();
+	else logged_ids.push_back(s);
 	string t;
 	for(auto& a : logged_ids) t += a;
 	//cout << t << endl;

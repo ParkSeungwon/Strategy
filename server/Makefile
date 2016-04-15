@@ -3,18 +3,18 @@ CC = g++
 SRC = $(wildcard *.cc)
 OBJ = $(patsubst %.cc, %.o, $(SRC))
 
-all : server client
+all : server.x client.x
 
-server : server.cc $(OBJ)
-	g++ -o server server.o ../tcpip.o 
+server.x : server.cc ../tcpip.cc $(OBJ)
+	g++ -o server.x server.o ../tcpip.o 
 	
-client : client.cc $(OBJ)
-	g++ -o client client.o ../tcpip.o
+client.x : client.cc ../tcpip.cc $(OBJ)
+	g++ -o client.x client.o ../tcpip.o
 
 %.o : %.cc
 	$(CC) -c $< $(CFLAG)
 
 
 clean : 
-	rm *.o server client
+	rm *.o server.x client.x
 #	./$@

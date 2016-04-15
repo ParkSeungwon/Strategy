@@ -2,6 +2,7 @@
 #include <string>
 #include <thread>
 #include <arpa/inet.h>
+#include <unordered_map>
 
 class Tcpip 
 {
@@ -33,6 +34,7 @@ public:
 
 protected:
 	static void timed_out(int sig);
+	static std::unordered_multimap<std::string, std::string> store;
 	std::string end_string;
 	unsigned int time_out;
 };
