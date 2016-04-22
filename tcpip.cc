@@ -77,7 +77,7 @@ void Server::start(function<string(string)> functor)
 						s.erase(0, 6);//key,value
 						string key = s.substr(0, s.find(","));
 						s.erase(0, key.size() + 1);
-						store.insert({key, s});//error
+						store.insert({key, s});
 						send("inserted " + key + ", " + s);//should send answer
 					} else if(s.find("list:") == 0) {
 						for(auto& a : store) s += a.first + a.second;
@@ -85,8 +85,8 @@ void Server::start(function<string(string)> functor)
 					} else send(functor(s));
 					alarm(time_out);
 				}
-			cout << "ending child" << endl;
-			break;
+				cout << "ending child" << endl;
+				break;
 			}
 		}
 	}
