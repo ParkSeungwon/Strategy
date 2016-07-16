@@ -6,8 +6,9 @@ OBJ = $(patsubst %.cc, %.o, $(SRC))
 LIB = -L/usr/local/lib -L/usr/lib
 INC = -I/usr/local/include
 	
-sql : $(OBJ)
-	$(CC) -o sql $(OBJ) $(LIB) -lmysqlcppconn 
+all : $(OBJ)
+#sql : $(OBJ)
+#	$(CC) -o sql $(OBJ) $(LIB) -lmysqlcppconn 
 
 %.o : %.cc 
 	$(CC) $(C_OPTION) $< $(INC)

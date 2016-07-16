@@ -5,25 +5,22 @@
 using namespace std;
 using namespace Glob;
 
-Unit::Unit(Point pos, float heading) 
+Unit::Unit(string name, Point pos, float heading) 
 {
+	ifstream fin("Unit.def");
+	string s;
+	while(fin >> s) {
+		if(s == name) {
+			fin >> maxHealth >> fuelCapacity >> unitPrice >> minimumSpeed >> maximumSpeed >> intelligenceRadius >>evadeRatio;
+			break;
+		}
+	}
+	unitName = name;
 	heading_toward = heading;
 	x = pos.x; y = pos.y;
 	currentHealth = maxHealth;
 	fuel = fuelCapacity;
 	experience = 0;
-
-	ifstream fin;
-	fin.open("Unit.def");
-	string s;
-	do {
-		if (fin.eof()) throw 3; 
-		fin >> s;
-	}
-	while (s != typeid(*this).name());
-	
-	fin >> maxHealth >> fuelCapacity >> unitPrice >> minimumSpeed >> maximumSpeed >> intelligenceRadius >>evadeRatio;
-	fin.close();
 }
 
 Unit::~Unit()

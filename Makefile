@@ -1,5 +1,5 @@
 CC = g++
-C_OPTION = -g -c -std=c++11 -fmax-errors=3
+C_OPTION = -g -c -std=c++11 -fmax-errors=3 -pedantic
 SRC = $(wildcard *.cc)
 OBJ = $(patsubst %.cc, %.o, $(SRC))
 
@@ -10,9 +10,10 @@ all : $(OBJ)
 	make -C gtk/
 	make -C mysql/
 	make -C server/
+	make test
 
-test : test.cc
-	g++ -g -std=c++11 -fmax-errors=5 -o test test.cc
+test : test.cpp
+	g++ -g -std=c++11 -fmax-errors=5 -o test test.cpp $(OBJ)
 	
 %.o : %.cc 
 	$(CC) $(C_OPTION) $<
