@@ -5,7 +5,7 @@ namespace Glob {
 	float correct_angle(float theta);
 	int min(int x, int y);
 	int max(int x, int y);
-	const int OneTick = 4;
+	const int OneTick = 1;
 	enum class UnitType : int {Air, Armor, Infantry, Ship};
 	
 	enum class TerrainType : unsigned char {
@@ -19,5 +19,5 @@ namespace Glob {
 		double color[4];
 	};
 
-};
+}
 

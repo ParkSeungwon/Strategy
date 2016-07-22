@@ -160,6 +160,7 @@ float Map::calculate_terrain_penalty(Unit& u) const
 {
 	u.save();
 	u.WhereAbout::operator=(u.waypoints[u.get_cur_waypt()]);
+	//u = u.waypoints[u.get_cur_time_in_waypt()];
 	float p = calculate_terrain_penalty(u, u.get_cur_time_in_waypt() + OneTick);
 	u.restore();	
 	return p;

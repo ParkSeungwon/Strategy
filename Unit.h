@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include "Waypoint.h"
+#include"mysql/mysqldata.h"
 
 class Weapon;
 class Airport;
@@ -51,20 +52,21 @@ public :
 	void set_known_to(int i, bool b) 			{known_to[i] = b;}
 
 protected :
+	static SqlData unit_def;
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
 	std::string unitName;
-	unsigned int unitPrice;
-	unsigned int maxHealth;
+	int unitPrice;
+	int maxHealth;
 	int evadeRatio, orig_evade_ratio;//to apply terrain effect
 	int fuelCapacity;
 	int minimumTurnRadius;
 	int minimumSpeed;
 	int maximumSpeed;
-	unsigned int intelligenceRadius;
+	int intelligenceRadius;
 	int team, ally;
 	int currentHealth;
 	int fuel;
-	unsigned int experience;
+	int experience;
 	Glob::UnitType unit_type;
 	bool can_supply = false;
 	bool can_recruit = false;

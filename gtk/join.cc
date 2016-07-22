@@ -72,26 +72,12 @@ void JoinPopup::on_join_click()
 		label_message.set_label("password does not match!");
 	}
     else {
-		SqlData member;
-		member.structure =  {
-			{"email", "char(30) NOT NULL"},
-			{"password", "char(45) DEFAULT NULL"},
-			{"level", "tinyint(4) DEFAULT NULL"},
-			{"name", "varchar(45) DEFAULT NULL"},
-			{"tel", "varchar(20) DEFAULT NULL"},
-			{"date", "datetime NOT NULL"}
-		};
-		member.table_name = "Users";
-		member.extra = "primary key (email, date)";
-		member.engine = "ENGINE=MyISAM DEFAULT CHARSET=utf8";
-		
-		QueryData qd;
+		SqlQuery qd;
 		if(qd.connect(host, "strategy", "strategy", "strategy")) {//host, id, pass, database
-			qd.create_table(member);
-			SqlData s = qd.select("Users", "email = '" + e + "'");
-			if(s.contents.empty()) {
-				member.contents = {e, p, "1", n, t, qd.now()};
-				qd.insert(member);
+			qd.select("Users", "where email = '" + e + "'");
+			if(qd.SqlData::empty()) {
+				*qd.begin() = {e, p, 1, n, t, qd.now()};
+				qd.insert();
 				label_message.set_label("Done! click Exit to login.");
 			} else label_message.set_label("email exists!");
 		}

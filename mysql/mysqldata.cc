@@ -1,54 +1,71 @@
 #include <chrono>
+#include<initializer_list>
+#include<unordered_map>
 #include <ctime>
-#include <unordered_map>
 #include "mysqldata.h"
 using namespace std;
 
-bool QueryData::create_table(const SqlData& d)
+bool SqlData::is_int(int n)
 {
-	string q = "create table " + d.table_name + " (";
-	for(auto& a : d.structure) q += " " + a.first + " " + a.second + ", ";
-	q += d.extra + " ) " + d.engine + ";";
-	return myQuery(q);
+	return structure[n].second.find("INT") != string::npos;
 }
+std::vector<Any>* SqlData::begin() {return &contents[0];}
+std::vector<Any>* SqlData::end() {return &contents[contents.size()];}
 
-bool QueryData::insert(const SqlData& d)
-{
-	string q = "insert into " + d.table_name + " values (";
-	for(int i = 0; i < d.structure.size(); i++) {
-		if(d.structure[i].second.find("int(") != string::npos)//can find
-			q += d.contents[i] + ",";
-		else q += "'" + d.contents[i] + "',";
+bool SqlQuery::insert()
+{//d should be 1 record
+	auto& record = contents[0];
+	string q = "insert into " + table_name + " values (";
+	for(int i=0; i<structure.size(); i++) {
+		string s = record[i];
+		if(structure[i].second.find("INT") != string::npos) q += s + ",";
+		else q += "'" + s + "',";
 	}
 	q.back() = ')';
 	q += ";";
 	return myQuery(q);
 }
 
-SqlData QueryData::select(string table, string where)
+string SqlQuery::now()
 {
-	string q = "select * from " + table;
-	if(where != "") q += " where " + where;
-	q += ";";
-	myQuery(q);
-
-	SqlData d;
-	d.table_name = table;
-	sql::ResultSetMetaData* res_meta = res->getMetaData();
-	int c = res_meta->getColumnCount();
-	for(int i = 0; i < c; i++) {
-		d.structure.push_back({res_meta->getColumnName(i+1), 
-				res_meta->getColumnTypeName(i+1)});
-	}
-	while(res->next()) {
-		for(int i = 0; i < c; i++) {
-			d.contents.push_back(res->getString(i+1));
-		}
-	}
-	return d;
+	myQuery("select now();");
+	res->next();
+	return res->getString(1);
 }
 
-string QueryData::now()
+string SqlQuery::password(string s)
+{
+	myQuery("select password('" + s + "');");
+	res->next();
+	return res->getString(1);
+}
+
+int SqlQuery::select(string table, string where)
+{
+	string q = "select * from " + table + ' ' + where + ';';
+	myQuery(q);
+
+	table_name = table;
+	sql::ResultSetMetaData* mt = res->getMetaData();
+	int c = mt->getColumnCount();
+	structure.clear();
+	contents.clear();
+	for(int i = 0; i < c; i++) //populate structure
+		structure.push_back({mt->getColumnName(i+1), mt->getColumnTypeName(i+1)});
+	vector<Any> record;
+	while(res->next()) { //populate contents
+		record.clear();
+		for(int i = 0; i < c; i++) {
+			if(is_int(i)) record.push_back(res->getInt(i+1));
+			else record.push_back(Any(res->getString(i+1)));
+		}
+		contents.push_back(record);
+	}
+	return contents.size();
+}
+
+
+/*string SqlData::now()
 {
 	auto now = chrono::system_clock::now();
 	auto tp = chrono::system_clock::to_time_t(now);
@@ -64,6 +81,27 @@ string QueryData::now()
 	else s += t[8];
 	s += t.substr(9, 10);
 	return s;
+}*/
+
+vector<string> SqlQuery::show_tables()
+{
+	vector<string> record;
+	myQuery("show tables;");
+	while(res->next()) record.push_back(res->getString(1));
+	return record;
 }
 
+bool SqlQuery::order_lambda(const std::vector<Any>& a, 
+		const std::vector<Any>& b, std::vector<int> cols)
+{
+	int i=0;
+	while(a[abs(cols[i])-1] == b[abs(cols[i])-1] && i < cols.size()-1) i++; 
+	bool desc = false;
+	if(cols[i] < 0) {
+		cols[i] = -cols[i];
+		desc = true;
+	}
+	bool asc = a[cols[i]-1] < b[cols[i]-1];
+	return desc ? !asc : asc;
+}
 

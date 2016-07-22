@@ -11,14 +11,14 @@ public:
 	//main function of this class. return left duration, change members
 	virtual int time_pass(int time, float penalty = 1);
 
-	void operator = (WhereAbout& wh);
+	WhereAbout& operator=(WhereAbout& wh);
 	void save();
 	void restore();
 
 	//getter
 	void set_turning(int turning);
-	int get_turning() {return turning;}
-	Point get_turn_center() {return turn_center;}
+	int get_turning() const{return turning;}
+	Point get_turn_center() const {return turn_center;}
 
 	//member variables
 	int speed;
@@ -40,6 +40,7 @@ private://for saving status temporarily
 class Waypoint : public WhereAbout
 {
 public:
+	Waypoint& operator=(const WhereAbout& rhs);
 	std::vector<WhereAbout> waypoints;
 	int insert_waypoint(int turning, int spd, int dur, float penalty);//return inserted nth waypoint
 	void delete_waypoint() {waypoints.pop_back();}
@@ -50,7 +51,7 @@ public:
 	int get_cur_time_in_waypt() {return cur_time_in_waypt;}
 
 protected:
-	int cur_waypt, cur_time_in_waypt;
+	int cur_waypt=0, cur_time_in_waypt=0;
 	int moved_distance(int start_time, int end_time);
 	int how_long_can_i_go(int start_time, int remainning_fuel);//return maximum time 
 

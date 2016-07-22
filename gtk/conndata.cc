@@ -182,11 +182,10 @@ void ConnectPopup::on_connect_click()
         string pass = entry3.get_text();
         string db = entry4.get_text();
 
-		QueryData qd;
+		SqlQuery qd;
 		qd.connect(host, "strategy", "strategy", db);//host, id, pass, database
-		SqlData m;
-		m = qd.select("Users", "email = '" + user + "' and password = '" + pass + "'");
-		if(m.contents.empty()) label5.set_label("Invalid!");
+		qd.select("Users", "where email = '" + user + "' and password = '" + pass + "'");
+		if(qd.empty()) label5.set_label("Invalid!");
 		else {
 			Client cl(host);
 			cl.send(user);

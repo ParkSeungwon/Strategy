@@ -1,17 +1,30 @@
-#include <fstream>
+#include<string>
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
 using namespace std;
 using namespace Glob;
 
+SqlData Unit::unit_def {};
+
 Unit::Unit(string name, Point pos, float heading) 
 {
-	ifstream fin("Unit.def");
-	string s;
-	while(fin >> s) {
-		if(s == name) {
-			fin >> maxHealth >> fuelCapacity >> unitPrice >> minimumSpeed >> maximumSpeed >> intelligenceRadius >>evadeRatio;
+	if(unit_def.empty()) {
+		SqlQuery sd;
+		sd.connect("localhost", "strategy", "strategy", "strategy");
+		sd.select("Units");
+		unit_def = move(sd);
+	}
+	for(auto& a : unit_def) {
+		if(a[0] == name) {
+			maxHealth = a[1];
+			fuelCapacity = a[2];
+			unitPrice = a[3];
+			minimumSpeed = a[4];
+			maximumSpeed = a[5];
+			intelligenceRadius = a[6];
+			minimumTurnRadius = a[7];
+			evadeRatio = a[8];
 			break;
 		}
 	}

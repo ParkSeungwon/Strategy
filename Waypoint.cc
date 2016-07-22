@@ -1,4 +1,5 @@
 #include <cmath>
+#include<iostream>
 #include "Waypoint.h"
 #include "Util.h"
 using namespace std;
@@ -57,7 +58,7 @@ int WhereAbout::time_pass(int time, float penalty)
 	return speed * time;//fuel usage
 }
 
-void WhereAbout::operator = (WhereAbout &wh)
+WhereAbout& WhereAbout::operator = (WhereAbout &wh) 
 {
 	x = wh.x; 
 	y = wh.y;
@@ -66,6 +67,19 @@ void WhereAbout::operator = (WhereAbout &wh)
 	speed = wh.speed;
 	heading_toward = wh.heading_toward;
 	duration = wh.duration;
+	return *this;
+}
+
+Waypoint& Waypoint::operator=(const WhereAbout& wh)
+{
+	x = wh.x;
+	y = wh.y;
+	turn_center = wh.get_turn_center();
+	turning = wh.get_turning();
+	speed = wh.speed;
+	heading_toward = wh.heading_toward;
+	duration = wh.duration;
+	return *this;
 }
 
 void WhereAbout::save()
@@ -117,13 +131,13 @@ int Waypoint::insert_waypoint(int turning, int spd, int dur, float p)
 
 int Waypoint::time_pass(float penalty)
 {
-	(WhereAbout)*this = waypoints[cur_waypt];
-	cur_time_in_waypt += OneTick;
-	WhereAbout::time_pass(cur_time_in_waypt, penalty);
+	*this = waypoints[cur_waypt];
 	if(cur_time_in_waypt == waypoints[cur_waypt].duration) {
 		cur_waypt++;
 		cur_time_in_waypt = 0;
 	}
+	cur_time_in_waypt += OneTick;
+	WhereAbout::time_pass(cur_time_in_waypt, penalty);
 	return cur_waypt;
 }
 
