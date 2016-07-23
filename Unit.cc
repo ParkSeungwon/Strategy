@@ -34,6 +34,7 @@ Unit::Unit(string name, Point pos, float heading)
 	currentHealth = maxHealth;
 	fuel = fuelCapacity;
 	experience = 0;
+	speed = 0;
 }
 
 Unit::~Unit()
@@ -45,6 +46,14 @@ Unit::~Unit()
 	(WhereAbout)*this = u;
 	return *this;
 }*/
+
+void Unit::show()
+{
+	cout << unitName << ' ' << "HP=" << currentHealth << ", x=" << x << ",y=" << y;
+	cout << ", turnx=" << turn_center.x << ", turny=" << turn_center.y;
+	cout << ", fuel=" << fuel << ", speed=" << speed;
+	cout << ", heading=" << heading_toward << endl;
+}
 
 int Unit::time_pass(float p)
 {
@@ -65,11 +74,10 @@ int Unit::time_pass(float p)
 		currentHealth += OneTick;
 		can_recruit = false;
 	}
-	
 	return fuel;
 }
 
-int Unit::operator + (Weapon& w)
+int Unit::operator+(Weapon& w)
 {
 	weapon.push_back(w);
 }

@@ -40,9 +40,8 @@ private://for saving status temporarily
 class Waypoint : public WhereAbout
 {
 public:
-	Waypoint& operator=(const WhereAbout& rhs);
 	std::vector<WhereAbout> waypoints;
-	int insert_waypoint(int turning, int spd, int dur, float penalty);//return inserted nth waypoint
+	int insert_waypoint(int turning, int spd, int dur, float penalty = 1);//return inserted nth waypoint
 	void delete_waypoint() {waypoints.pop_back();}
 	int time_pass(float penalty = 1);
 	//void operator = (WhereAbout<float> &wh) {*this = wh;}

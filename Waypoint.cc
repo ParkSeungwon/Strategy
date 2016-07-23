@@ -70,18 +70,6 @@ WhereAbout& WhereAbout::operator = (WhereAbout &wh)
 	return *this;
 }
 
-Waypoint& Waypoint::operator=(const WhereAbout& wh)
-{
-	x = wh.x;
-	y = wh.y;
-	turn_center = wh.get_turn_center();
-	turning = wh.get_turning();
-	speed = wh.speed;
-	heading_toward = wh.heading_toward;
-	duration = wh.duration;
-	return *this;
-}
-
 void WhereAbout::save()
 {
 	save_pos.x = x; save_pos.y = y;
@@ -106,37 +94,32 @@ void WhereAbout::restore()
 
 int Waypoint::insert_waypoint(int turning, int spd, int dur, float p)
 {
-	int ret = waypoints.size();
 	WhereAbout mediator;
-	if(ret == 0) {//if none push current position
-		mediator = *this;
-		waypoints.push_back(mediator);
-		ret++;
+	if(waypoints.size() == 0) mediator = *this;
+	else {
+		auto& wh = waypoints.back();
+		wh.save();
+		wh.time_pass(wh.duration, wh.penalty);
+		mediator = wh;
+		wh.restore();
 	}
-
-	vector<WhereAbout>::iterator it = waypoints.end();
-	it--;
-	it->save();
-	it->time_pass(it->duration, it->penalty);
-	mediator = *it;//reuse mediator, change position
-	it->restore();
 	mediator.speed = spd;
 	mediator.set_turning(turning);
 	mediator.duration = dur;
 	mediator.penalty = p;
-	waypoints.push_back(mediator);
+	waypoints.push_back(move(mediator));
 
-	return ret + 1;//size of waypoints
+	return waypoints.size();//size of waypoints
 }
 
 int Waypoint::time_pass(float penalty)
 {
-	*this = waypoints[cur_waypt];
-	if(cur_time_in_waypt == waypoints[cur_waypt].duration) {
-		cur_waypt++;
-		cur_time_in_waypt = 0;
-	}
 	cur_time_in_waypt += OneTick;
+	if(cur_time_in_waypt >= waypoints[cur_waypt].duration) {
+		cur_waypt++;
+		cur_time_in_waypt -= waypoints[cur_waypt].duration;
+	}
+	this->WhereAbout::operator=(waypoints[cur_waypt]);
 	WhereAbout::time_pass(cur_time_in_waypt, penalty);
 	return cur_waypt;
 }
