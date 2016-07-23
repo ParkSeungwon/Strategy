@@ -77,7 +77,7 @@ int Unit::time_pass(float p)
 	return fuel;
 }
 
-int Unit::operator+(Weapon& w)
+int Unit::operator+(Weapon w)
 {
 	weapon.push_back(w);
 }

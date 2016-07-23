@@ -1,13 +1,45 @@
 #include <string>
 #include <stdlib.h>
-#include <time.h>
+#include <random>
 #include "Terrain.h"
 #include "map.h"
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
+#include"mysql/mysqldata.h"
 using namespace std;
 using namespace Glob;
+
+SqlData Weapon::weapon_def = {};
+
+Weapon::Weapon(string name)
+{
+	if(weapon_def.empty()) {
+		SqlQuery sd;
+		sd.connect("localhost", "strategy", "strategy", "strategy");
+		sd.select("Weapons");
+		weapon_def = move(sd);
+	}
+	for(auto& a : weapon_def) {
+		if(a[0] == name) {
+			firePower = a[1];
+			fireRate = a[2];
+			maxRounds = a[3];
+			hitRatioVSAir = a[4];
+			hitRatioVsArmor = a[5];
+			hitRatioVsInfantry = a[6];
+			hitRatioVsShip = a[7];
+			shootingRangeMin = a[8];
+			shootingRangeMax = a[9];
+			shootingAngleFrom = a[10];
+			shootingAngleTo = a[11];
+			break;
+		}
+	}
+	weaponName = name;
+	currentRounds = maxRounds;
+	lapsedTimeAfterFire = 0;
+}
 
 int Weapon::operator + (const Unit &e) const
 {
@@ -67,13 +99,15 @@ int Weapon::operator >> (Unit &e)
 	if (can_fire()) {
 		lapsedTimeAfterFire = 0;
 		currentRounds -= 1;
-	}
-	else return 0;
+	} else return 0;
 	
-	srand(time(NULL));
-	int dice = rand() % 100;//0~99사이의 수를 리턴하는 유틸함수
-	if (dice <= hitRatio * (100 - e.get_evadeRatio())/100)  
+	uniform_int_distribution<int> di(0, 99);
+	random_device r;
+	int dice = di(r);//0~99사이의 수를 리턴하는 유틸함수
+	if (dice <= hitRatio * (100 - e.get_evadeRatio())/100) {
+		cout << "hit" << endl;
 		e.set_currentHealth(e.get_currentHealth()-firePower);
+	} else cout << "missed" << endl;
 	dice_record.push_back(dice);
 	return dice;
 }

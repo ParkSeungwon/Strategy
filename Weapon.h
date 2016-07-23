@@ -7,6 +7,7 @@ class WhereAbout;
 class Weapon 
 {
 public:
+	Weapon(std::string weaponName);
 	enum Preference {LOW_HEALTH, HIGH_DAMAGE, HIGH_RATIO, EXPENSIVE, CHEAP}; 
 	
 	int operator + (const Unit& enemy) const;//target return expected value regards to preference 
@@ -24,7 +25,9 @@ public:
 	int get_shootingAngleFrom() const {return shootingAngleFrom;}
 
 protected:
+	static SqlData weapon_def;
 	Preference preference;
+	std::string weaponName;
 	int fireRate, firePower, maxRounds;
 	int hitRatioVSAir, hitRatioVsArmor, hitRatioVsInfantry, hitRatioVsShip;
 	int shootingRangeMin, shootingRangeMax;
