@@ -13,13 +13,13 @@ int main()
 	cout << u.get_fuel() << ' ' << u.get_currentHealth() << endl;
 	u.insert_waypoint(100, 50, 3, 1);
 	u.show();
-	u.insert_waypoint(-20, 3, 20, 1);
-	u.insert_waypoint(20, 3, 20, 1);
-	u.insert_waypoint(200, 3, 20, 1);
-	u.insert_waypoint(-150, 7, 20, 1);
+	u.insert_waypoint(-20, 3, 20);
+	u.insert_waypoint(20, 3, 20);
+	u.insert_waypoint(200, 3, 20);
+	u.insert_waypoint(-150, 7, 20);
 	Weapon w{"side-winder"};
 //	u.time_pass(1);
-	for(int i=0; i<90; i++) {
+	for(int i=0; i<60; i++) {
 		w.time_pass();
 		u.time_pass();
 		u.show();
@@ -31,10 +31,6 @@ int main()
 	Unit e{"bomber_hb", {40, 320}, 0};
 	cout << w + e;
 	w.time_pass();
-	w >> u;
-	w >> u;
-	w >> u;
-	w >> u;
 	w >> u;
 	u.show();
 }

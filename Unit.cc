@@ -25,6 +25,7 @@ Unit::Unit(string name, Point pos, float heading)
 			intelligenceRadius = a[6];
 			minimumTurnRadius = a[7];
 			evadeRatio = a[8];
+			unit_type = static_cast<UnitType>((int)a[9]);
 			break;
 		}
 	}

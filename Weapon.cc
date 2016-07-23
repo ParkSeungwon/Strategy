@@ -11,6 +11,8 @@ using namespace std;
 using namespace Glob;
 
 SqlData Weapon::weapon_def = {};
+uniform_int_distribution<int> Weapon::dist(0, 99);
+random_device Weapon::rd;
 
 Weapon::Weapon(string name)
 {
@@ -82,17 +84,10 @@ int Weapon::operator >> (Unit &e)
 {
 	int hitRatio;
 	switch (e.get_unit_type()) {
-		case UnitType::Infantry:
-			hitRatio = hitRatioVsInfantry;
-			break;
-		case UnitType::Armor:
-			hitRatio = hitRatioVsArmor;
-			break;
-		case UnitType::Air:
-			hitRatio = hitRatioVSAir;
-			break;
-		case UnitType::Ship:
-			hitRatio = hitRatioVsShip;
+		case UnitType::Infantry: 	hitRatio = hitRatioVsInfantry; break;
+		case UnitType::Armor: 		hitRatio = hitRatioVsArmor; break;
+		case UnitType::Air: 		hitRatio = hitRatioVSAir; break;
+		case UnitType::Ship: 		hitRatio = hitRatioVsShip;
 	}
 	
 	if (hitRatio == 0) return 0;
@@ -101,9 +96,10 @@ int Weapon::operator >> (Unit &e)
 		currentRounds -= 1;
 	} else return 0;
 	
-	uniform_int_distribution<int> di(0, 99);
-	random_device r;
-	int dice = di(r);//0~99사이의 수를 리턴하는 유틸함수
+	//uniform_int_distribution<int> di(0, 99);
+	//random_device r;
+	int dice = dist(rd);//0~99사이의 수를 리턴하는 유틸함수
+	cout << "dice=" << dice << "= dice" << endl;
 	if (dice <= hitRatio * (100 - e.get_evadeRatio())/100) {
 		cout << "hit" << endl;
 		e.set_currentHealth(e.get_currentHealth()-firePower);

@@ -35,5 +35,9 @@ protected:
 	int lapsedTimeAfterFire;
 	int currentRounds;
 	std::vector<int> dice_record;//to record dice data for replay
+
+private:
+	static std::uniform_int_distribution<int> dist;
+	static std::random_device rd;
 };
 
