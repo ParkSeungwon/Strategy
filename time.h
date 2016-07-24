@@ -1,13 +1,17 @@
 #pragma once
 #include "map.h"
+class Darea;
 
 class Time : public Map
 {
-	private:
-	protected:
-	
-	public:
-		double clock;
-		int oneTickPass() ;
-		void time_pass();
+public:
+  	Time(Darea& d) : battlefield(d) {}
+	double clock;
+	int oneTickPass() ;
+	void time_pass();
+
+protected:
+  	Darea& battlefield;
+private:
+  	void sync();
 };

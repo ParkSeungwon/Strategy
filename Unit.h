@@ -36,6 +36,7 @@ public :
 	void show();
 	
 	//setter, getter
+	std::string get_unitName() 					{return unitName;}
 	int get_evadeRatio() const 					{return evadeRatio;}
 	unsigned int get_intelligenceRadius() const {return intelligenceRadius;}
 	int get_ally() const 						{return ally;}
