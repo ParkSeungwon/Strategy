@@ -1,4 +1,5 @@
 #pragma once
+#include"mysql/mysqldata.h"
 #include <vector>
 class Unit;
 class Clip;

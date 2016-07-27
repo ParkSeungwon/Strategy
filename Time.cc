@@ -3,7 +3,7 @@
 #include "time.h"
 #include "Unit.h"
 #include "Terrain.h"
-#include"gtk/darea.h"//need to add gtkmm flags
+//#include"gtk/darea.h"//need to add gtkmm flags
 #include <vector>
 using namespace std;
 using namespace Glob;
@@ -31,14 +31,3 @@ void Time::time_pass()
 	sync();
 }
 
-void Time::sync()
-{
-	for(auto& u : deployedUnits) {
-		battlefield.paste_pix(u.x, u.y, u.get_unitName(), u.heading_toward);
-		for(auto& w : u.weapon) {
-			battlefield.insert_to_draw({u.x, u.y, w.get_shootingRangeMin(), 
-					w.get_shootingRangeMax(), w.get_shootingAngleFrom(), 
-					w.get_shootingAngleTo(), u.get_team() / 8 , 0.3,0.3,0.3});
-		}
-	}
-}

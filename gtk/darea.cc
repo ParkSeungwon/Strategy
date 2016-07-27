@@ -1,10 +1,10 @@
-#include <gdkmm/pixbuf.h>
+#include <gtkmm.h>//<gdkmm/pixbuf.h>
 #include <iostream>
 #include <cmath>
 #include <complex>
 #include "darea.h"
-#include "../file.h"
-#include "../terrain_data.h"
+#include "file.h"
+#include "terrain_data.h"
 //#include <gdk-pixbuf/gdk-pixbuf.h>
 using namespace std;
 using namespace Gtk;

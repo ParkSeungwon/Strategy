@@ -136,7 +136,8 @@ int Map::generate_recon() const
 
 TerrainType Map::get_terrain_type(Point p) const
 {
-	return terrain_map[p.x][p.y];
+	if(p.x < width && p.x >= 0 && p.y < height && p.y >=0)
+		return terrain_map[p.x][p.y];
 }
 
 float Map::calculate_terrain_penalty(Unit& u, int time) const

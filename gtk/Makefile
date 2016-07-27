@@ -1,5 +1,7 @@
+ROOT = $(HOME)/Programming/Strategy
 CFLAG = -g -c -std=c++11 -fmax-errors=3
-GTKCFLAG = $(shell pkg-config gtkmm-3.0 --cflags)
+INCLUDE = -I$(ROOT)
+GTKCFLAG = $(shell pkg-config gtkmm-3.0 --cflags) #-I$(ROOT)
 GTKLIB = $(shell pkg-config gtkmm-3.0 --libs)
 MLIB = -L/usr/local/lib -L/usr/lib
 CC = g++
@@ -15,7 +17,7 @@ show.x : $(OBJ) $(POBJ) $(MOBJ)
 #./show
 
 %.o : %.cc 
-	$(CC) $(GTKCFLAG) $(CFLAG) $<
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $<
 
 clean :
 	rm *.o show.x

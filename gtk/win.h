@@ -2,8 +2,8 @@
 #include <string>
 #include <gtkmm.h>
 #include "darea.h"
-#include "../time.h"
-#include "../terrain_data.h"
+#include "Time.h"
+#include "terrain_data.h"
 #include "interface.h"
 class TeamSetup;
 class ConnectPopup;

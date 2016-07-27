@@ -1,11 +1,13 @@
+ROOT = $(HOME)/Programming/Strategy
 CC = g++
-C_OPTION = -g -c -std=c++11 -fmax-errors=3 -pedantic
+C_OPTION = -g -c -std=c++11 -fmax-errors=3 -I$(ROOT)
 SRC = $(wildcard *.cc)
 OBJ = $(patsubst %.cc, %.o, $(SRC))
 MYOBJ = $(wildcard mysql/*.o)
 
 gtkmmCFLAG = $(shell pkg-config gtkmm-3.0 --cflags)
 gtkmmLIB = $(shell pkg-config gtkmm-3.0 --libs)
+CPPFLAGS = -pedantic
 	
 all : $(OBJ)
 	make -C gtk/
@@ -21,3 +23,6 @@ test : test.cpp $(OBJ)
 
 clean :
 	rm *.o test
+
+ls :
+	ls $(HOME)

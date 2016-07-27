@@ -18,7 +18,7 @@ namespace Glob {
 class Unit : public Waypoint
 {
 public :
-	Unit(std::string name, Point position, float headingToward);
+	Unit(std::string name, Point position = {0,0}, float headingToward = 0);
 	virtual ~Unit();
 
 	std::vector<Weapon> weapon;
