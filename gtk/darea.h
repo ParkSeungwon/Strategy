@@ -2,10 +2,11 @@
 #include <unordered_map>
 #include <gtkmm.h>
 #include <memory>
-#include "Util.h"//Glob::To_draw
+#include "src/Util.h"//Glob::To_draw
+#include"interface.h"
 class Terrain_data;
 
-class Darea : public Gtk::DrawingArea
+class Darea : public Gtk::DrawingArea, public FieldInterface
 {
 public:
 	Darea();
