@@ -20,12 +20,13 @@ badd +1 ~/Programming/Strategy/gtk/control.cc
 badd +1 ~/Programming/Strategy/gtk/control.h
 badd +9 ~/Programming/Strategy/control.cc
 badd +1 ~/Programming/Strategy/control.h
-badd +0 ~/Programming/Strategy/gtk/win.cc
-badd +0 ~/Programming/Strategy/gtk/win.h
+badd +1 ~/Programming/Strategy/gtk/win.cc
+badd +1 ~/Programming/Strategy/gtk/win.h
+badd +0 ~/Programming/Strategy/gtk/main.cpp
 argglobal
 silent! argdel *
 set stal=2
-edit ~/Programming/Strategy/gtk/main.cc
+edit ~/Programming/Strategy/gtk/win.cc
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -41,29 +42,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 29) / 58)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
-tabedit ~/Programming/Strategy/gtk/win.cc
-set splitbelow splitright
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 29) / 58)
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -85,7 +64,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 123 - ((57 * winheight(0) + 29) / 58)
+let s:l = 123 - ((44 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -107,7 +86,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 29) / 58)
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -129,7 +108,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 29) / 58)
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -151,13 +130,35 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 29) / 58)
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
-tabnext 6
+tabedit ~/Programming/Strategy/gtk/main.cpp
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+tabnext 1
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

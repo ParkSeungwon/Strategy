@@ -1,5 +1,5 @@
 //client exe
-#include "../tcpip.h"
+#include "tcpip.h"
 #include <iostream>
 #include <string>
 using namespace std;

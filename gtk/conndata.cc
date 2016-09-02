@@ -3,12 +3,12 @@
 #include <memory>
 #include <fstream>
 #include <gtkmm.h>
-#include "../mysql/mysqldata.h"
-#include "../Util.h"
+#include "mysql/mysqldata.h"
+#include "Util.h"
 #include "join.h"
 #include "conndata.h"
 #include "interface.h"
-#include "../tcpip.h"
+#include "server/tcpip.h"
 using namespace std;
 extern Interface* pInterface;
 

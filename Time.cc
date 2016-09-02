@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <functional>
-#include "time.h"
+#include "Time.h"
 #include "Unit.h"
 #include "Terrain.h"
 //#include"gtk/darea.h"//need to add gtkmm flags

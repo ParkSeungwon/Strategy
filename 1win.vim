@@ -24,10 +24,14 @@ badd +1 ~/Programming/Strategy/Util.h
 badd +1 ~/Programming/Strategy/Unit.cc
 badd +1 ~/Programming/Strategy/Util.cc
 badd +1 ~/Programming/Strategy/gtk/interface.h
-badd +0 ~/Programming/Strategy/gtk/win.cc
-badd +0 ~/Programming/Strategy/gtk/win.h
-badd +0 ~/Programming/Strategy/gtk/main.cc
-args teamsetup.cc
+badd +1 ~/Programming/Strategy/gtk/win.cc
+badd +1 ~/Programming/Strategy/gtk/win.h
+badd +1 ~/Programming/Strategy/gtk/main.cc
+badd +0 ~/Programming/Strategy/gtk/main.cpp
+argglobal
+silent! argdel *
+argadd teamsetup.cc
+set stal=2
 edit ~/Programming/Strategy/gtk/darea.cc
 set splitbelow splitright
 set nosplitbelow
@@ -44,7 +48,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 97 - ((1 * winheight(0) + 24) / 48)
+let s:l = 97 - ((1 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -66,7 +70,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 19 - ((0 * winheight(0) + 23) / 47)
+let s:l = 19 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -88,12 +92,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 46 - ((45 * winheight(0) + 23) / 46)
+let s:l = 12 - ((9 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-46
-normal! 020|
+12
+normal! 0
 tabedit ~/Programming/Strategy/gtk/win.h
 set splitbelow splitright
 set nosplitbelow
@@ -138,7 +142,7 @@ exe s:l
 normal! zt
 28
 normal! 0
-tabedit ~/Programming/Strategy/gtk/teamsetup.h
+tabedit ~/Programming/Strategy/gtk/main.cpp
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -154,56 +158,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 47)
+let s:l = 4 - ((3 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
-tabedit ~/Programming/Strategy/gtk/join.cc
-set splitbelow splitright
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 89 - ((0 * winheight(0) + 23) / 46)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-89
-normal! 038|
-tabedit ~/Programming/Strategy/gtk/join.h
-set splitbelow splitright
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
+4
+normal! 05|
 tabedit ~/Programming/Strategy/gtk/Makefile
 set splitbelow splitright
 set nosplitbelow
@@ -220,11 +180,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+let s:l = 10 - ((9 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+10
 normal! 0
 tabedit ~/Programming/Strategy/gtk/conndata.cc
 set splitbelow splitright
@@ -242,12 +202,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 46 - ((45 * winheight(0) + 23) / 46)
+let s:l = 192 - ((29 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-46
-normal! 05|
+192
+normal! 013|
 tabedit ~/Programming/Strategy/gtk/conndata.h
 set splitbelow splitright
 set nosplitbelow
@@ -292,29 +252,8 @@ exe s:l
 normal! zt
 6
 normal! 05|
-tabedit ~/Programming/Strategy/gtk/main.cc
-set splitbelow splitright
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 015|
-tabnext 9
+tabnext 6
+set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

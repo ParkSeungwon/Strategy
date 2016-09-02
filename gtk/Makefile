@@ -1,23 +1,18 @@
 ROOT = $(HOME)/Programming/Strategy
+OBJ_DIR = $(ROOT)/OBJS
+MAIN_DIR = $(ROOT)/MAINOBJ
 CFLAG = -g -c -std=c++11 -fmax-errors=3
 INCLUDE = -I$(ROOT)
 GTKCFLAG = $(shell pkg-config gtkmm-3.0 --cflags) #-I$(ROOT)
-GTKLIB = $(shell pkg-config gtkmm-3.0 --libs)
-MLIB = -L/usr/local/lib -L/usr/lib
 CC = g++
-SRC = $(wildcard *.cc)
-OBJ = $(patsubst %.cc, %.o, $(SRC))
-POBJ = $(wildcard ../*.o)
-MOBJ = $(wildcard ../mysql/*.o)
+OBJ = $(patsubst %.cc, $(OBJ_DIR)/%.o, $(wildcard *.cc))
+MAIN_OBJ = $(patsubst %.cpp, $(MAIN_DIR)/%.o, $(wildcard *.cpp))
 
-all : show.x 
+all : $(OBJ) $(MAIN_OBJ)
 
-show.x : $(OBJ) $(POBJ) $(MOBJ)
-	g++ -o show.x $(OBJ) $(POBJ) $(MOBJ) $(GTKLIB) -lmysqlcppconn
-#./show
+$(OBJ_DIR)/%.o : %.cc 
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
 
-%.o : %.cc 
-	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $<
+$(MAIN_DIR)/%.o : %.cpp
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
 
-clean :
-	rm *.o show.x

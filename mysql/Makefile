@@ -1,17 +1,17 @@
+ROOT = $(HOME)/Programming/Strategy
+OBJ_DIR = $(ROOT)/OBJS
+MAIN_DIR = $(ROOT)/MAINOBJ
+CFLAG = -g -c -std=c++11 -fmax-errors=3
+INCLUDE = -I$(ROOT)
 CC = g++
-C_OPTION = -g -c -std=c++11 -fmax-errors=3
-SRC = $(wildcard *.cc)
-OBJ = $(patsubst %.cc, %.o, $(SRC))
+OBJ = $(patsubst %.cc, $(OBJ_DIR)/%.o, $(wildcard *.cc))
+MAIN_OBJ = $(patsubst %.cpp, $(MAIN_DIR)/%.o, $(wildcard *.cpp))
 
-LIB = -L/usr/local/lib -L/usr/lib
-INC = -I/usr/local/include
-	
-all : $(OBJ)
-#sql : $(OBJ)
-#	$(CC) -o sql $(OBJ) $(LIB) -lmysqlcppconn 
+all : $(OBJ) $(MAIN_OBJ)
 
-%.o : %.cc 
-	$(CC) $(C_OPTION) $< $(INC)
+$(OBJ_DIR)/%.o : %.cc 
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
 
-clean :
-	rm *.o 
+$(MAIN_DIR)/%.o : %.cpp
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
+

@@ -12,12 +12,13 @@
 //using namespace Gtk;
 using namespace std;
 using namespace Glob;
-
+Interface* pInterface;
 
 Win::Win() : time(area),
    	bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
 	box2(Gtk::ORIENTATION_VERTICAL), label1("라벨") 
 {
+	pInterface = this;
     set_border_width(10);
     set_default_size(900, 900);
     add(box1);

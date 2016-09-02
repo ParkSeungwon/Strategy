@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include "../tcpip.h"
+#include "tcpip.h"
 
 class GameServer
 {

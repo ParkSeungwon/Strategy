@@ -1,20 +1,17 @@
-CFLAG = -g -std=c++11 
+ROOT = $(HOME)/Programming/Strategy
+OBJ_DIR = $(ROOT)/OBJS
+MAIN_DIR = $(ROOT)/MAINOBJ
+CFLAG = -g -c -std=c++11 -fmax-errors=3
+INCLUDE = -I$(ROOT)
 CC = g++
-SRC = $(wildcard *.cc)
-OBJ = $(patsubst %.cc, %.o, $(SRC))
+OBJ = $(patsubst %.cc, $(OBJ_DIR)/%.o, $(wildcard *.cc))
+MAIN_OBJ = $(patsubst %.cpp, $(MAIN_DIR)/%.o, $(wildcard *.cpp))
 
-all : server.x client.x
+all : $(OBJ) $(MAIN_OBJ)
 
-server.x : server.cc ../tcpip.cc $(OBJ)
-	g++ -o server.x server.o ../tcpip.o 
-	
-client.x : client.cc ../tcpip.cc $(OBJ)
-	g++ -o client.x client.o ../tcpip.o
+$(OBJ_DIR)/%.o : %.cc 
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
 
-%.o : %.cc
-	$(CC) -c $< $(CFLAG)
+$(MAIN_DIR)/%.o : %.cpp
+	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
 
-
-clean : 
-	rm *.o server.x client.x
-#	./$@

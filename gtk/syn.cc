@@ -1,8 +1,8 @@
 #include<gtkmm.h>
 #include"darea.h"
-#include"../time.h"
-#include"../Unit.h"
-#include"../Weapon.h"
+#include"Time.h"
+#include"Unit.h"
+#include"Weapon.h"
 
 void Time::sync()
 {
