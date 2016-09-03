@@ -1,9 +1,9 @@
 all : 
 	make -C gtk/
 	make -C mysql/
-	make -C server/
+	make -C tcpip/
 	make -C src/
-	make -C MAINOBJ/
+	make -C OBJS/
 
 PHONY : clean
 

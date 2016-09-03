@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include "Waypoint.h"
+#include"Weapon.h"
 #include"mysql/mysqldata.h"
 
 class Weapon;

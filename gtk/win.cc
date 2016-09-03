@@ -101,13 +101,14 @@ void Win::on_button_click()
 	//ts = new TeamSetup(8);
     // force our program to redraw the entire clock.
 	area.refresh();
+	for(int i=0; i<100; i++) time.time_pass();
 }
 
 void Win::on_cancel_click()
 {
-	Unit u{"bomber_hb"};
-	time.deployUnit(u, {800, 800}, 1.0);
-	time.deployedUnits[0]->insert_waypoint(100, 20, 50);
+//	Unit u{"bomber_hb"};
+//	time.deployUnit(u, {800, 800}, 1.0);
+//	time.deployedUnits[0]->insert_waypoint(100, 20, 50);
 	for(int i=0; i<50; i++) time.time_pass();
 	Glob::To_draw td;
 	td.x = 300 + i_++*10;

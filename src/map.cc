@@ -110,7 +110,7 @@ int Map::geo_effect(Unit& u)
 	}
 }
 		
-void Map::deployUnit(Unit &u, Point p, float h) 
+void Map::deployUnit(Unit u, Point p, float h) 
 {
 	City& c = get_city(p);
 	u.set_team(c.owner());

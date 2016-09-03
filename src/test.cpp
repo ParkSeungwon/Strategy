@@ -3,7 +3,10 @@
 #include"Util.h"
 #include"Weapon.h"
 #include"mysql/mysqldata.h"
+#include"gtk/interface.h"
 using namespace std;
+
+extern FieldInterface* fInterface;
 
 int main()
 {
@@ -22,6 +25,7 @@ int main()
 	for(int i=0; i<60; i++) {
 		w.time_pass();
 		u.time_pass();
+		fInterface->paste_pix(u.x, u.y, u.get_unitName(), u.heading_toward);
 		u.show();
 		w >> u;
 		u.show();

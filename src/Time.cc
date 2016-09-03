@@ -5,6 +5,7 @@
 #include "Terrain.h"
 //#include"gtk/darea.h"//need to add gtkmm flags
 #include <vector>
+#include"gtk/interface.h"
 using namespace std;
 using namespace Glob;
 
@@ -31,3 +32,8 @@ void Time::time_pass()
 	sync();
 }
 
+Time::Time(Darea& d) : battlefield(d)
+{
+	deployUnit(Unit{"bomber_hb"}, Point{50,50}, 0);
+	deployedUnits[0]->insert_waypoint(-20, 5, 10);
+}

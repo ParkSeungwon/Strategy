@@ -14,139 +14,20 @@ badd +1 ~/Programming/Strategy/mysql/mysqlmember.j
 badd +1 ~/Programming/Strategy/mysql/mysqlmember.h
 badd +1 ~/Programming/Strategy/mysql/mysqlmember.cc
 badd +1 ~/Programming/Strategy/mysql/mysqlquery.h
-badd +1 ~/Programming/Strategy/mysql/mysqlquery.cc
+badd +51 ~/Programming/Strategy/mysql/mysqlquery.cc
 badd +1 ~/Programming/Strategy/mysql/mysqldata.h
-badd +1 ~/Programming/Strategy/mysql/mysqldata.cc
+badd +40 ~/Programming/Strategy/mysql/mysqldata.cc
+badd +0 ~/Programming/Strategy/mysql/Makefile
+argglobal
 silent! argdel *
-edit ~/Programming/Strategy/mysql/member.cc
-set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 26) / 53)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 01|
-wincmd w
-argglobal
-edit ~/Programming/Strategy/mysql/member.h
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 26) / 53)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
-wincmd w
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-tabedit ~/Programming/Strategy/mysql/mysqlmember.cc
-set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 51)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
-wincmd w
-argglobal
-edit ~/Programming/Strategy/mysql/mysqlmember.h
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 51)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
-wincmd w
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-tabedit ~/Programming/Strategy/mysql/mysqlquery.cc
-set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 51 - ((50 * winheight(0) + 25) / 51)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-51
-normal! 057|
-wincmd w
-argglobal
+set stal=2
 edit ~/Programming/Strategy/mysql/mysqlquery.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -156,27 +37,18 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 6 - ((0 * winheight(0) + 25) / 51)
+let s:l = 6 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 6
 normal! 0
-wincmd w
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-tabedit ~/Programming/Strategy/mysql/mysqldata.cc
+tabedit ~/Programming/Strategy/mysql/Makefile
 set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 118 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 116 + 117) / 235)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -187,15 +59,19 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 40 - ((24 * winheight(0) + 25) / 51)
+let s:l = 12 - ((11 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-40
-normal! 0
-wincmd w
+12
+normal! 011|
+tabedit ~/Programming/Strategy/mysql/mysqldata.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
 argglobal
-edit ~/Programming/Strategy/mysql/mysqldata.h
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -205,16 +81,14 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 4 - ((3 * winheight(0) + 25) / 51)
+let s:l = 4 - ((3 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 4
 normal! 0
-wincmd w
-exe 'vert 1resize ' . ((&columns * 118 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 116 + 117) / 235)
-tabnext 4
+tabnext 2
+set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

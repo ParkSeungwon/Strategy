@@ -1,17 +1,13 @@
-ROOT = $(HOME)/Programming/Strategy
-OBJ_DIR = $(ROOT)/OBJS
-MAIN_DIR = $(ROOT)/MAINOBJ
 CFLAG = -g -c -std=c++11 -fmax-errors=3
-INCLUDE = -I$(ROOT)
+INCLUDE = -I../
 CC = g++
-OBJ = $(patsubst %.cc, $(OBJ_DIR)/%.o, $(wildcard *.cc))
-MAIN_OBJ = $(patsubst %.cpp, $(MAIN_DIR)/%.o, $(wildcard *.cpp))
+OBJ = $(patsubst %.cc, ../OBJS/%.o, $(wildcard *.cc))
+MAIN_OBJ = $(patsubst %.cpp, ../OBJS/%.x, $(wildcard *.cpp))
 
 all : $(OBJ) $(MAIN_OBJ)
 
-$(OBJ_DIR)/%.o : %.cc 
+../OBJS/%.o : %.cc 
 	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
 
-$(MAIN_DIR)/%.o : %.cpp
+../OBJS/%.x : %.cpp
 	$(CC) $(GTKCFLAG) $(INCLUDE) $(CFLAG) $< -o $@
-

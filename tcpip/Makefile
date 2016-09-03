@@ -1,6 +1,5 @@
 CFLAG = -g -c -std=c++11 -fmax-errors=3
-INCLUDE = -I../ -I../src
-GTKCFLAG = $(shell pkg-config gtkmm-3.0 --cflags) #-I$(ROOT)
+INCLUDE = -I../
 CC = g++
 OBJ = $(patsubst %.cc, ../OBJS/%.o, $(wildcard *.cc))
 MAIN_OBJ = $(patsubst %.cpp, ../OBJS/%.x, $(wildcard *.cpp))

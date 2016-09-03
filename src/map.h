@@ -41,7 +41,7 @@ public:
 	std::vector<std::shared_ptr<Unit>> deployedUnits;
 //	std::vector<City> ci;
 	std::unordered_map<char, City> cities;
-	void deployUnit(Unit &unit, Point p, float heading_toward);
+	void deployUnit(Unit unit, Point p, float heading_toward);
 	Glob::TerrainType get_terrain_type(Point p) const;
 };
 

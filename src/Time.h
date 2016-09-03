@@ -5,7 +5,7 @@ class Darea;
 class Time : public Map
 {
 public:
-  	Time(Darea& d) : battlefield(d) {}
+  	Time(Darea& d);
 	double clock;
 	int oneTickPass() ;
 	void time_pass();

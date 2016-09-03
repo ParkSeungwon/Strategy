@@ -38,9 +38,7 @@ Unit::Unit(string name, Point pos, float heading)
 	speed = 0;
 }
 
-Unit::~Unit()
-{
-}
+Unit::~Unit() { }
 
 /*Unit Unit::operator=(Unit u)
 {//need more coding
