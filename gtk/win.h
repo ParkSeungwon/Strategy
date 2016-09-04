@@ -2,7 +2,6 @@
 #include <string>
 #include <gtkmm.h>
 #include "darea.h"
-#include "Time.h"
 #include "terrain_data.h"
 #include "interface.h"
 class TeamSetup;
@@ -17,7 +16,6 @@ public:
 
 protected:
     Darea area;
-	Time time;
 //	Control control;
     Gtk::Button bt1, bt2, bt3, bt4;
 	void open_terrain_file(std::string filename);

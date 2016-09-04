@@ -22,7 +22,8 @@ badd +9 ~/Programming/Strategy/control.cc
 badd +1 ~/Programming/Strategy/control.h
 badd +1 ~/Programming/Strategy/gtk/win.cc
 badd +1 ~/Programming/Strategy/gtk/win.h
-badd +0 ~/Programming/Strategy/gtk/main.cpp
+badd +1 ~/Programming/Strategy/gtk/main.cpp
+badd +0 ~/Programming/Strategy/gtk/interface.h
 argglobal
 silent! argdel *
 set stal=2
@@ -64,13 +65,35 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 123 - ((44 * winheight(0) + 23) / 46)
+let s:l = 156 - ((2 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-123
-normal! 05|
+156
+normal! 011|
 tabedit ~/Programming/Strategy/gtk/darea.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+tabedit ~/Programming/Strategy/gtk/interface.h
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -158,7 +181,7 @@ exe s:l
 normal! zt
 1
 normal! 0
-tabnext 1
+tabnext 4
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

@@ -32,8 +32,24 @@ void Time::time_pass()
 	sync();
 }
 
-Time::Time(Darea& d) : battlefield(d)
+Time::Time()
 {
-	deployUnit(Unit{"bomber_hb"}, Point{50,50}, 0);
-	deployedUnits[0]->insert_waypoint(-20, 5, 10);
+	//deployUnit(Unit{"bomber_hb"}, Point{50,50}, 0);
+	//deployedUnits[0]->insert_waypoint(-20, 5, 10);
 }
+
+void Time::sync()
+{//use interface to access screen
+	extern FieldInterface* fInterface;
+	for(auto& u : deployedUnits) {
+		fInterface->paste_pix(u->x, u->y, u->get_unitName(), u->heading_toward);
+		for(auto& w : u->weapon) {
+			fInterface->insert_to_draw({u->x, u->y, w.get_shootingRangeMin(), 
+					w.get_shootingRangeMax(), 
+					w.get_shootingAngleFrom() + u->heading_toward, 
+					w.get_shootingAngleTo() + u->heading_toward, 
+					u->get_team() / 8 , 0.3,0.3,0.3});
+		}
+	}
+}
+

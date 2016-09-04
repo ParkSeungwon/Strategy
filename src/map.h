@@ -3,18 +3,13 @@
 #include <unordered_map>
 #include <memory>
 #include "Terrain.h"
+#include"mapinterface.h"
 
 class Unit;
 class Point;
 class Bitmap;
 class Terrain_data;
 namespace Glob {enum class TerrainType : unsigned char;}
-
-class MapInterface 
-{
-public:
-	virtual int occupy(Point p, int team) = 0;
-};
 
 class Map : public MapInterface
 {
@@ -33,6 +28,7 @@ protected:
 	int width, height;
 	
 public:
+	Map();
 	int init_map(Terrain_data&& tr);///<return capital count
 	virtual ~Map();
 	virtual int occupy(Point p, int team);

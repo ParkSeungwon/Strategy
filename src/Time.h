@@ -5,13 +5,12 @@ class Darea;
 class Time : public Map
 {
 public:
-  	Time(Darea& d);
+  	Time();
 	double clock;
 	int oneTickPass() ;
 	void time_pass();
 
 protected:
-  	Darea& battlefield;
 private:
   	void sync();
 };

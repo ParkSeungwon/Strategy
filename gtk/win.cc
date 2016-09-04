@@ -13,10 +13,10 @@
 using namespace std;
 using namespace Glob;
 Interface* pInterface;
+extern MapInterface* mInterface;
 
-Win::Win() : time(area),
-   	bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
-	box2(Gtk::ORIENTATION_VERTICAL), label1("라벨") 
+Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
+			 box2(Gtk::ORIENTATION_VERTICAL), label1("라벨") 
 {
 	pInterface = this;
     set_border_width(10);
@@ -55,7 +55,7 @@ bool Win::on_key_press_event(GdkEventKey* e)
 
 int Win::label_change(int x, int y, int bt)
 {
-	string s = Terrain::name[static_cast<int>(time.get_terrain_type(Point(x, y)))];
+	string s = Terrain::name[static_cast<int>(mInterface->get_terrain_type(Point(x, y)))];
 	s += "\n" + to_string(x);
 	s += "\n" + to_string(y);
 	s += "\n" + to_string(bt);
@@ -88,7 +88,7 @@ void Win::on_open_click()
 		//Notice that this is a std::string, not a Glib::ustring.
 		std::string filename = dialog.get_filename();
 		std::cout << "File selected: " <<  filename << std::endl;
-		teamsetup = make_shared<TeamSetup>(time.init_map(area.open_map_file(filename)));
+		teamsetup = make_shared<TeamSetup>(mInterface->init_map(area.open_map_file(filename)));
 		teamsetup->show();
     }
 }
@@ -101,7 +101,7 @@ void Win::on_button_click()
 	//ts = new TeamSetup(8);
     // force our program to redraw the entire clock.
 	area.refresh();
-	for(int i=0; i<100; i++) time.time_pass();
+	//for(int i=0; i<100; i++) time.time_pass();
 }
 
 void Win::on_cancel_click()
@@ -109,7 +109,7 @@ void Win::on_cancel_click()
 //	Unit u{"bomber_hb"};
 //	time.deployUnit(u, {800, 800}, 1.0);
 //	time.deployedUnits[0]->insert_waypoint(100, 20, 50);
-	for(int i=0; i<50; i++) time.time_pass();
+	//for(int i=0; i<50; i++) time.time_pass();
 	Glob::To_draw td;
 	td.x = 300 + i_++*10;
 	td.y = 300;

@@ -9,6 +9,13 @@
 typedef unsigned char UC;
 using namespace Glob;
 
+MapInterface* mInterface;
+
+Map::Map()
+{
+	mInterface = this;
+}
+
 int Map::init_map(Terrain_data&& tr)
 {
 	width = tr.width;
