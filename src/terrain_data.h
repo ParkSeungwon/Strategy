@@ -1,7 +1,7 @@
 #pragma once
 //move syntax realize
 class Terrain_data 
-{
+{//pixbuf에서 파일을 읽어들여 초기화함.
 public:
 	virtual ~Terrain_data();
 	Terrain_data();

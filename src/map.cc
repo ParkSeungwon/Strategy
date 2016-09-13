@@ -16,6 +16,20 @@ Map::Map()
 	mInterface = this;
 }
 
+Unit& Map::getUnit(Point p)
+{
+	float closest = 10000;
+	int idx;
+	for(int i=0; i<deployedUnits.size(); i++) {
+		float distance = *deployedUnits[i] ^ p; 
+		if(distance < 20 && closest > distance) {
+			closest = distance;
+			idx = i;
+		}
+	}
+	return *deployedUnits[idx];
+}
+
 int Map::init_map(Terrain_data&& tr)
 {
 	width = tr.width;
@@ -119,7 +133,7 @@ int Map::geo_effect(Unit& u)
 		
 void Map::deployUnit(Unit u, Point p, float h) 
 {
-	City& c = get_city(p);
+	City& c = get_city(p);//buggy when not initialized
 	u.set_team(c.owner());
 	
 	if(u.get_team() != 0) {//verify

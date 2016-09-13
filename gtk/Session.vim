@@ -23,7 +23,12 @@ badd +1 ~/Programming/Strategy/control.h
 badd +1 ~/Programming/Strategy/gtk/win.cc
 badd +1 ~/Programming/Strategy/gtk/win.h
 badd +1 ~/Programming/Strategy/gtk/main.cpp
-badd +0 ~/Programming/Strategy/gtk/interface.h
+badd +1 ~/Programming/Strategy/gtk/interface.h
+badd +1 ~/Programming/Strategy/gtk/syn.cc
+badd +0 ~/Programming/Strategy/gtk/teamsetup.cc
+badd +0 ~/Programming/Strategy/gtk/teamsetup.h
+badd +0 ~/Programming/Strategy/gtk/conndata.h
+badd +0 ~/Programming/Strategy/gtk/conndata.cc
 argglobal
 silent! argdel *
 set stal=2
@@ -43,12 +48,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+let s:l = 107 - ((41 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+107
+normal! 05|
 tabedit ~/Programming/Strategy/gtk/darea.cc
 set splitbelow splitright
 set nosplitbelow
@@ -65,12 +70,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 156 - ((2 * winheight(0) + 23) / 46)
+let s:l = 40 - ((39 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-156
-normal! 011|
+40
+normal! 010|
 tabedit ~/Programming/Strategy/gtk/darea.h
 set splitbelow splitright
 set nosplitbelow
@@ -153,13 +158,35 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+let s:l = 19 - ((18 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+19
 normal! 0
 tabedit ~/Programming/Strategy/gtk/main.cpp
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 3 - ((2 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+3
+normal! 016|
+tabedit ~/Programming/Strategy/gtk/teamsetup.cc
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -181,7 +208,73 @@ exe s:l
 normal! zt
 1
 normal! 0
-tabnext 4
+tabedit ~/Programming/Strategy/gtk/teamsetup.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+tabedit ~/Programming/Strategy/gtk/conndata.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+tabedit ~/Programming/Strategy/gtk/conndata.cc
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+tabnext 11
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

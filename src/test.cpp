@@ -4,6 +4,7 @@
 #include"Weapon.h"
 #include"mysql/mysqldata.h"
 #include"gtk/interface.h"
+#include"mapinterface.h"
 using namespace std;
 
 extern FieldInterface* fInterface;
@@ -25,16 +26,18 @@ int main()
 	for(int i=0; i<60; i++) {
 		w.time_pass();
 		u.time_pass();
-		fInterface->paste_pix(u.x, u.y, u.get_unitName(), u.heading_toward);
+		//fInterface->paste_pix(u.x, u.y, u.get_unitName(), u.heading_toward);
 		u.show();
 		w >> u;
 		u.show();
 	}
 
+	extern MapInterface* mInterface;
+	mInterface->deployUnit(u, u, 0);
 	u + w;
 	Unit e{"bomber_hb", {40, 320}, 0};
 	cout << w + e;
-	w.time_pass();
+	w.time_pass(); 
 	w >> u;
 	u.show();
 }

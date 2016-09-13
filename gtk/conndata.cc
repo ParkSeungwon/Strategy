@@ -8,7 +8,7 @@
 #include "join.h"
 #include "conndata.h"
 #include "interface.h"
-#include "server/tcpip.h"
+#include "tcpip/tcpip.h"
 using namespace std;
 extern Interface* pInterface;
 

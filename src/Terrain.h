@@ -27,17 +27,21 @@ public:
 
 class City : public Terrain {
 public:
+	//getter, setter
 	void ttype(Glob::TerrainType tt) {ttype_ = tt;}
 	Glob::TerrainType ttype() {return ttype_;}
+	char id() {return id_;}
+	void id(char c) {id_ = c;}
 	int owner() {return owner_;}
 	void owner(int o) {owner_ = o;}
 	int ally() {return ally_;}
 	void ally(int a) {ally_ = a;}
 
 protected:
+	char id_;//city_map_pixel number
 	int owner_;
 	int ally_;
-	Glob::TerrainType ttype_;
+	Glob::TerrainType ttype_;//capital harbor city airport
 };
 
 class Capital : public City {

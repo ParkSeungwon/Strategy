@@ -34,8 +34,6 @@ void Time::time_pass()
 
 Time::Time()
 {
-	//deployUnit(Unit{"bomber_hb"}, Point{50,50}, 0);
-	//deployedUnits[0]->insert_waypoint(-20, 5, 10);
 }
 
 void Time::sync()
@@ -48,7 +46,7 @@ void Time::sync()
 					w.get_shootingRangeMax(), 
 					w.get_shootingAngleFrom() + u->heading_toward, 
 					w.get_shootingAngleTo() + u->heading_toward, 
-					u->get_team() / 8 , 0.3,0.3,0.3});
+					u->get_team() / 8.0 , 0.3,0.3,0.3});
 		}
 	}
 }
