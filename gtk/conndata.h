@@ -1,9 +1,6 @@
 #pragma once
 #include <gtkmm.h>
 #include <string>
-class JoinPopup;
-std::string login(std::string prog_id, std::string prog_pass, 
-		std::string message = "U can use ID:anony@anony, PASS:anony");
 
 class ConnectPopup : public Gtk::Dialog 
 {

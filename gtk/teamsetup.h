@@ -6,12 +6,10 @@ class TeamSetup : public Gtk::Dialog
 public:
 	TeamSetup(int c);
 	virtual ~TeamSetup();
+	Gtk::ComboBoxText* comboboxes;
 	
 protected:
-	Gtk::VBox vbox1;
 	Gtk::HBox* hboxes;
-	Gtk::ComboBoxText* comboboxes;
-	Gtk::Button bt1;
 	void on_click();
 };
 

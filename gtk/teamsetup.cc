@@ -2,15 +2,15 @@
 #include "teamsetup.h"
 using namespace std;
 
-TeamSetup::TeamSetup(int c) : bt1("Start game")
+TeamSetup::TeamSetup(int c)
 {
 	set_title("Team setup");
-	add(vbox1);
+	Gtk::Box *box = get_content_area();
 	hboxes = new Gtk::HBox[c];
 	comboboxes = new Gtk::ComboBoxText[c * 3];
 	string s;
 	for(int i=0; i<c; i++) {
-		vbox1.pack_start(hboxes[i]);
+		box->pack_start(hboxes[i]);
 		hboxes[i].pack_start(comboboxes[i]);
 		hboxes[i].pack_start(comboboxes[i + c]);
 		hboxes[i].pack_start(comboboxes[i + c + c]);
@@ -38,8 +38,9 @@ TeamSetup::TeamSetup(int c) : bt1("Start game")
 		comboboxes[i + c + c].set_active(i);
 	}
 	comboboxes[0].set_active(0);
-	vbox1.pack_start(bt1);
-	bt1.signal_clicked().connect(sigc::mem_fun(*this, &TeamSetup::on_click));
+	add_button("Start game", 1);
+	add_button("cancel", 2);
+
 	show_all_children();
 }
 
@@ -49,7 +50,20 @@ TeamSetup::~TeamSetup()
 	delete [] hboxes;
 }
 
-void TeamSetup::on_click()
+vector<array<int, 3>> setup(int c)
 {
-	
+	TeamSetup ts(c);
+	vector<array<int, 3>> v;
+	array<int, 3> ar;
+
+	int result = ts.run();
+	if(result == 1) {
+		for(int i=0; i<c; i++) {
+			ar[0] = ts.comboboxes[i].get_active_row_number();
+			ar[1] = ts.comboboxes[i+c].get_active_row_number();
+			ar[2] = ts.comboboxes[i+c+c].get_active_row_number();
+			v.push_back(ar);
+		}
+	}
+	return v;
 }

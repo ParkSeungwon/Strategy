@@ -126,11 +126,12 @@ string ConnectPopup::del()
 
 
 string ConnectPopup::join_dialog()
-{
+{//popup to verify password
 	class JoinPopup : public Gtk::Dialog
 	{
 	public:
 		JoinPopup() : label("Retype password") {
+			set_title("verify password");
 			Gtk::Box* box = get_content_area();
 			box->pack_start(label);
 			box->pack_start(entry);
@@ -151,7 +152,7 @@ string ConnectPopup::join_dialog()
 }
 
 string ConnectPopup::connect()
-{
+{//return logged id
     if(checkValid()) {
         string host = entry[0].get_text();
         string user = entry[1].get_text();
@@ -161,7 +162,7 @@ string ConnectPopup::connect()
 		SqlQuery qd;
 		qd.connect(host, prog_id, prog_pass, db);//host, id, pass, database
 		qd.select("Users", "where email = '" + user + "' and password = '" + qd.password(pass) + "'");
-		if(qd.empty()) return predefined_word[4];
+		if(qd.empty()) return predefined_word[4];//no sudh id
 		else return qd.begin()->front();
 	}
 }
@@ -196,20 +197,20 @@ string repeat_dialog(string prog_id, string prog_pass, string message)
 	ConnectPopup cp(prog_id, prog_pass, message);
 	int result = cp.run();
 	switch(result) {
-	case 1: return cp.connect();
-	case 2: return cp.save(); 
-	case 3: return cp.del(); 
-	case 4: 
-	case Gtk::RESPONSE_DELETE_EVENT: return "exit";
-	case 5: return cp.join();
-//		JoinPopup jp();
+		case 1: return cp.connect();
+		case 2: return cp.save(); 
+		case 3: return cp.del(); 
+		case 4: 
+		case Gtk::RESPONSE_DELETE_EVENT: return "exit";
+		case 5: return cp.join();
 	}
 }
 	
 string login(string prog_id, string prog_pass)
 {
-	string s = "";
-	while(is_predefined(s) || s == "") s = repeat_dialog(prog_id, prog_pass, s);
+	string s;
+	do s = repeat_dialog(prog_id, prog_pass, s);
+	while(is_predefined(s)) ;
 	return s;
 }
 
