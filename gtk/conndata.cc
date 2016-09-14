@@ -4,12 +4,20 @@
 #include <memory>
 #include <fstream>
 #include "mysqldata.h"
-#include "join.h"
 #include "conndata.h"
 using namespace std;
 
-ConnectPopup::ConnectPopup(string prog_id, string prog_pass) 
-	: frame("Choose one Connection")
+const char *predefined_word[6] = { "password mismatch", "email already occupied",
+	"saved", "deleted", "Login failed", "No space allowed" };
+
+bool is_predefined(string s)
+{
+	for(int i=0; i<6; i++) if(s == predefined_word[i]) return true;
+	return false;
+}
+
+ConnectPopup::ConnectPopup(string prog_id, string prog_pass, string message) 
+	: frame("Choose one Connection"), message_label(message)
 {
     homefile = getenv("HOME");
     homefile += "/." + prog_id;
@@ -58,7 +66,6 @@ void ConnectPopup::pack_all()
 	label[1].set_label("email addr :");
 	label[2].set_label("Password  :");
 	label[3].set_label("Database  :");
-	message_label.set_label("U can use ID:anony@anony, PASS:anony");
 	add_button("Connect", 1);
 	add_button("Save", 2);
 	add_button("Delete", 3);
@@ -70,13 +77,13 @@ void ConnectPopup::pack_all()
 	show_all_children();
 }
 
-void ConnectPopup::save()
+string ConnectPopup::save()
 {
     if (checkValid()) {
         ofstream file(homefile.c_str(), std::ios_base::app);
         for(int i=0; i<4; i++) file << entry[i].get_text() << ' ';
-        message_label.set_label("--");
-    } else message_label.set_label("No space allowed!");
+		return predefined_word[2];
+    } else return predefined_word[5];
 }
 
 bool ConnectPopup::checkValid()
@@ -97,7 +104,7 @@ void ConnectPopup::on_radio_click(int whichButton, array<string, 4> s)
     radioSelection = whichButton;
 }
 
-void ConnectPopup::del()
+string ConnectPopup::del()
 {
     ifstream infile(homefile.c_str());
     ofstream outfile("/tmp/temp.cfg");
@@ -114,6 +121,33 @@ void ConnectPopup::del()
     std::remove(homefile.c_str());
     std::rename("/tmp/temp.cfg", homefile.c_str());
     std::remove("/tmp/temp.cfg");
+	return predefined_word[3];
+}
+
+
+string ConnectPopup::join_dialog()
+{
+	class JoinPopup : public Gtk::Dialog
+	{
+	public:
+		JoinPopup() : label("Retype password") {
+			Gtk::Box* box = get_content_area();
+			box->pack_start(label);
+			box->pack_start(entry);
+			entry.set_visibility(false);
+			add_button("Ok", 1);
+			add_button("cancel", 2);
+			show_all_children();
+		}
+		Gtk::Entry entry;
+
+	protected:
+		Gtk::Label label;
+	} jp;
+
+	int result = jp.run();
+	if(result == 1) return jp.entry.get_text();
+	else return "";
 }
 
 string ConnectPopup::connect()
@@ -127,30 +161,47 @@ string ConnectPopup::connect()
 		SqlQuery qd;
 		qd.connect(host, prog_id, prog_pass, db);//host, id, pass, database
 		qd.select("Users", "where email = '" + user + "' and password = '" + qd.password(pass) + "'");
-		if(qd.empty()) return "";
+		if(qd.empty()) return predefined_word[4];
 		else return qd.begin()->front();
 	}
 }
 
-void ConnectPopup::on_join_click()
+string ConnectPopup::join()
 {
-	string host = entry[0].get_text();
-	string user = entry[1].get_text();
-	string pass = entry[2].get_text();
-	string db = entry[3].get_text();
+	if(join_dialog() != entry[2].get_text()) return predefined_word[0];
+	if(checkValid()) {
+        string host = entry[0].get_text();
+        string user = entry[1].get_text();
+		string pass = entry[2].get_text();
+        string db = entry[3].get_text();
+
+		SqlQuery sq;
+		sq.connect(host, prog_id, prog_pass, db);
+		sq.select("Users", "where email = '" + user + "' and password = '" + sq.password(pass) + "'");
+		if(sq.empty()) {
+			sq.select("Users", "limit 1");
+			auto& record = *sq.begin();
+			record[0] = user;
+			record[1] = sq.password(pass);
+			record[2] = "";
+			record[3] = "";
+			sq.insert();
+			return connect();
+		} else return predefined_word[1];
+	}
 }
 
-string repeat_dialog(string prog_id, string prog_pass)
+string repeat_dialog(string prog_id, string prog_pass, string message)
 {
-	ConnectPopup cp(prog_id, prog_pass);
+	ConnectPopup cp(prog_id, prog_pass, message);
 	int result = cp.run();
 	switch(result) {
 	case 1: return cp.connect();
-	case 2: cp.save(); return "";
-	case 3: cp.del(); return "";
-	case 4: return "exit";
-	case 5: return "";
+	case 2: return cp.save(); 
+	case 3: return cp.del(); 
+	case 4: 
 	case Gtk::RESPONSE_DELETE_EVENT: return "exit";
+	case 5: return cp.join();
 //		JoinPopup jp();
 	}
 }
@@ -158,7 +209,7 @@ string repeat_dialog(string prog_id, string prog_pass)
 string login(string prog_id, string prog_pass)
 {
 	string s = "";
-	while(s == "") s = repeat_dialog(prog_id, prog_pass);
+	while(is_predefined(s) || s == "") s = repeat_dialog(prog_id, prog_pass, s);
 	return s;
 }
 
