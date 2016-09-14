@@ -11,12 +11,11 @@ using namespace Gtk;
 
 FieldInterface* fInterface;
 
-Darea::Darea() 
+Darea::Darea()
 {
 	fInterface = this;
 	add_events(Gdk::BUTTON_PRESS_MASK);
 	add_events(Gdk::KEY_PRESS_MASK);
-    map = Gdk::Pixbuf::create_from_file("car.png");
 	
 	File f;
 	f.find_all_ext("units", ".png");

@@ -13,6 +13,7 @@ public:
 	Win();	
 	Terrain_data terrain_data;
 	void set_user(std::string user);
+	Terrain_data open_map_file(std::string mapfile);
 
 protected:
     Darea area;
@@ -21,7 +22,6 @@ protected:
 	void open_terrain_file(std::string filename);
     void on_button_click();
     void on_cancel_click();
-	void on_open_click();
 	void on_connect_click();
 	bool on_button_press_event(GdkEventButton* e);
 	bool on_key_press_event(GdkEventKey* e);
@@ -30,9 +30,6 @@ protected:
 	Gtk::Box box2;
     Gtk::ScrolledWindow swin;
 	Gtk::Label label1;
-
-	std::shared_ptr<TeamSetup> teamsetup;
-	std::shared_ptr<ConnectPopup> connectpopup;
 
 private:
 	int i_ = 0;

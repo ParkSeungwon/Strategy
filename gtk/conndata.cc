@@ -1,131 +1,88 @@
 #include <iostream>
+#include <functional>
 #include <cstdlib>
 #include <memory>
 #include <fstream>
-#include <gtkmm.h>
-#include "mysql/mysqldata.h"
-#include "Util.h"
+#include "mysqldata.h"
 #include "join.h"
 #include "conndata.h"
-#include "interface.h"
-#include "tcpip/tcpip.h"
 using namespace std;
-extern Interface* pInterface;
 
-ConnectPopup::ConnectPopup() : 
-		label1("Host name :"), label2("email addr :"), label3("Password  :"),
-        label4("Database  :"), label5("U can use ID:anony@anony, PASS:anony"),
-        button1("Connect"), button2("Save"),
-        button3("Delete"), button4("Exit"), button5("Join"),
-        frame1("Choose one Connection")
+ConnectPopup::ConnectPopup(string prog_id, string prog_pass) 
+	: frame("Choose one Connection")
 {
     homefile = getenv("HOME");
-    homefile += "/.strategy";
-    
+    homefile += "/." + prog_id;
+	this->prog_id = prog_id;
+	this->prog_pass = prog_pass;
+	init_radio();
+	pack_all();
+}
+
+void ConnectPopup::init_radio() 
+{
 	ifstream f(homefile.c_str());
-	if(!f.is_open()) {
-		ofstream f(homefile.c_str());
-		f << "www.db4free.net anony@anony anony dbddfree ";
+	array<string, 4> s;
+	int i = 0;
+	while(f >> s[0] >> s[1] >> s[2] >> s[3]) {
+		v_radio.push_back(Gtk::RadioButton(s[0] + ' ' + s[1] + ' ' + s[3]));
+		v_radio.back().signal_clicked().connect(
+				bind(&ConnectPopup::on_radio_click, this, i++, s));
 	}
-	f.close();
-	
-	    
+	Gtk::RadioButton::Group group;
+	for(auto& a : v_radio) {
+		radioBox.pack_start(a);
+		a.set_group(group);
+		a.set_active();
+	}
+	radioSelection = i-1;
+}
+
+void ConnectPopup::pack_all() 
+{
 	set_title("Connect Database");
-    pRadioButton = NULL;
 	set_default_size(300, -1);
-	add(vBox1);
-	radioButton();
-    vBox1.pack_start(frame1);
-    frame1.add(vBox2);
-	vBox1.pack_start(hBox1);
-	vBox1.pack_start(hBox2);
-	vBox1.pack_start(hBox3);
-	vBox1.pack_start(hBox4);
-    vBox1.pack_start(label5);
-	hBox1.pack_start(label1);
-	hBox2.pack_start(label4);
-	hBox3.pack_start(label2);
-	hBox4.pack_start(label3);
-	hBox1.pack_start(entry1);
-	hBox2.pack_start(entry4);
-	hBox3.pack_start(entry2);
-	hBox4.pack_start(entry3);
-    entry1.set_max_length(25);
-    entry2.set_max_length(25);
-    entry3.set_max_length(25);
-	entry3.set_visibility(false);
-    entry4.set_max_length(25);
-	vBox1.pack_start(hBox5);
-	hBox5.pack_start(button1);
-	hBox5.pack_start(button2);
-	hBox5.pack_start(button3);
-	hBox5.pack_start(button4);
-    hBox5.pack_start(button5);
-	button1.signal_clicked().connect(sigc::mem_fun(*this, &ConnectPopup::on_connect_click));
-    button2.signal_clicked().connect(sigc::mem_fun(*this, &ConnectPopup::on_save_click));
-    button3.signal_clicked().connect(sigc::mem_fun(*this, &ConnectPopup::on_delete_click));
-	button4.signal_clicked().connect(sigc::mem_fun(*this, &ConnectPopup::on_exit_click));
-    button5.signal_clicked().connect(sigc::mem_fun(*this, &ConnectPopup::on_join_click));
+
+	Gtk::Box* box = get_content_area();
+    box->pack_start(frame);
+    frame.add(radioBox);
+	for(int i=0; i<4; i++) {
+		box->pack_start(hBox[i]);
+		hBox[i].pack_start(label[i]);
+		hBox[i].pack_start(entry[i]);
+		entry[i].set_max_length(25);
+	}
+	box->pack_end(message_label);
+	entry[2].set_visibility(false);
+	label[0].set_label("Host name :");
+	label[1].set_label("email addr :");
+	label[2].set_label("Password  :");
+	label[3].set_label("Database  :");
+	message_label.set_label("U can use ID:anony@anony, PASS:anony");
+	add_button("Connect", 1);
+	add_button("Save", 2);
+	add_button("Delete", 3);
+	add_button("Exit", 4);
+	add_button("Join", 5);
+
     set_position(Gtk::WIN_POS_CENTER_ON_PARENT);
     set_modal(true);
 	show_all_children();
 }
 
-void ConnectPopup::radioButton() 
-{
-	ifstream file(homefile.c_str());
-	const int MAX_CONNECT = 100;
-	string host[MAX_CONNECT], user[MAX_CONNECT], pass[MAX_CONNECT], db[MAX_CONNECT];
-	int i=0;
-	while(file >> host[i]) {
-		file >> user[i];
-		file >> pass[i];
-		file >> db[i];
-		i++;
-	}
-	file.close();
-
-    if(pRadioButton != NULL) delete [] pRadioButton;
-	pRadioButton = new Gtk::RadioButton[i];
-    Gtk::RadioButton::Group group;
-	if(i != 0) group = pRadioButton[0].get_group();
-    int j;
-	for(j=1; j<i; j++) pRadioButton[j].set_group(group);
-    for(j=0; j<i; j++) {
-        pRadioButton[j].signal_clicked().connect(sigc::bind<int>(sigc::mem_fun(*this, &ConnectPopup::on_radio_click), j));
-        pRadioButton[j].set_label(host[j] +" "+ user[j] +" "+ db[j]);
-		vBox2.pack_start(pRadioButton[j]);
-	}
-    radioSelection = 0;
-    this->show_all_children();
-}
-
-ConnectPopup::~ConnectPopup()
-{
-	delete [] pRadioButton;
-}
-
-void ConnectPopup::on_save_click()
+void ConnectPopup::save()
 {
     if (checkValid()) {
         ofstream file(homefile.c_str(), std::ios_base::app);
-        file << entry1.get_text() << " ";
-        file << entry2.get_text() << " ";
-        file << entry3.get_text() << " ";
-        file << entry4.get_text() << " ";
-        file.close();
-        radioButton();
-        label5.set_label("--");
-    }
-    else label5.set_label("No space allowed!");
+        for(int i=0; i<4; i++) file << entry[i].get_text() << ' ';
+        message_label.set_label("--");
+    } else message_label.set_label("No space allowed!");
 }
 
 bool ConnectPopup::checkValid()
 {
-    if(noSpace(entry1.get_text()) && noSpace(entry2.get_text()) &&
-        noSpace(entry3.get_text()) && noSpace(entry4.get_text()) )
-        return true;
-    else return false;
+    for(int i=0; i<4; i++) if(!noSpace(entry[i].get_text())) return false;
+	return true;
 }
 
 bool ConnectPopup::noSpace(string s)
@@ -134,74 +91,75 @@ bool ConnectPopup::noSpace(string s)
     else return false;
 }
 
-void ConnectPopup::on_radio_click(int whichButton)
+void ConnectPopup::on_radio_click(int whichButton, array<string, 4> s)
 {
-    ifstream file(homefile.c_str());
-    string s;
-    int i = 0;
-    while ( i++ < whichButton) {
-        for (int j=0; j < 4; j++) file >> s;
-    }
-    file >> s; entry1.set_text(s);
-    file >> s; entry2.set_text(s);
-    file >> s; entry3.set_text(s);
-    file >> s; entry4.set_text(s);
-    file.close();
+	for(int i=0; i<4; i++) entry[i].set_text(s[i]);
     radioSelection = whichButton;
 }
 
-void ConnectPopup::on_delete_click()
+void ConnectPopup::del()
 {
-    ifstream infile;
-    infile.open(homefile.c_str());
-    ofstream outfile;
-    outfile.open("/tmp/temp.cfg");
-    string s, garbage;
+    ifstream infile(homefile.c_str());
+    ofstream outfile("/tmp/temp.cfg");
+    string s;
    
-    for (int i=0; i < radioSelection; i++) {
-        for (int j=0; j < 4; j++) {
-            infile >> s;
-            outfile << s << " ";
-        }
+    for (int i=0; i < 4*radioSelection; i++) {
+		infile >> s;
+		outfile << s << ' ';
     }
-    for (int j=0; j < 4; j++) infile >> garbage;
-    while (infile >> s) outfile << s << " ";
+    for (int i=0; i < 4; i++) infile >> s;
+    while (infile >> s) outfile << s << ' ';
     outfile.close();
     infile.close();
     std::remove(homefile.c_str());
     std::rename("/tmp/temp.cfg", homefile.c_str());
     std::remove("/tmp/temp.cfg");
-    radioButton();
 }
 
-void ConnectPopup::on_connect_click()
+string ConnectPopup::connect()
 {
     if(checkValid()) {
-        string host = entry1.get_text();
-        string user = entry2.get_text();
-        string pass = entry3.get_text();
-        string db = entry4.get_text();
+        string host = entry[0].get_text();
+        string user = entry[1].get_text();
+        string pass = entry[2].get_text();
+        string db = entry[3].get_text();
 
 		SqlQuery qd;
-		qd.connect(host, "strategy", "strategy", db);//host, id, pass, database
-		qd.select("Users", "where email = '" + user + "' and password = '" + pass + "'");
-		if(qd.empty()) label5.set_label("Invalid!");
-		else {
-			Client cl(host);
-			cl.send(user);
-			pInterface->set_user(cl.recv());
-			hide();
-		}
-    }
+		qd.connect(host, prog_id, prog_pass, db);//host, id, pass, database
+		qd.select("Users", "where email = '" + user + "' and password = '" + qd.password(pass) + "'");
+		if(qd.empty()) return "";
+		else return qd.begin()->front();
+	}
 }
 
 void ConnectPopup::on_join_click()
 {
-	string host = entry1.get_text();
-	string user = entry2.get_text();
-	string pass = entry3.get_text();
-	string db = entry4.get_text();
-	joinpopup = make_shared<JoinPopup>(host, user, pass, db);
-    joinpopup->set_transient_for(*this);
-	joinpopup->show();
+	string host = entry[0].get_text();
+	string user = entry[1].get_text();
+	string pass = entry[2].get_text();
+	string db = entry[3].get_text();
 }
+
+string repeat_dialog(string prog_id, string prog_pass)
+{
+	ConnectPopup cp(prog_id, prog_pass);
+	int result = cp.run();
+	switch(result) {
+	case 1: return cp.connect();
+	case 2: cp.save(); return "";
+	case 3: cp.del(); return "";
+	case 4: return "exit";
+	case 5: return "";
+	case Gtk::RESPONSE_DELETE_EVENT: return "exit";
+//		JoinPopup jp();
+	}
+}
+	
+string login(string prog_id, string prog_pass)
+{
+	string s = "";
+	while(s == "") s = repeat_dialog(prog_id, prog_pass);
+	return s;
+}
+
+

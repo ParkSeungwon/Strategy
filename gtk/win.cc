@@ -16,7 +16,7 @@ Interface* pInterface;
 extern MapInterface* mInterface;
 
 Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
-			 box2(Gtk::ORIENTATION_VERTICAL), label1("라벨") 
+			 box2(Gtk::ORIENTATION_VERTICAL), label1("라벨")
 {
 	pInterface = this;
     set_border_width(10);
@@ -36,9 +36,14 @@ Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"),
     box1.pack_start(area);
     bt1.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_button_click));
     bt2.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_cancel_click));
-    bt3.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_open_click));
+    //bt3.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_open_click));
 	bt4.signal_clicked().connect(sigc::mem_fun(*this, &Win::on_connect_click));
     show_all_children();
+}
+
+Terrain_data Win::open_map_file(string map)
+{
+	return area.open_map_file(map);
 }
 
 bool Win::on_button_press_event(GdkEventButton* e)
@@ -63,35 +68,6 @@ int Win::label_change(int x, int y, int bt)
 	return s.size();
 }
 
-void Win::on_open_click()
-{
-	Gtk::FileChooserDialog dialog("Please choose a file", Gtk::FILE_CHOOSER_ACTION_OPEN);
-	dialog.set_transient_for(*this);
-
-	//Add response buttons the the dialog:
-	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
-	dialog.add_button("_Open", Gtk::RESPONSE_OK);
-
-	//Add filters, so that only certain file types can be selected:
-
-	auto filter_any = Gtk::FileFilter::create();
-	filter_any->set_name("Map files");
-	filter_any->add_pattern("*.map");
-	dialog.add_filter(filter_any);
-	//Show the dialog and wait for a user response:
-	int result = dialog.run();
-
-	//Handle the response:
-	if(result == Gtk::RESPONSE_OK) {
-		std::cout << "Open clicked." << std::endl;
-
-		//Notice that this is a std::string, not a Glib::ustring.
-		std::string filename = dialog.get_filename();
-		std::cout << "File selected: " <<  filename << std::endl;
-		teamsetup = make_shared<TeamSetup>(mInterface->init_map(area.open_map_file(filename)));
-		teamsetup->show();
-    }
-}
 
 void Win::on_button_click()
 {
@@ -131,8 +107,6 @@ void Win::on_cancel_click()
 
 void Win::on_connect_click()
 {
-	connectpopup = make_shared<ConnectPopup>();
-	connectpopup->show();
 }
 
 void Win::set_user(string user)

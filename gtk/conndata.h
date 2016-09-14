@@ -1,34 +1,35 @@
 #pragma once
+#include <gtkmm.h>
 #include <string>
 class JoinPopup;
+std::string login(std::string prog_id, std::string prog_pass);
 
-class ConnectPopup : public Gtk::Window {
+class ConnectPopup : public Gtk::Dialog 
+{
+public:
+	ConnectPopup(std::string prog_id, std::string prog_pass);
+	void save();
+	void del();
+	std::string connect();
+    
+protected:
+	Gtk::VBox radioBox;
+	Gtk::HBox hBox[4];
+	Gtk::Entry entry[4];
+	Gtk::Label label[4], message_label;
+    Gtk::Frame frame;
+
+	void on_radio_click(int whichButton, std::array<std::string ,4> s);
+    void on_join_click();
+
+    
 private:
+    void init_radio();
+	void pack_all();
     int radioSelection;
+	std::string prog_id, prog_pass;
+	std::vector<Gtk::RadioButton> v_radio;
     bool checkValid();
 	bool noSpace(std::string s);
 	std::string homefile;
-    
-protected:
-	Gtk::VBox vBox1, vBox2;
-	Gtk::HBox hBox1, hBox2, hBox3, hBox4, hBox5;
-	Gtk::Entry entry1, entry2, entry3, entry4;
-	Gtk::Label label1, label2, label3, label4, label5;
-	Gtk::Button button1, button2, button3, button4, button5;
-	Gtk::RadioButton *pRadioButton;
-    Gtk::Frame frame1;
-
-	virtual void on_save_click();
-	virtual void on_delete_click();
-	virtual void on_connect_click();
-	virtual void on_exit_click() {hide();}
-	virtual void on_radio_click(int whichButton);
-    virtual void on_join_click();
-
-    void radioButton();
-    
-public:
-	std::shared_ptr<JoinPopup> joinpopup;
-	ConnectPopup();
-	~ConnectPopup();
 };

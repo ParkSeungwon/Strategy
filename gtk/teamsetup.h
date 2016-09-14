@@ -1,7 +1,7 @@
 #pragma once
 #include <gtkmm.h>
 
-class TeamSetup : public Gtk::Window
+class TeamSetup : public Gtk::Dialog
 {
 public:
 	TeamSetup(int c);
@@ -14,3 +14,5 @@ protected:
 	Gtk::Button bt1;
 	void on_click();
 };
+
+

@@ -1,4 +1,5 @@
 #pragma once
+#include <gtkmm.h>
 #include <string>
 
 class JoinPopup : public Gtk::Window
