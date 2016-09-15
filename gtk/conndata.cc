@@ -7,10 +7,11 @@
 #include "conndata.h"
 using namespace std;
 
-const char *predefined_word[6] = { "password mismatch", "email already occupied",
-	"saved", "deleted", "Login failed", "No space allowed" };
+static const char *predefined_word[6] = { "password mismatch", 
+	"email already occupied", "saved", "deleted", "Login failed", 
+	"No space allowed" };
 
-bool is_predefined(string s)
+static bool is_predefined(string s)
 {
 	for(int i=0; i<6; i++) if(s == predefined_word[i]) return true;
 	return false;
@@ -192,7 +193,7 @@ string ConnectPopup::join()
 	}
 }
 
-string repeat_dialog(string prog_id, string prog_pass, string message)
+static string repeat_dialog(string prog_id, string prog_pass, string message)
 {
 	ConnectPopup cp(prog_id, prog_pass, message);
 	int result = cp.run();
@@ -210,7 +211,7 @@ string login(string prog_id, string prog_pass)
 {
 	string s;
 	do s = repeat_dialog(prog_id, prog_pass, s);
-	while(is_predefined(s)) ;
+	while(is_predefined(s));
 	return s;
 }
 

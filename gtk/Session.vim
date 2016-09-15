@@ -184,12 +184,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 7 - ((6 * winheight(0) + 23) / 46)
+let s:l = 31 - ((30 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-7
-normal! 064|
+31
+normal! 05|
 tabedit ~/Programming/Strategy/gtk/teamsetup.cc
 set splitbelow splitright
 set nosplitbelow
@@ -206,11 +206,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 25 - ((12 * winheight(0) + 23) / 46)
+let s:l = 46 - ((45 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-25
+46
 normal! 0
 tabedit ~/Programming/Strategy/gtk/teamsetup.h
 set splitbelow splitright
@@ -228,12 +228,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+let s:l = 9 - ((8 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+9
+normal! 05|
 tabedit ~/Programming/Strategy/gtk/conndata.h
 set splitbelow splitright
 set nosplitbelow
@@ -272,13 +272,13 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 208 - ((34 * winheight(0) + 23) / 46)
+let s:l = 132 - ((0 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-208
-normal! 046|
-tabnext 7
+132
+normal! 012|
+tabnext 11
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
