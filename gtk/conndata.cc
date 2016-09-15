@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <memory>
 #include <fstream>
+#include "Unit.h"
+#include "Weapon.h"
 #include "mysqldata.h"
 #include "conndata.h"
 using namespace std;
@@ -153,7 +155,7 @@ string ConnectPopup::join_dialog()
 }
 
 string ConnectPopup::connect()
-{//return logged id
+{//return logged id, also initialize unit, weapon definition
     if(checkValid()) {
         string host = entry[0].get_text();
         string user = entry[1].get_text();
@@ -164,7 +166,14 @@ string ConnectPopup::connect()
 		qd.connect(host, prog_id, prog_pass, db);//host, id, pass, database
 		qd.select("Users", "where email = '" + user + "' and password = '" + qd.password(pass) + "'");
 		if(qd.empty()) return predefined_word[4];//no sudh id
-		else return qd.begin()->front();
+		else {
+			string ret = qd.begin()->front();
+			qd.select("Units");
+			Unit::unit_def = std::move(qd);
+			qd.select("Weapons");
+			Weapon::weapon_def = std::move(qd);
+			return ret;
+		}
 	}
 }
 

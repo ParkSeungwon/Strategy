@@ -6,7 +6,6 @@
 #include "Unit.h"
 #include "Util.h"
 #include "Weapon.h"
-#include"mysql/mysqldata.h"
 using namespace std;
 using namespace Glob;
 
@@ -16,12 +15,6 @@ random_device Weapon::rd;
 
 Weapon::Weapon(string name)
 {
-	if(weapon_def.empty()) {
-		SqlQuery sd;
-		sd.connect("localhost", "strategy", "strategy", "strategy");
-		sd.select("Weapons");
-		weapon_def = move(sd);
-	}
 	for(auto& a : weapon_def) {
 		if(a[0] == name) {
 			firePower = a[1];

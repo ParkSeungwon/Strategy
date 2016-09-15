@@ -7,7 +7,7 @@
 #include <memory>
 #include "Waypoint.h"
 #include"Weapon.h"
-#include"mysql/mysqldata.h"
+#include"mysqldata.h"
 
 class Weapon;
 class Airport;
@@ -21,6 +21,7 @@ class Unit : public Waypoint
 public :
 	Unit(std::string name, Point position = {0,0}, float headingToward = 0);
 	virtual ~Unit();
+	static SqlData unit_def;
 
 	std::vector<Weapon> weapon;
 	int operator + (Weapon weapon);///<equip weapon
@@ -55,7 +56,6 @@ public :
 	void set_known_to(int i, bool b) 			{known_to[i] = b;}
 
 protected :
-	static SqlData unit_def;
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
 	std::string unitName;
 	int unitPrice;

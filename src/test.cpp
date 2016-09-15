@@ -2,7 +2,7 @@
 #include"Unit.h"
 #include"Util.h"
 #include"Weapon.h"
-#include"mysql/mysqldata.h"
+#include"mysqldata.h"
 #include"gtk/interface.h"
 #include"mapinterface.h"
 using namespace std;

@@ -9,12 +9,6 @@ SqlData Unit::unit_def {};
 
 Unit::Unit(string name, Point pos, float heading) 
 {
-	if(unit_def.empty()) {
-		SqlQuery sd;
-		sd.connect("localhost", "strategy", "strategy", "strategy");
-		sd.select("Units");
-		unit_def = move(sd);
-	}
 	for(auto& a : unit_def) {
 		if(a[0] == name) {
 			maxHealth = a[1];

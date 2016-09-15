@@ -1,14 +1,12 @@
 all : 
 	make -C gtk/
-	make -C mysql/
-	make -C tcpip/
 	make -C src/
 	make -C OBJS/
 
 PHONY : clean
 
 clean :
-	rm OBJS/*.o MAINOBJ/*.o *.x
+	rm OBJS/*.o OBJS/*.x *.x
 
 ls :
 	echo $(EXE)
