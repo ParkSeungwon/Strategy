@@ -3,8 +3,9 @@
 class User
 {
 public:
-	int type, team, id;
+	int type;//human, user, cpu
 	std::string nation;
 	int money;
 	deployUnit(Map& map, Unit unit);
 };
+

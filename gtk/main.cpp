@@ -4,6 +4,8 @@
 #include"Time.h"
 using namespace std;
 
+extern const char **Type, **Nations;
+map<string, int> Teams;
 string login(string prog_id, string prog_pass);//in conndata.cc, find with grep
 string choose_map();
 vector<array<int, 3>> setup(int capital_count);
@@ -24,7 +26,10 @@ int main(int argc, char** argv)
 	int capital_count = time.init_map(win.open_map_file(map));
 	auto teams = setup(capital_count);
 	if(teams.empty()) return 0;
-	for(auto& a : teams) for(auto& b : a) cout << b << ' ';
+	for(auto& a : teams) {
+		cout << Type[a[0]] << " : " << Nations[a[1]] << ", team" << a[2] << endl;
+		Teams[Nations[a[1]]] = a[2];
+	}
 	cout << id << map;
     
 //	for(auto& a : time.cities) {

@@ -2,6 +2,11 @@
 #include "teamsetup.h"
 using namespace std;
 
+const char *Nations[] = {"Americans", "Australians", "British", "Canadians",
+	"Chinese", "French", "Germans", "Italians", "Japanese", "Neutral", 
+	"Puppet_States", "Russians"};
+const char *Type[] = {"User", "Human", "CPU"};
+
 TeamSetup::TeamSetup(int c)
 {
 	set_title("Team setup");
@@ -17,18 +22,7 @@ TeamSetup::TeamSetup(int c)
 		comboboxes[i].append("User");
 		comboboxes[i].append("Human");
 		comboboxes[i].append("CPU");
-		comboboxes[i + c].append("Americans");
-		comboboxes[i + c].append("Australians");
-		comboboxes[i + c].append("British");
-		comboboxes[i + c].append("Canadians");
-		comboboxes[i + c].append("Chinese");
-		comboboxes[i + c].append("French");
-		comboboxes[i + c].append("Germans");
-		comboboxes[i + c].append("Italians");
-		comboboxes[i + c].append("Japanese");
-		comboboxes[i + c].append("Neutral");
-		comboboxes[i + c].append("Puppet_States");
-		comboboxes[i + c].append("Russians");
+		for(int j=0; j<12; j++) comboboxes[i +c].append(Nations[j]);
 		for(int j=1; j<=c; j++) {
 			s = "Team" + to_string(j);
 			comboboxes[i + c + c].append(s);
