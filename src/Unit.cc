@@ -7,19 +7,19 @@ using namespace Glob;
 
 SqlData Unit::unit_def {};
 
-Unit::Unit(string name, Point pos, float heading) 
+Unit::Unit(string nation, string name, Point pos, float heading) 
 {
 	for(auto& a : unit_def) {
-		if(a[0] == name) {
-			maxHealth = a[1];
-			fuelCapacity = a[2];
-			unitPrice = a[3];
-			minimumSpeed = a[4];
-			maximumSpeed = a[5];
-			intelligenceRadius = a[6];
-			minimumTurnRadius = a[7];
-			evadeRatio = a[8];
-			unit_type = static_cast<UnitType>((int)a[9]);
+		if(a[0] == nation && a[1] == name) {
+			maxHealth = a[2];
+			fuelCapacity = a[3];
+			unitPrice = a[4];
+			minimumSpeed = a[5];
+			maximumSpeed = a[6];
+			intelligenceRadius = a[7];
+			minimumTurnRadius = a[8];
+			evadeRatio = a[9];
+			unit_type = static_cast<UnitType>((int)a[10]);
 			break;
 		}
 	}

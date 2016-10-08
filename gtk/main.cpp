@@ -18,8 +18,8 @@ int main(int argc, char** argv)
 	string map = choose_map();
 	if(map == "exit") return 0;
 	
-	Time time;
-	Win win;
+	Time time;//model
+	Win win;//view
 	
 	int capital_count = time.init_map(win.open_map_file(map));
 	auto teams = setup(capital_count);

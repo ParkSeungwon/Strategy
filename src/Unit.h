@@ -19,7 +19,7 @@ namespace Glob {
 class Unit : public Waypoint
 {
 public :
-	Unit(std::string name, Point position = {0,0}, float headingToward = 0);
+	Unit(std::string nation, std::string name, Point position = {0,0}, float headingToward = 0);
 	virtual ~Unit();
 	static SqlData unit_def;
 

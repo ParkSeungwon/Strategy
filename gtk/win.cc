@@ -78,7 +78,7 @@ void Win::on_button_click()
     // force our program to redraw the entire clock.
 	area.refresh();
 
-	mInterface->deployUnit(Unit{"bomber_hb"}, Point{1793,875}, 0);//if point is not city crash...
+	mInterface->deployUnit(Unit{"British", "bomber_hb"}, Point{1793,875}, 0);//if point is not city crash...
 //	mInterface->deployedUnits[0]->insert_waypoint(-20, 5, 10);
 	//for(int i=0; i<100; i++) time.time_pass();
 }

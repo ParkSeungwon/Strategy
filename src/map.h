@@ -20,9 +20,9 @@ public:
 	virtual int occupy(Point p, int team);
 	int geo_effect(Unit& u);
 
-	std::vector<std::shared_ptr<Unit>> deployedUnits;
+	std::vector<std::shared_ptr<Unit>> deployedUnits[8];
 //	std::vector<City> ci;
-	std::unordered_map<char, City> cities;
+	std::unordered_map<unsigned char, City> cities;
 	void deployUnit(Unit unit, Point p, float heading_toward);
 	Unit& getUnit(Point p);
 	Glob::TerrainType get_terrain_type(Point p) const;

@@ -11,7 +11,7 @@ extern FieldInterface* fInterface;
 
 int main()
 {
-	Unit u{"bomber_hb", Point{200,100}, M_PI};
+	Unit u{"British", "bomber_hb", Point{200,100}, M_PI};
 	u.show();
 	cout << "position " << u.x << ' ' << u.y << endl;
 	cout << u.get_fuel() << ' ' << u.get_currentHealth() << endl;
@@ -35,7 +35,7 @@ int main()
 	extern MapInterface* mInterface;
 	mInterface->deployUnit(u, u, 0);
 	u + w;
-	Unit e{"bomber_hb", {40, 320}, 0};
+	Unit e{"Chinese", "bomber_hb", {40, 320}, 0};
 	cout << w + e;
 	w.time_pass(); 
 	w >> u;
