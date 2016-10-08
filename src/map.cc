@@ -10,6 +10,7 @@ typedef unsigned char UC;
 using namespace Glob;
 
 MapInterface* mInterface;
+extern map<string, int> Teams;
 
 Map::Map()
 {
@@ -90,7 +91,7 @@ Map::~Map()
 
 std::string Map::occupy(Point p, int team)
 {
-	get_city(p).nation(team);
+	return get_city(p).nation();
 }
 
 bool Map::in_city(Point p) 
@@ -118,7 +119,7 @@ int Map::geo_effect(Unit& u)
 		} else if(tt == TerrainType::airport && ut == UnitType::Air) ok = true;
 		else if(tt == TerrainType::harbor && ut == UnitType::Ship) ok = true;
 		
-		if(ok && c.nation() == u.nation()) {
+		if(ok && Teams[c.nation()] == Teams[u.nation()]) {
 			u.set_supply();
 			u.set_recruit();
 		}
@@ -126,7 +127,7 @@ int Map::geo_effect(Unit& u)
 	} else u.out_of_city();
 
 	if(ut == UnitType::Air && u.get_fuel() <= 0) {
-		if(tt != TerrainType::airport || c.ally() != u.get_ally()) 
+		if(tt != TerrainType::airport || Teams[c.nation()] != Teams[u.nation()]) 
 			u.set_currentHealth(-100);
 	}
 }
