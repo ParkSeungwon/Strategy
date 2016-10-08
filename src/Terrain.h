@@ -30,17 +30,14 @@ public:
 	//getter, setter
 	void ttype(Glob::TerrainType tt) {ttype_ = tt;}
 	Glob::TerrainType ttype() {return ttype_;}
-	char id() {return id_;}
-	void id(char c) {id_ = c;}
-	int owner() {return owner_;}
-	void owner(int o) {owner_ = o;}
-	int ally() {return ally_;}
-	void ally(int a) {ally_ = a;}
+	unsigned char id() {return id_;}
+	void id(unsigned char c) {id_ = c;}
+	std::string nation() {return nation_;}
+	void nation(std::string n) {nation_ = n;}
 
 protected:
-	char id_;//city_map_pixel number
-	int owner_;
-	int ally_;
+	unsigned char id_;//city_map_pixel number
+	std::string nation_;
 	Glob::TerrainType ttype_;//capital harbor city airport
 };
 

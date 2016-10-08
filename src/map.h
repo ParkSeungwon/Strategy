@@ -17,17 +17,17 @@ public:
 	Map();
 	int init_map(Terrain_data&& tr);///<return capital count
 	virtual ~Map();
-	virtual int occupy(Point p, int team);
+	virtual std::string occupy(Point p, int team);
 	int geo_effect(Unit& u);
 
-	std::vector<std::shared_ptr<Unit>> deployedUnits[8];
-//	std::vector<City> ci;
-	std::unordered_map<unsigned char, City> cities;
 	void deployUnit(Unit unit, Point p, float heading_toward);
 	Unit& getUnit(Point p);
 	Glob::TerrainType get_terrain_type(Point p) const;
 
 protected:
+	std::vector<std::shared_ptr<Unit>> deployedUnits;
+	std::unordered_map<unsigned char, City> cities;
+
 	float calculate_terrain_penalty(Unit& u, int time) const;
 	float calculate_terrain_penalty(Unit& u) const;
 	int generate_recon() const;//return showing unit count
@@ -39,6 +39,6 @@ protected:
 private:
 	int count_cities();
 	bool in_city(Point p);
-	City& get_city(Point p); 
+	City& get_city(Point p) ; 
 };
 

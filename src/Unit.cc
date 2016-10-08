@@ -23,6 +23,7 @@ Unit::Unit(string nation, string name, Point pos, float heading)
 			break;
 		}
 	}
+	nation_ = nation;
 	unitName = name;
 	heading_toward = heading;
 	x = pos.x; y = pos.y;

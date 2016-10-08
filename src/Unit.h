@@ -54,9 +54,12 @@ public :
 	void set_team(int t) 						{team = t;}
 	void set_evadeRatio(float bonus) {evadeRatio = bonus * orig_evade_ratio;}
 	void set_known_to(int i, bool b) 			{known_to[i] = b;}
+	void nation(std::string nt) 				{nation_ = nt;}
+	std::string nation()						{return nation_;}
 
 protected :
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
+	std::string nation_;
 	std::string unitName;
 	int unitPrice;
 	int maxHealth;

@@ -24,10 +24,13 @@ int main(int argc, char** argv)
 	int capital_count = time.init_map(win.open_map_file(map));
 	auto teams = setup(capital_count);
 	if(teams.empty()) return 0;
-	
 	for(auto& a : teams) for(auto& b : a) cout << b << ' ';
 	cout << id << map;
     
+//	for(auto& a : time.cities) {
+		//cout << a.first << endl;
+		//cout << a.first << ' ' <<  endl;
+//	}
 	return app->run(win);
 }
 

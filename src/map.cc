@@ -63,7 +63,7 @@ int Map::count_cities()
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
 			ct.ttype(terrain_map[x][y]); 
-			cities.emplace(city_map[x][y], ct);
+			cities[city_map[x][y]] = ct;
 		}
 	}
 	int c = 0;
@@ -88,9 +88,9 @@ Map::~Map()
 
 //Map::Map() {}//이것을 헤더파일에 넣을 경우 city클래스의 포워드로는 부족하다.
 
-int Map::occupy(Point p, int team)
+std::string Map::occupy(Point p, int team)
 {
-	get_city(p).owner(team);
+	get_city(p).nation(team);
 }
 
 bool Map::in_city(Point p) 
@@ -118,7 +118,7 @@ int Map::geo_effect(Unit& u)
 		} else if(tt == TerrainType::airport && ut == UnitType::Air) ok = true;
 		else if(tt == TerrainType::harbor && ut == UnitType::Ship) ok = true;
 		
-		if(ok && c.ally() == u.get_ally()) {
+		if(ok && c.nation() == u.nation()) {
 			u.set_supply();
 			u.set_recruit();
 		}
