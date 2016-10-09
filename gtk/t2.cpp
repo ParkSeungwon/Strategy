@@ -5,6 +5,7 @@
 #include"mysqldata.h"
 #include"gtk/interface.h"
 #include"mapinterface.h"
+#include"unitbutton.h"
 #include<gtkmm.h>
 using namespace std;
 
@@ -23,6 +24,10 @@ int main(int argc, char** argv)
 		Teams[Nations[a[1]]] = a[1];
 		//cout << a[0] << Teams[Nations[a[1]]] << endl;
 	}
-	return app->run();
+	Gtk::Window win;
+	UnitButton bt("Chinese", "infantry");
+	win.add(bt);
+	win.show_all_children();
+	return app->run(win);
 
 }

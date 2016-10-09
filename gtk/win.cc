@@ -16,7 +16,7 @@ Interface* pInterface;
 extern MapInterface* mInterface;
 
 Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
-			 box2(Gtk::ORIENTATION_VERTICAL), label1("라벨")
+	ubt("Chinese", "infantry"), box2(Gtk::ORIENTATION_VERTICAL), label1("라벨")
 {
 	pInterface = this;
     set_border_width(10);
@@ -30,6 +30,7 @@ Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"),
     box2.pack_start(bt2, Gtk::PACK_SHRINK);
     box2.pack_start(bt3, Gtk::PACK_SHRINK);
     box2.pack_start(bt4, Gtk::PACK_SHRINK);
+	box2.pack_start(ubt, Gtk::PACK_SHRINK);
 	box2.pack_start(label1, Gtk::PACK_SHRINK);
  //   cout << "높이 " << area.height << endl;
  //   area.set_size_request(area.width, area.height);

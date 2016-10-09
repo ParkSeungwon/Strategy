@@ -17,6 +17,7 @@ public:
 	void refresh();
 	void insert_to_draw(const Glob::To_draw& td);
 	int get_height() {return height;}
+	static Gtk::Image get_icon(std::string nation, std::string unitName);
 
 protected:
 	struct bk_pixbuf {
@@ -24,9 +25,9 @@ protected:
 	};
 	int width, height;
 	std::vector<Glob::To_draw> to_draws;
+	static std::unordered_map<std::string, Glib::RefPtr<Gdk::Pixbuf>> unit_png;
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
 	Glib::RefPtr<Gdk::Pixbuf> map;
-	std::unordered_map<std::string, Glib::RefPtr<Gdk::Pixbuf>> unit_png;
 //	Cairo::RefPtr<Cairo::Context> context;
 	static Glib::RefPtr<Gdk::Pixbuf> rotate_pix_buf(
 			const Glib::RefPtr<Gdk::Pixbuf> pb, float radian);

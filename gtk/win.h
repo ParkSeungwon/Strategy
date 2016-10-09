@@ -4,6 +4,7 @@
 #include "darea.h"
 #include "terrain_data.h"
 #include "interface.h"
+#include "unitbutton.h"
 class TeamSetup;
 class ConnectPopup;
 
@@ -19,6 +20,7 @@ protected:
     Darea area;
 //	Control control;
     Gtk::Button bt1, bt2, bt3, bt4;
+	UnitButton ubt;
 	void open_terrain_file(std::string filename);
     void on_button_click();
     void on_cancel_click();

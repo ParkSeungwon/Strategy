@@ -10,19 +10,26 @@ using namespace std;
 using namespace Gtk;
 
 FieldInterface* fInterface;
+std::unordered_map<std::string, Glib::RefPtr<Gdk::Pixbuf>> Darea::unit_png;
 
 Darea::Darea()
 {
 	fInterface = this;
 	add_events(Gdk::BUTTON_PRESS_MASK);
 	add_events(Gdk::KEY_PRESS_MASK);
-	
+
 	File f;
 	f.find_all_ext("units", ".png");
 	for(auto& a : f.file_names) {
 		unit_png.insert({a, Gdk::Pixbuf::create_from_file(a)});
 		cout << "opening file " << a << endl;
 	}
+}
+
+Gtk::Image Darea::get_icon(string nation, string unitname)
+{
+	for(auto& a : unit_png) cout << a.first << endl;
+	return Gtk::Image(unit_png["units/" + nation + '/' + unitname + ".png"]);
 }
 
 Terrain_data Darea::open_map_file(string mp)
