@@ -33,6 +33,9 @@ badd +1 ~/Programming/Strategy/gtk/join.h
 badd +1 /usr/include/c++/5/functional
 badd +1 ~/Programming/Strategy/gtk/mapchooser.cc
 badd +1 ~/Programming/Strategy/gtk/join.cc
+badd +0 ~/Programming/Strategy/gtk/t2.cpp
+badd +0 ~/Programming/Strategy/gtk/unitbutton.h
+badd +0 ~/Programming/Strategy/gtk/unitbutton.cc
 argglobal
 silent! argdel *
 set stal=2
@@ -52,12 +55,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 68 - ((22 * winheight(0) + 23) / 46)
+let s:l = 50 - ((45 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-68
-normal! 016|
+50
+normal! 0
 tabedit ~/Programming/Strategy/gtk/darea.cc
 set splitbelow splitright
 set nosplitbelow
@@ -74,11 +77,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 19 - ((18 * winheight(0) + 23) / 46)
+let s:l = 30 - ((29 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-19
+30
 normal! 0
 tabedit ~/Programming/Strategy/gtk/darea.h
 set splitbelow splitright
@@ -96,11 +99,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 12 - ((11 * winheight(0) + 23) / 46)
+let s:l = 28 - ((27 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-12
+28
 normal! 011|
 tabedit ~/Programming/Strategy/gtk/interface.h
 set splitbelow splitright
@@ -162,13 +165,35 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 16 - ((15 * winheight(0) + 23) / 46)
+let s:l = 7 - ((6 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-16
-normal! 031|
+7
+normal! 023|
 tabedit ~/Programming/Strategy/gtk/main.cpp
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 34 - ((33 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+34
+normal! 05|
+tabedit ~/Programming/Strategy/gtk/t2.cpp
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -189,7 +214,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 31
-normal! 027|
+normal! 023|
 tabedit ~/Programming/Strategy/gtk/teamsetup.cc
 set splitbelow splitright
 set nosplitbelow
@@ -206,11 +231,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 9 - ((8 * winheight(0) + 23) / 46)
+let s:l = 10 - ((9 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-9
+10
 normal! 0
 tabedit ~/Programming/Strategy/gtk/teamsetup.h
 set splitbelow splitright
@@ -250,7 +275,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 4 - ((3 * winheight(0) + 22) / 45)
+let s:l = 4 - ((3 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -277,8 +302,52 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 132
-normal! 012|
-tabnext 8
+normal! 0
+tabedit ~/Programming/Strategy/gtk/unitbutton.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 15 - ((14 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+15
+normal! 02|
+tabedit ~/Programming/Strategy/gtk/unitbutton.cc
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 11 - ((10 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+11
+normal! 0
+tabnext 14
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

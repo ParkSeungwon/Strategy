@@ -14,6 +14,7 @@ using namespace std;
 using namespace Glob;
 Interface* pInterface;
 extern MapInterface* mInterface;
+string produce(const City& city);
 
 Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
 	ubt("Chinese", "infantry"), box2(Gtk::ORIENTATION_VERTICAL), label1("라벨")
@@ -67,6 +68,7 @@ int Win::label_change(int x, int y, int bt)
 	s += "\n" + to_string(bt);
 	auto city = mInterface->get_city(Point(x,y));
 	s += '\n' + city.nation();
+	if(city.nation() != "") produce(city);
 	label1.set_text(s);
 	return s.size();
 }

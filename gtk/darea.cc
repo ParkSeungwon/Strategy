@@ -28,7 +28,6 @@ Darea::Darea()
 
 Gtk::Image Darea::get_icon(string nation, string unitname)
 {
-	for(auto& a : unit_png) cout << a.first << endl;
 	return Gtk::Image(unit_png["units/" + nation + '/' + unitname + ".png"]);
 }
 

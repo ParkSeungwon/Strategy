@@ -29,10 +29,10 @@ class City : public Terrain {
 public:
 	//getter, setter
 	void ttype(Glob::TerrainType tt) {ttype_ = tt;}
-	Glob::TerrainType ttype() {return ttype_;}
-	unsigned char id() {return id_;}
+	Glob::TerrainType ttype() const {return ttype_;}
+	unsigned char id() const {return id_;}
 	void id(unsigned char c) {id_ = c;}
-	std::string nation() {return nation_;}
+	std::string nation() const {return nation_;}
 	void nation(std::string n) {nation_ = n;}
 
 protected:

@@ -1,5 +1,7 @@
 #pragma once
 #include<gtkmm.h>
+#include<vector>
+class City;
 class UnitButton : public Gtk::Button
 {
 public:
@@ -12,4 +14,9 @@ protected:
 class Produce : public Gtk::Dialog
 {
 public:
+	Produce(const City& city);
+
+protected:
+	std::vector<UnitButton> icons;
+	UnitButton ut;
 };
