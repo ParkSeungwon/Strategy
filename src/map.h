@@ -19,6 +19,7 @@ public:
 	virtual ~Map();
 	virtual std::string occupy(Point p, int team);
 	int geo_effect(Unit& u);
+	void locate_nations();
 
 	void deployUnit(Unit unit, Point p, float heading_toward);
 	Unit& getUnit(Point p);

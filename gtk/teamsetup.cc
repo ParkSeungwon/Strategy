@@ -6,6 +6,7 @@ const char *Nations[] = {"Americans", "Australians", "British", "Canadians",
 	"Chinese", "French", "Germans", "Italians", "Japanese", "Neutral", 
 	"Puppet_States", "Russians"};
 const char *Type[] = {"User", "Human", "CPU"};
+map<string, int> Teams;
 
 TeamSetup::TeamSetup(int c)
 {

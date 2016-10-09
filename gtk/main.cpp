@@ -4,8 +4,8 @@
 #include"Time.h"
 using namespace std;
 
-extern const char **Type, **Nations;
-map<string, int> Teams;
+extern const char *Type[], *Nations[];
+extern map<string, int> Teams;
 string login(string prog_id, string prog_pass);//in conndata.cc, find with grep
 string choose_map();
 vector<array<int, 3>> setup(int capital_count);
@@ -31,11 +31,7 @@ int main(int argc, char** argv)
 		Teams[Nations[a[1]]] = a[2];
 	}
 	cout << id << map;
-    
-//	for(auto& a : time.cities) {
-		//cout << a.first << endl;
-		//cout << a.first << ' ' <<  endl;
-//	}
+   	time.locate_nations(); 
 	return app->run(win);
 }
 

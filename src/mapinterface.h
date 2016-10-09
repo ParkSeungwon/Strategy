@@ -1,6 +1,7 @@
 #include"Util.h"
 class Point;
 class Terrain_data;
+class City;
 
 struct MapInterface 
 {

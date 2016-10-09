@@ -29,10 +29,10 @@ badd +1 ~/Programming/Strategy/gtk/teamsetup.cc
 badd +1 ~/Programming/Strategy/gtk/teamsetup.h
 badd +1 ~/Programming/Strategy/gtk/conndata.h
 badd +1 ~/Programming/Strategy/gtk/conndata.cc
-badd +0 ~/Programming/Strategy/gtk/join.h
-badd +0 /usr/include/c++/5/functional
-badd +0 ~/Programming/Strategy/gtk/mapchooser.cc
-badd +0 ~/Programming/Strategy/gtk/join.cc
+badd +1 ~/Programming/Strategy/gtk/join.h
+badd +1 /usr/include/c++/5/functional
+badd +1 ~/Programming/Strategy/gtk/mapchooser.cc
+badd +1 ~/Programming/Strategy/gtk/join.cc
 argglobal
 silent! argdel *
 set stal=2
@@ -52,12 +52,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 30 - ((29 * winheight(0) + 23) / 46)
+let s:l = 68 - ((22 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
-normal! 05|
+68
+normal! 016|
 tabedit ~/Programming/Strategy/gtk/darea.cc
 set splitbelow splitright
 set nosplitbelow
@@ -145,7 +145,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
-normal! 0
+normal! 039|
 tabedit ~/Programming/Strategy/gtk/win.h
 set splitbelow splitright
 set nosplitbelow
@@ -189,7 +189,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 31
-normal! 05|
+normal! 027|
 tabedit ~/Programming/Strategy/gtk/teamsetup.cc
 set splitbelow splitright
 set nosplitbelow
@@ -206,11 +206,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 46 - ((45 * winheight(0) + 23) / 46)
+let s:l = 9 - ((8 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-46
+9
 normal! 0
 tabedit ~/Programming/Strategy/gtk/teamsetup.h
 set splitbelow splitright
@@ -250,7 +250,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 4 - ((3 * winheight(0) + 23) / 46)
+let s:l = 4 - ((3 * winheight(0) + 22) / 45)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -278,7 +278,7 @@ exe s:l
 normal! zt
 132
 normal! 012|
-tabnext 11
+tabnext 8
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

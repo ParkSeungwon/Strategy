@@ -8,9 +8,10 @@
 #define TERRAIN_COUNT 14
 typedef unsigned char UC;
 using namespace Glob;
+using namespace std;
 
 MapInterface* mInterface;
-extern map<string, int> Teams;
+extern std::map<std::string, int> Teams;
 
 Map::Map()
 {
@@ -64,15 +65,29 @@ int Map::count_cities()
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
 			ct.ttype(terrain_map[x][y]); 
+			ct.id((unsigned char)terrain_map[x][y]);
 			cities[city_map[x][y]] = ct;
 		}
 	}
 	int c = 0;
 	for(auto& a : cities) {
-		std::cout << a.first << " ";
+		std::cout << +a.first << " ";
 		if(a.second.ttype() == TerrainType::capital) c++;
 	}
 	return c;
+}
+
+void Map::locate_nations() 
+{
+	for(auto& a : Teams) {
+		for(auto& b : cities) {
+			if(b.second.ttype() == TerrainType::capital && b.second.nation() == "") {
+				b.second.nation(a.first);
+				break;
+			}
+		}
+	}
+	for(auto& a : cities) cout << +a.first << " : " << a.second.nation() << endl;
 }
 
 Map::~Map()
@@ -135,7 +150,7 @@ int Map::geo_effect(Unit& u)
 void Map::deployUnit(Unit u, Point p, float h) 
 {
 	City& c = get_city(p);//buggy when not initialized
-	u.set_team(c.owner());
+	u.set_team(Teams[c.nation()]);
 	
 	if(u.get_team() != 0) {//verify
 		u.heading_toward = h;

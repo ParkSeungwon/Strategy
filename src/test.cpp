@@ -8,6 +8,7 @@
 using namespace std;
 
 extern FieldInterface* fInterface;
+vector<array<int, 3>> setup(int capital_count);
 
 int main()
 {
