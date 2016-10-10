@@ -38,6 +38,9 @@ public :
 	void show();
 	
 	//setter, getter
+	std::string file() {
+		return "units/" + nation() + '/' + get_unitName() + ".png";
+	}
 	std::string get_unitName() 					{return unitName;}
 	int get_evadeRatio() const 					{return evadeRatio;}
 	unsigned int get_intelligenceRadius() const {return intelligenceRadius;}

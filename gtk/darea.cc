@@ -66,6 +66,7 @@ void Darea::clear_map()
 		map_backup_->copy_area(a.x, a.y, a.w, a.h, map, a.x, a.y);
 	}
 	backgrounds.clear();
+	to_draws.clear();
 }
 
 void Darea::paste_pix(int x, int y, string fl, float heading)
@@ -174,6 +175,7 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 	int i;
 	for(auto& a : to_draws) {
 		cr->set_source_rgba(a.color[0], a.color[1], a.color[2], a.color[3]);
+		a.y = height - a.y - 1;
 		cr->arc(a.x, a.y, a.rmin, a.angle_from, a.angle_to);
 		cr->arc_negative(a.x, a.y, a.rmax, a.angle_to, a.angle_from);
 		cr->close_path();
