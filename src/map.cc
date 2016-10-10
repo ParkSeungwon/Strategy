@@ -18,10 +18,10 @@ Map::Map()
 	mInterface = this;
 }
 
-Unit& Map::getUnit(Point p)
+shared_ptr<Unit> Map::getUnit(Point p)
 {
 	float closest = 10000;
-	int idx;
+	int idx = -1;
 	for(int i=0; i<deployedUnits.size(); i++) {
 		float distance = *deployedUnits[i] ^ p; 
 		if(distance < 20 && closest > distance) {
@@ -29,7 +29,8 @@ Unit& Map::getUnit(Point p)
 			idx = i;
 		}
 	}
-	return *deployedUnits[idx];
+	if(idx == -1) return shared_ptr<Unit>{};
+	else return deployedUnits[idx];
 }
 
 int Map::init_map(Terrain_data&& tr)

@@ -67,6 +67,11 @@ int Win::label_change(int x, int y, int bt)
 	s += "\n" + to_string(y);
 	s += "\n" + to_string(bt);
 	auto city = mInterface->get_city(Point(x,y));
+	auto u = mInterface->getUnit(Point{x,y});
+	if(u) {
+		cout << u->get_unitName() << " is here." << endl;
+		*u + Weapon{"side-winder"};
+	}
 	s += '\n' + city.nation();
 	string unit;
 	if(city.nation() != "") s += '\n' + (unit = produce(city));

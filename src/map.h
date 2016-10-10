@@ -22,7 +22,7 @@ public:
 	void locate_nations();
 
 	void deployUnit(Unit unit, Point p, float heading_toward);
-	Unit& getUnit(Point p);
+	std::shared_ptr<Unit> getUnit(Point p);
 	Glob::TerrainType get_terrain_type(Point p) const;
 
 protected:
