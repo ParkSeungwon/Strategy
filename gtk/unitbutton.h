@@ -15,8 +15,9 @@ class Produce : public Gtk::Dialog
 {
 public:
 	Produce(const City& city);
+	std::string selection;
 
 protected:
 	std::vector<UnitButton> icons;
-	UnitButton ut;
+	void on_click(std::string s);
 };

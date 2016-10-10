@@ -68,8 +68,9 @@ int Win::label_change(int x, int y, int bt)
 	s += "\n" + to_string(bt);
 	auto city = mInterface->get_city(Point(x,y));
 	s += '\n' + city.nation();
-	if(city.nation() != "") produce(city);
+	if(city.nation() != "") s += '\n' + produce(city);
 	label1.set_text(s);
+
 	return s.size();
 }
 

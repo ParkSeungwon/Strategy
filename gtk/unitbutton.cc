@@ -10,7 +10,7 @@ UnitButton::UnitButton(string nation, string unitname) {
 	set_image(img);
 }
 
-Produce::Produce(const City& city) : ut("Americans", "marine")
+Produce::Produce(const City& city) 
 {
 	auto tt = city.ttype();
 	string nt = city.nation();
@@ -26,13 +26,13 @@ Produce::Produce(const City& city) : ut("Americans", "marine")
 		case 0: case 3: 
 			if(a[0] == nt && t == k) {
 				icons.push_back(UnitButton(nt, a[1])); 
-				cout << nt << ' ' << a[1] << endl;
+				icons.back().signal_clicked().connect(bind(&Produce::on_click, this, a[1]));
 			}
 			break;
 		case 1: case 2: 
 			if(a[0] == nt && t == 1) {
 				icons.push_back(UnitButton(nt, a[1])); 
-				cout << nt << ' ' << a[1] << endl;
+				icons.back().signal_clicked().connect(bind(&Produce::on_click, this, a[1]));
 			}
 		}
 	}
@@ -41,7 +41,14 @@ Produce::Produce(const City& city) : ut("Americans", "marine")
 	show_all_children();
 }
 
+void Produce::on_click(string s)
+{
+	selection = s;
+	hide();
+}
+
 string produce(const City& city) {
 	Produce pd(city);
 	int result = pd.run();
+	return pd.selection;
 }
