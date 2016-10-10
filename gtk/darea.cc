@@ -171,11 +171,10 @@ bool Darea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	Gdk::Cairo::set_source_pixbuf(cr, map, 0, 0);
     cr->paint();
-    cr->set_line_width(10.0);
+    cr->set_line_width(0.0);
 	int i;
 	for(auto& a : to_draws) {
 		cr->set_source_rgba(a.color[0], a.color[1], a.color[2], a.color[3]);
-		a.y = height - a.y - 1;
 		cr->arc(a.x, a.y, a.rmin, a.angle_from, a.angle_to);
 		cr->arc_negative(a.x, a.y, a.rmax, a.angle_to, a.angle_from);
 		cr->close_path();
@@ -194,8 +193,9 @@ void Darea::refresh()
     }
 }
 
-void Darea::insert_to_draw(const Glob::To_draw& td)
+void Darea::insert_to_draw(Glob::To_draw& td)
 {
+	td.y = height - td.y;
 	to_draws.push_back(td);
 }
 

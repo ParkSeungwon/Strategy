@@ -15,7 +15,7 @@ public:
 	void paste_pix(int x, int y, std::string name, float heading = 0);
 	void clear_map();
 	void refresh();
-	void insert_to_draw(const Glob::To_draw& td);
+	void insert_to_draw(Glob::To_draw& td);
 	int get_height() {return height;}
 	static Gtk::Image get_icon(std::string nation, std::string unitName);
 

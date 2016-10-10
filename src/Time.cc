@@ -45,17 +45,20 @@ void Time::sync()
 	extern FieldInterface* fInterface;
 	if(deployedUnits.empty()) cout << "it's empty" << endl;
 	fInterface->clear_map();
+	To_draw td;
 	for(auto& u : deployedUnits) {
 		fInterface->paste_pix(u->x, u->y, u->file(), u->heading_toward);
-		fInterface->insert_to_draw({u->x, u->y, 0, u->get_intelligenceRadius(),
-				0, 2*M_PI, 0.2, 0.2, 0.2, 0.2});
+		td = {u->x, u->y, 0, u->get_intelligenceRadius(), 0, 2*M_PI, 
+			0.2, 0.2, 0.2, 0.2};
+		fInterface->insert_to_draw(td);
 		cout << u->x << u->y << u->get_unitName() << u->heading_toward << endl;
 		for(auto& w : u->weapon) {
-			fInterface->insert_to_draw({u->x, u->y, w.get_shootingRangeMin(), 
+			td = {u->x, u->y, w.get_shootingRangeMin(), 
 					w.get_shootingRangeMax(), 
 					w.get_shootingAngleFrom() + u->heading_toward, 
 					w.get_shootingAngleTo() + u->heading_toward, 
-					u->get_team() / 8.0 , 0.3,0.3,0.3});
+					u->get_team() / 8.0 , 0.3,0.3,0.3};
+			fInterface->insert_to_draw(td);
 		}
 	}
 	fInterface->refresh();
