@@ -1,8 +1,11 @@
 #pragma once
 #include "map.h"
 class Darea;
+struct TimeInterface {
+	virtual void sync() = 0;
+};
 
-class Time : public Map
+class Time : public Map, public TimeInterface
 {
 public:
   	Time();

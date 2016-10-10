@@ -68,18 +68,22 @@ int Win::label_change(int x, int y, int bt)
 	s += "\n" + to_string(bt);
 	auto city = mInterface->get_city(Point(x,y));
 	s += '\n' + city.nation();
-	if(city.nation() != "") s += '\n' + produce(city);
+	string unit;
+	if(city.nation() != "") s += '\n' + (unit = produce(city));
 	label1.set_text(s);
-
+	mInterface->deployUnit(Unit{city.nation(), unit}, Point{x,y}, 0);
 	return s.size();
 }
 
 
 void Win::on_button_click()
 {
+	extern FieldInterface* fInterface;
+
 	area.clear_map();
-	area.paste_pix(100 + i_++, 1900, "units/Americans/bomber_hb.png", 1 + f_++);
-	area.paste_pix(500, 1900, "units/Chinese/battlecruiser.png", M_PI);
+	fInterface->paste_pix(100 + i_++, 1900, "units/Americans/bomber_hb.png", 1 + f_++);
+	//area.paste_pix(100 + i_++, 1900, "units/Americans/bomber_hb.png", 1 + f_++);
+	//area.paste_pix(500, 1900, "units/Chinese/battlecruiser.png", M_PI);
 	//ts = new TeamSetup(8);
     // force our program to redraw the entire clock.
 	area.refresh();
@@ -113,6 +117,8 @@ void Win::on_cancel_click()
 
 void Win::on_connect_click()
 {
+	extern TimeInterface* tInterface;
+	tInterface->sync();
 }
 
 void Win::set_user(string user)

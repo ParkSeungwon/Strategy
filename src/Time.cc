@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <functional>
+#include<cmath>
 #include "Time.h"
 #include "Unit.h"
 #include "Terrain.h"
@@ -8,6 +9,8 @@
 #include"gtk/interface.h"
 using namespace std;
 using namespace Glob;
+
+TimeInterface* tInterface;
 
 void Time::time_pass()
 {
@@ -34,13 +37,20 @@ void Time::time_pass()
 
 Time::Time()
 {
+	tInterface = this;
 }
 
 void Time::sync()
 {//use interface to access screen
 	extern FieldInterface* fInterface;
+	if(deployedUnits.empty()) cout << "it's empty" << endl;
+	fInterface->clear_map();
 	for(auto& u : deployedUnits) {
-		fInterface->paste_pix(u->x, u->y, u->get_unitName(), u->heading_toward);
+		string fl = "units/" + u->nation() + '/' + u->get_unitName() + ".png";
+		fInterface->paste_pix(u->x, u->y, fl, u->heading_toward);
+		fInterface->insert_to_draw({u->x, u->y, 0, u->get_intelligenceRadius(),
+				0, 2*M_PI, 0.2, 0.2, 0.2, 0.2});
+		cout << u->x << u->y << u->get_unitName() << u->heading_toward << endl;
 		for(auto& w : u->weapon) {
 			fInterface->insert_to_draw({u->x, u->y, w.get_shootingRangeMin(), 
 					w.get_shootingRangeMax(), 
@@ -49,5 +59,6 @@ void Time::sync()
 					u->get_team() / 8.0 , 0.3,0.3,0.3});
 		}
 	}
+	fInterface->refresh();
 }
 
