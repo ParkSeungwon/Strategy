@@ -71,12 +71,13 @@ int Win::label_change(int x, int y, int bt)
 	if(u) {
 		cout << u->get_unitName() << " is here." << endl;
 		*u + Weapon{"side-winder"};
+		*u + Weapon{"Aim-9"};
 	}
 	s += '\n' + city.nation();
 	string unit;
 	if(city.nation() != "") s += '\n' + (unit = produce(city));
 	label1.set_text(s);
-	mInterface->deployUnit(Unit{city.nation(), unit}, Point{x,y}, 0);
+	mInterface->deployUnit(Unit{city.nation(), unit}, Point{x,y}, 1.5);
 	return s.size();
 }
 

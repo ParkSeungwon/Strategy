@@ -53,10 +53,11 @@ void Time::sync()
 		fInterface->insert_to_draw(td);
 		cout << u->x << u->y << u->get_unitName() << u->heading_toward << endl;
 		for(auto& w : u->weapon) {
+			float from = (float)w.get_shootingAngleFrom() / 360 * 2 * M_PI;
+			float to = (float)w.get_shootingAngleTo() / 360 * 2 * M_PI;
 			td = {u->x, u->y, w.get_shootingRangeMin(), 
 					w.get_shootingRangeMax(), 
-					w.get_shootingAngleFrom() + u->heading_toward, 
-					w.get_shootingAngleTo() + u->heading_toward, 
+					from + u->heading_toward, to + u->heading_toward, 
 					u->get_team() / 8.0 , 0.3,0.3,0.3};
 			fInterface->insert_to_draw(td);
 		}

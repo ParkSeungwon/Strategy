@@ -21,7 +21,6 @@ Produce::Produce(const City& city)
 	else if(tt == Glob::TerrainType::airport) t = 0;
 	for(auto& a : Unit::unit_def) {
 		int k = a[10];
-		cout << k << endl;
 		switch(k) { //0 air 1 armor 2 infantry 3 ship
 		case 0: case 3: 
 			if(a[0] == nt && t == k) {
