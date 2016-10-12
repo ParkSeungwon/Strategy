@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <gtkmm.h>
+#include <memory>
 #include "darea.h"
 #include "terrain_data.h"
 #include "interface.h"
@@ -18,6 +19,7 @@ public:
 
 protected:
     Darea area;
+	std::shared_ptr<Unit> selected_unit;
 //	Control control;
     Gtk::Button bt1, bt2, bt3, bt4;
 	UnitButton ubt;

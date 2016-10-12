@@ -25,13 +25,15 @@ Produce::Produce(const City& city)
 		case 0: case 3: 
 			if(a[0] == nt && t == k) {
 				icons.push_back(UnitButton(nt, a[1])); 
-				icons.back().signal_clicked().connect(bind(&Produce::on_click, this, a[1]));
+				icons.back().signal_clicked().connect(
+						bind(&Produce::on_click, this, a[1]));
 			}
 			break;
 		case 1: case 2: 
 			if(a[0] == nt && t == 1) {
 				icons.push_back(UnitButton(nt, a[1])); 
-				icons.back().signal_clicked().connect(bind(&Produce::on_click, this, a[1]));
+				icons.back().signal_clicked().connect(
+						bind(&Produce::on_click, this, a[1]));
 			}
 		}
 	}

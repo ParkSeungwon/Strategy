@@ -3,6 +3,7 @@
 class Darea;
 struct TimeInterface {
 	virtual void sync() = 0;
+	virtual void time_pass() = 0;
 };
 
 class Time : public Map, public TimeInterface

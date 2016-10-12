@@ -14,6 +14,7 @@ using namespace std;
 using namespace Glob;
 Interface* pInterface;
 extern MapInterface* mInterface;
+extern TimeInterface* tInterface;
 string produce(const City& city);
 
 Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"), 
@@ -56,6 +57,15 @@ bool Win::on_button_press_event(GdkEventButton* e)
 bool Win::on_key_press_event(GdkEventKey* e)
 {
 	cout << "key : " << e->keyval << endl;
+	if(selected_unit) {
+		switch(e->keyval) {
+			case 65361: selected_unit->heading_toward += 0.1; break;//left
+			case 65362: selected_unit->heading_toward -= 0.1; break;//up
+			case 65363: selected_unit->heading_toward -= 0.1; break;//right
+			case 65364: selected_unit->heading_toward += 0.1; break;//down
+		}
+		tInterface->sync();
+	}
 	label1.set_text(to_string(e->keyval) + user);
 	return false;
 }
@@ -63,21 +73,26 @@ bool Win::on_key_press_event(GdkEventKey* e)
 int Win::label_change(int x, int y, int bt)
 {
 	string s = Terrain::name[static_cast<int>(mInterface->get_terrain_type(Point(x, y)))];
+	auto city = mInterface->get_city(Point(x,y));
+	auto u = mInterface->getUnit(Point{x,y});
 	s += "\n" + to_string(x);
 	s += "\n" + to_string(y);
 	s += "\n" + to_string(bt);
-	auto city = mInterface->get_city(Point(x,y));
-	auto u = mInterface->getUnit(Point{x,y});
-	if(u) {
-		cout << u->get_unitName() << " is here." << endl;
-		*u + Weapon{"side-winder"};
-		*u + Weapon{"Aim-9"};
-	}
 	s += '\n' + city.nation();
-	string unit;
-	if(city.nation() != "") s += '\n' + (unit = produce(city));
+	if(u) {
+		selected_unit = u;
+		cout << u->get_unitName() << " is here." << endl;
+		*u + Weapon{"Ship_cannon_l"};
+		*u + Weapon{"Aim-9"};
+		u->insert_waypoint(30, 1, 500);
+		u->insert_waypoint(80, 70, 100);
+	} else if(city.nation() != "") {
+		string unit  = produce(city);
+		s += '\n' + unit;
+		mInterface->deployUnit(Unit{city.nation(), unit}, Point{x,y}, 0);
+	}
 	label1.set_text(s);
-	mInterface->deployUnit(Unit{city.nation(), unit}, Point{x,y}, 1.5);
+	tInterface->sync();
 	return s.size();
 }
 
@@ -124,7 +139,10 @@ void Win::on_cancel_click()
 void Win::on_connect_click()
 {
 	extern TimeInterface* tInterface;
-	tInterface->sync();
+	for(int i=0; i<1000; i++) {
+		tInterface->time_pass();
+//		tInterface->sync();
+	}
 }
 
 void Win::set_user(string user)

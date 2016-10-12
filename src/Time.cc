@@ -6,6 +6,7 @@
 #include "Terrain.h"
 //#include"gtk/darea.h"//need to add gtkmm flags
 #include <vector>
+#include<thread>
 #include"gtk/interface.h"
 using namespace std;
 using namespace Glob;
@@ -33,6 +34,7 @@ void Time::time_pass()
 			[](shared_ptr<Unit> u){return u->get_currentHealth() <= 0;});
 	it = deployedUnits.erase(it, deployedUnits.end());
 	sync();
+	this_thread::sleep_for(chrono::milliseconds(100));
 }
 
 Time::Time()
