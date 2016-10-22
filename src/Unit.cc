@@ -71,9 +71,10 @@ int Unit::time_pass(float p)
 	return fuel;
 }
 
-int Unit::operator+(Weapon w)
+Unit& Unit::operator+(Weapon w)
 {
 	weapon.push_back(w);
+	return *this;
 }
 
 int Unit::operator-(std::vector<Weapon>::iterator it)

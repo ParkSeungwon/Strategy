@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "point.h"
 #include "Terrain.h"
 #include "win.h"
@@ -59,10 +60,33 @@ bool Win::on_key_press_event(GdkEventKey* e)
 	cout << "key : " << e->keyval << endl;
 	if(selected_unit) {
 		switch(e->keyval) {
-			case 65361: selected_unit->heading_toward += 0.1; break;//left
-			case 65362: selected_unit->heading_toward -= 0.1; break;//up
-			case 65363: selected_unit->heading_toward -= 0.1; break;//right
-			case 65364: selected_unit->heading_toward += 0.1; break;//down
+			case 65361: //left
+				slc_turn++;
+				if(slc_turn == 1) slc_turn = -1000;
+				if(abs(slc_turn) < selected_unit->get_minTurn()) slc_turn = 0;
+				break;
+			case 65362: //up
+				if(slc_spd < selected_unit->get_maxSpd()) slc_spd++; 
+				break;
+			case 65363: //right
+				slc_turn--;
+				if(slc_turn == -1) slc_turn = 1000;
+				if(abs(slc_turn) < selected_unit->get_minTurn()) slc_turn = 0;
+				break;
+			case 65364: //down
+				if(slc_spd > selected_unit->get_maxSpd()) slc_spd--;
+				break;
+			case 65293: //enter
+
+			case 105://i
+			case 100://d
+			case 45://-
+			case 61://=
+			case 65379://insert
+			case 65535://delete
+			case 91://[
+			case 93://]
+			default:;
 		}
 		tInterface->sync();
 	}
@@ -72,28 +96,30 @@ bool Win::on_key_press_event(GdkEventKey* e)
 
 int Win::label_change(int x, int y, int bt)
 {
-	string s = Terrain::name[static_cast<int>(mInterface->get_terrain_type(Point(x, y)))];
+	stringstream ss;
+	ss << Terrain::name[static_cast<int>(mInterface->get_terrain_type(Point(x, y)))];
 	auto city = mInterface->get_city(Point(x,y));
 	auto u = mInterface->getUnit(Point{x,y});
-	s += "\n" + to_string(x);
-	s += "\n" + to_string(y);
-	s += "\n" + to_string(bt);
-	s += '\n' + city.nation();
+	ss << endl << x << endl << y << endl << bt << endl << city.nation();
 	if(u) {
 		selected_unit = u;
-		cout << u->get_unitName() << " is here." << endl;
-		*u + Weapon{"Ship_cannon_l"};
-		*u + Weapon{"Aim-9"};
+		ubt.set_img(u->nation(), u->get_unitName());
+		slc_turn = 0;
+		slc_spd = u->get_maxSpd();
+		slc_dur = 0;
+		ss << endl << u->get_unitName() << endl << "H : ";
+		ss << u->get_currentHealth() << '/' << endl << "F : ";
+		ss << u->get_fuel() << '/';
 		u->insert_waypoint(30, 1, 500);
 		u->insert_waypoint(80, 70, 100);
-	} else if(city.nation() != "") {
+	} else if(bt == 3 && city.nation() != "") {
 		string unit  = produce(city);
-		s += '\n' + unit;
-		mInterface->deployUnit(Unit{city.nation(), unit}, Point{x,y}, 0);
+		mInterface->deployUnit(Unit{city.nation(), unit} + Weapon{"Aim-9"}, 
+				Point{x,y}, 0);
 	}
-	label1.set_text(s);
+	label1.set_text(ss.str());
 	tInterface->sync();
-	return s.size();
+	return ss.str().size();
 }
 
 

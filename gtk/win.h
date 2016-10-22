@@ -39,5 +39,8 @@ private:
 	int i_ = 0;
 	float f_ = 0;
 	std::string user;
+	int slc_turn;
+	int slc_spd;
+	int slc_dur;
 };
 

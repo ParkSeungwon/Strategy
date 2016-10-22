@@ -10,6 +10,13 @@ UnitButton::UnitButton(string nation, string unitname) {
 	set_image(img);
 }
 
+void UnitButton::set_img(string nation, string unitname) {
+	img = Darea::get_icon(nation, unitname);
+	set_image(img);
+	img.show();
+	show_all_children();
+}
+
 Produce::Produce(const City& city) 
 {
 	auto tt = city.ttype();

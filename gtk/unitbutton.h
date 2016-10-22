@@ -6,6 +6,7 @@ class UnitButton : public Gtk::Button
 {
 public:
 	UnitButton(std::string nation, std::string unitname);
+	void set_img(std::string nation, std::string unitname);
 
 protected:
 	Gtk::Image img;

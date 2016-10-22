@@ -24,7 +24,7 @@ public :
 	static SqlData unit_def;
 
 	std::vector<Weapon> weapon;
-	int operator + (Weapon weapon);///<equip weapon
+	Unit& operator + (Weapon weapon);///<equip weapon
 	int operator - (std::vector<Weapon>::iterator it);///<unload weapon
 
 	///현재 설정된 프레퍼런스에 따라 배열 중 하나의 적을 선택하여 공격
@@ -59,6 +59,9 @@ public :
 	void set_known_to(int i, bool b) 			{known_to[i] = b;}
 	void nation(std::string nt) 				{nation_ = nt;}
 	std::string nation()						{return nation_;}
+	int get_minTurn()						{return minimumTurnRadius;}
+	int get_minSpd()						{return minimumSpeed;}
+	int get_maxSpd()						{return maximumSpeed;}
 
 protected :
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};

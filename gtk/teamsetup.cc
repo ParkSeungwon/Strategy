@@ -33,7 +33,7 @@ TeamSetup::TeamSetup(int c)
 		comboboxes[i + c + c].set_active(i);
 	}
 	comboboxes[0].set_active(0);
-	add_button("Start game", 1);
+	add_button("_Start game", 1);
 	add_button("cancel", 2);
 
 	show_all_children();

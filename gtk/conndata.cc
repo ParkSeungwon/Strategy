@@ -69,7 +69,7 @@ void ConnectPopup::pack_all()
 	label[1].set_label("email addr :");
 	label[2].set_label("Password  :");
 	label[3].set_label("Database  :");
-	add_button("Connect", 1);
+	add_button("_Connect", 1);
 	add_button("Save", 2);
 	add_button("Delete", 3);
 	add_button("Exit", 4);
@@ -164,7 +164,7 @@ string ConnectPopup::connect()
 
 		SqlQuery qd;
 		qd.connect(host, prog_id, prog_pass, db);//host, id, pass, database
-		qd.select("Users", "where email = '" + user + "' and password = '" + qd.password(pass) + "'");
+		qd.select("Users", "where email = '" + user + "' and password = '" + qd.encrypt(pass) + "'");
 		if(qd.empty()) return predefined_word[4];//no sudh id
 		else {
 			string ret = qd.begin()->front();
@@ -188,12 +188,12 @@ string ConnectPopup::join()
 
 		SqlQuery sq;
 		sq.connect(host, prog_id, prog_pass, db);
-		sq.select("Users", "where email = '" + user + "' and password = '" + sq.password(pass) + "'");
+		sq.select("Users", "where email = '" + user + "' and password = '" + sq.encrypt(pass) + "'");
 		if(sq.empty()) {
 			sq.select("Users", "limit 1");
 			auto& record = *sq.begin();
 			record[0] = user;
-			record[1] = sq.password(pass);
+			record[1] = sq.encrypt(pass);
 			record[2] = "";
 			record[3] = "";
 			sq.insert();
