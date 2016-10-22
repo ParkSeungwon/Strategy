@@ -171,10 +171,14 @@ void Win::on_cancel_click()
 void Win::on_connect_click()
 {
 	extern TimeInterface* tInterface;
+<<<<<<< HEAD
 	for(int i=0; i<1000; i++) {
 		tInterface->time_pass();
 //		tInterface->sync();
 	}
+=======
+	tInterface->sync();
+>>>>>>> 559973091af2e4c433cf1bd7740d647a79ad6b39
 }
 
 void Win::set_user(string user)
