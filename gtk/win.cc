@@ -33,8 +33,9 @@ Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"),
     box2.pack_start(bt2, Gtk::PACK_SHRINK);
     box2.pack_start(bt3, Gtk::PACK_SHRINK);
     box2.pack_start(bt4, Gtk::PACK_SHRINK);
-	box2.pack_start(ubt, Gtk::PACK_SHRINK);
 	box2.pack_start(label1, Gtk::PACK_SHRINK);
+	box2.pack_start(ubt, Gtk::PACK_SHRINK);
+	box2.pack_start(unit_info, Gtk::PACK_SHRINK);
  //   cout << "높이 " << area.height << endl;
  //   area.set_size_request(area.width, area.height);
     box1.pack_start(area);
@@ -48,11 +49,6 @@ Win::Win() : bt1("OK"), bt2("cancel"), bt3("open"), bt4("connect"),
 Terrain_data Win::open_map_file(string map)
 {
 	return area.open_map_file(map);
-}
-
-bool Win::on_button_press_event(GdkEventButton* e)
-{
-	label_change(e->x, area.get_height() - e->y - 1, e->button);
 }
 
 bool Win::on_key_press_event(GdkEventKey* e)
@@ -94,32 +90,42 @@ bool Win::on_key_press_event(GdkEventKey* e)
 	return false;
 }
 
-int Win::label_change(int x, int y, int bt)
+bool Win::on_button_press_event(GdkEventButton* e)
 {
+	int x = e->x;
+	int y = area.get_height() - e->y - 1;
+	int bt = e->button;
+
 	stringstream ss;
 	ss << Terrain::name[static_cast<int>(mInterface->get_terrain_type(Point(x, y)))];
 	auto city = mInterface->get_city(Point(x,y));
 	auto u = mInterface->getUnit(Point{x,y});
-	ss << endl << x << endl << y << endl << bt << endl << city.nation();
+	ss << endl << "x : " << x << endl << "y : " << y << endl;
+	ss << bt << endl << city.nation();
 	if(u) {
+		stringstream ss2;
 		selected_unit = u;
 		ubt.set_img(u->nation(), u->get_unitName());
 		slc_turn = 0;
 		slc_spd = u->get_maxSpd();
 		slc_dur = 0;
-		ss << endl << u->get_unitName() << endl << "H : ";
-		ss << u->get_currentHealth() << '/' << endl << "F : ";
-		ss << u->get_fuel() << '/';
+		ss2 << u->get_unitName() << endl;
+		ss2 << "H : " << u->get_currentHealth() << '/' << u->get_maxHealth() << endl;
+		ss2 << "F : " << u->get_fuel() << '/' << u->get_fuelCapacity() << endl;
+		ss2 << "S : " << u->get_minSpd() << '/' << u->get_maxSpd() << endl;
+		ss2 << "Intel : " << u->get_intelligenceRadius() << endl;
+		ss2 << "Exp : " << u->get_exp() << endl;
+		ss2 << "turn : " << u->get_minTurn() << endl;
 		u->insert_waypoint(30, 1, 500);
 		u->insert_waypoint(80, 70, 100);
+		unit_info.set_text(ss2.str());
 	} else if(bt == 3 && city.nation() != "") {
 		string unit  = produce(city);
-		mInterface->deployUnit(Unit{city.nation(), unit} + Weapon{"Aim-9"}, 
-				Point{x,y}, 0);
+		mInterface->deployUnit(Unit{city.nation(), unit} + Weapon{"Aim-9"}, {x,y}, 0);
+		tInterface->sync();
 	}
 	label1.set_text(ss.str());
-	tInterface->sync();
-	return ss.str().size();
+	return false;
 }
 
 

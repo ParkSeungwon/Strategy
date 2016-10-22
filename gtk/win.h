@@ -2,6 +2,7 @@
 #include <string>
 #include <gtkmm.h>
 #include <memory>
+#include "src/Unit.h"
 #include "darea.h"
 #include "terrain_data.h"
 #include "interface.h"
@@ -33,7 +34,7 @@ protected:
     Gtk::Box box1;
 	Gtk::Box box2;
     Gtk::ScrolledWindow swin;
-	Gtk::Label label1;
+	Gtk::Label label1, unit_info;
 
 private:
 	int i_ = 0;

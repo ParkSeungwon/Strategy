@@ -62,6 +62,9 @@ public :
 	int get_minTurn()						{return minimumTurnRadius;}
 	int get_minSpd()						{return minimumSpeed;}
 	int get_maxSpd()						{return maximumSpeed;}
+	int get_maxHealth() 					{return maxHealth;}
+	int get_fuelCapacity()					{return fuelCapacity;}
+	int get_exp() 							{return experience;}
 
 protected :
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
