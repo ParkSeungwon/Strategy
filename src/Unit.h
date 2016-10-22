@@ -64,7 +64,7 @@ public :
 	int get_maxSpd()						{return maximumSpeed;}
 	int get_maxHealth() 					{return maxHealth;}
 	int get_fuelCapacity()					{return fuelCapacity;}
-	int get_exp() 							{return experience;}
+	int get_exp() 							{return experience; }
 
 protected :
 	std::vector<bool> known_to = {0,0,0,0,0,0,0,0};
